@@ -1,3 +1,6 @@
+package com.revature.SongSearcher;
+
+import com.revature.SongSearcher.Model.Song;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +42,7 @@ public class MusicSearch {
     private String getUserLyrics(String searchText) {
         String lyrics = "";
         do {
-            //Get Song Lyrics
+            //Get com.revature.SongSearcher.Model.Song Lyrics
             System.out.print("\n" + searchText);
             StringBuilder builder = new StringBuilder();
             while (scan.hasNextLine()) {
@@ -58,7 +61,7 @@ public class MusicSearch {
     }
 
     public List<Song> searchByLyrics() {
-        String userInput = getUserLyrics("Search By Song Lyrics (Followed by 'DONE' on a new line): ");
+        String userInput = getUserLyrics("Search By com.revature.SongSearcher.Model.Song Lyrics (Followed by 'DONE' on a new line): ");
         log.info("Searching by Lyrics");
 
         float[] embedding = this.embedder.getEmbedding(userInput);
@@ -70,7 +73,7 @@ public class MusicSearch {
 
     public List<Song> searchByTitle() {
         String userInput = getUserText("Search By Title: ");
-        log.info("Searching by Song Title");
+        log.info("Searching by com.revature.SongSearcher.Model.Song Title");
 
         List<Song> songs = this.searcher.getSongsByTitle(userInput, 5);
 
@@ -78,8 +81,8 @@ public class MusicSearch {
     }
 
     public List<Song> searchByAlbum() {
-        String userInput = getUserText("Search By Album: ");
-        log.info("Searching by Album Name");
+        String userInput = getUserText("Search By com.revature.SongSearcher.Model.Album: ");
+        log.info("Searching by com.revature.SongSearcher.Model.Album Name");
 
         List<Song> songs = this.searcher.getSongsByAlbum(userInput, 5);
 
@@ -87,8 +90,8 @@ public class MusicSearch {
     }
 
     public List<Song> searchByArtist() {
-        String userInput = getUserText("Search By Artist: ");
-        log.info("Searching by Artist");
+        String userInput = getUserText("Search By com.revature.SongSearcher.Model.Artist: ");
+        log.info("Searching by com.revature.SongSearcher.Model.Artist");
 
         List<Song> songs = this.searcher.getSongsByArtist(userInput, 5);
 

@@ -1,3 +1,5 @@
+package com.revature.SongSearcher.Model;
+
 public class Artist {
 
     private final String name;
@@ -20,6 +22,6 @@ public class Artist {
     }
 
     public String toString() {
-        return "Artist: " + this.getName();
+        return "com.revature.SongSearcher.Model.Artist: " + this.getName();
     }
 }

@@ -1,3 +1,8 @@
+package com.revature.SongSearcher;
+
+import com.revature.SongSearcher.Model.Album;
+import com.revature.SongSearcher.Model.Song;
+import com.revature.SongSearcher.Model.Artist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,15 +39,15 @@ public class MusicApp {
         List<Song> returnedSongs = List.of();
         do {
             System.out.println("Options are:\n");
-            System.out.println("\t1: Add Artist");
-            System.out.println("\t2: Delete Artist");
-            System.out.println("\t3: Add Album");
-            System.out.println("\t4: Delete Album");
-            System.out.println("\t5: Add Song");
-            System.out.println("\t6: Delete Song");
-            System.out.println("\t7: Search by Artist");
-            System.out.println("\t8: Search by Album");
-            System.out.println("\t9: Search by Song Title");
+            System.out.println("\t1: Add com.revature.SongSearcher.Model.Artist");
+            System.out.println("\t2: Delete com.revature.SongSearcher.Model.Artist");
+            System.out.println("\t3: Add com.revature.SongSearcher.Model.Album");
+            System.out.println("\t4: Delete com.revature.SongSearcher.Model.Album");
+            System.out.println("\t5: Add com.revature.SongSearcher.Model.Song");
+            System.out.println("\t6: Delete com.revature.SongSearcher.Model.Song");
+            System.out.println("\t7: Search by com.revature.SongSearcher.Model.Artist");
+            System.out.println("\t8: Search by com.revature.SongSearcher.Model.Album");
+            System.out.println("\t9: Search by com.revature.SongSearcher.Model.Song Title");
             System.out.println("\t10: Search for Similar Songs by Lyrics");
             System.out.println("\tQ: Quit");
 
@@ -56,9 +61,9 @@ public class MusicApp {
                 continue;
             } else if (input.equals("2")) {
                 boolean didDelete = getAndDeleteArtist();
-                if (didDelete) { System.out.println("Deleted Artist");}
-                else { System.out.println("Failed to remove Artist. Either Artist doesn't exist or an album depends " +
-                        "on the Artist. Please delete any necessary Albums/Songs first and try again.");}
+                if (didDelete) { System.out.println("Deleted com.revature.SongSearcher.Model.Artist");}
+                else { System.out.println("Failed to remove com.revature.SongSearcher.Model.Artist. Either com.revature.SongSearcher.Model.Artist doesn't exist or an album depends " +
+                        "on the com.revature.SongSearcher.Model.Artist. Please delete any necessary Albums/Songs first and try again.");}
                 continue;
             } else if (input.equals("3")) {
                 Album album = getAndInsertAlbum();
@@ -66,9 +71,9 @@ public class MusicApp {
                 continue;
             } else if (input.equals("4")) {
                 boolean didDelete = getAndDeleteAlbum();
-                if (didDelete) { System.out.println("Deleted Album");}
-                else { System.out.println("Failed to remove Album. Either Album doesn't exist or a Song/Songs depends " +
-                        "on the Album. Please delete any necessary Songs first and try again.");}
+                if (didDelete) { System.out.println("Deleted com.revature.SongSearcher.Model.Album");}
+                else { System.out.println("Failed to remove com.revature.SongSearcher.Model.Album. Either com.revature.SongSearcher.Model.Album doesn't exist or a com.revature.SongSearcher.Model.Song/Songs depends " +
+                        "on the com.revature.SongSearcher.Model.Album. Please delete any necessary Songs first and try again.");}
                 continue;
             } else if (input.equals("5")) {
                 Song song = getAndInsertSong();
@@ -76,8 +81,8 @@ public class MusicApp {
                 continue;
             } else if (input.equals("6")) {
                 boolean didDelete = getAndDeleteSong();
-                if (didDelete) { System.out.println("Deleted Song");}
-                else { System.out.println("Failed to remove Song. Please verify that the Song exists.");}
+                if (didDelete) { System.out.println("Deleted com.revature.SongSearcher.Model.Song");}
+                else { System.out.println("Failed to remove com.revature.SongSearcher.Model.Song. Please verify that the com.revature.SongSearcher.Model.Song exists.");}
                 continue;
             } else if (input.equals("7")) {
                 returnedSongs = musicSearch.searchByArtist();
@@ -159,7 +164,7 @@ public class MusicApp {
         boolean didInsert = repo.createArtist(artist);
         if (!didInsert) {
             log.warn("Failed to insert artist into IRepository.");
-            System.out.println("An error occurred when adding new Artist");
+            System.out.println("An error occurred when adding new com.revature.SongSearcher.Model.Artist");
             return null;
         } else {
             log.info("Successfully inserted");
@@ -183,7 +188,7 @@ public class MusicApp {
         boolean isInvalid = false;
         log.info("Getting artist information from user for deletion");
         do {
-            System.out.print("Artist: ");
+            System.out.print("com.revature.SongSearcher.Model.Artist: ");
             name = scan.nextLine();
             if (name.isBlank()) {
                 System.out.println("Invalid artist name. Please try again.");
@@ -213,14 +218,14 @@ public class MusicApp {
             return null;
         }
 
-        log.info("Getting Album information from user for insertion");
+        log.info("Getting com.revature.SongSearcher.Model.Album information from user for insertion");
 
         do {
             //Get album name
-            System.out.print("Album Name: ");
+            System.out.print("com.revature.SongSearcher.Model.Album Name: ");
             name = scan.nextLine().strip();
             if (name.isBlank()) {
-                System.out.println("Invalid Album Name. Please try again");
+                System.out.println("Invalid com.revature.SongSearcher.Model.Album Name. Please try again");
             } else { break; }
         } while (true);
 
@@ -256,12 +261,12 @@ public class MusicApp {
             return checkAlbum;
         }
 
-        log.info("Attempting to insert Album into IRepository");
+        log.info("Attempting to insert com.revature.SongSearcher.Model.Album into IRepository");
         Album album = new Album(artist_names, album_name, release_year);
         boolean didInsert = repo.createAlbum(album);
         if (!didInsert) {
             log.warn("Failed to insert album into IRepository.");
-            System.out.println("An error occurred when adding new Album");
+            System.out.println("An error occurred when adding new com.revature.SongSearcher.Model.Album");
             return null;
         }
 
@@ -272,14 +277,14 @@ public class MusicApp {
         String name;
         int release_year;
 
-        log.info("Getting Album information from user for deletion");
+        log.info("Getting com.revature.SongSearcher.Model.Album information from user for deletion");
 
         do {
             //Get album name
-            System.out.print("Album Name: ");
+            System.out.print("com.revature.SongSearcher.Model.Album Name: ");
             name = scan.nextLine().strip();
             if (name.isBlank()) {
-                System.out.println("Invalid Album Name. Please try again");
+                System.out.println("Invalid com.revature.SongSearcher.Model.Album Name. Please try again");
             } else { break; }
         } while (true);
 
@@ -322,37 +327,37 @@ public class MusicApp {
         }
         //String album_title = album.getTitle();
 
-        log.info("Getting Song information from user for insertion");
+        log.info("Getting com.revature.SongSearcher.Model.Song information from user for insertion");
 
         do {
-            //Get Song Name
-            System.out.print("Song Title: ");
+            //Get com.revature.SongSearcher.Model.Song Name
+            System.out.print("com.revature.SongSearcher.Model.Song Title: ");
             title = scan.nextLine();
             if (title.isBlank()) {
-                System.out.println("Invalid Song Title. Please try again");
+                System.out.println("Invalid com.revature.SongSearcher.Model.Song Title. Please try again");
             } else { break; }
         } while (true);
 
         do {
             //Get song duration
-            System.out.print("Song Length (in seconds): ");
+            System.out.print("com.revature.SongSearcher.Model.Song Length (in seconds): ");
             String input = scan.nextLine();
             try {
                 secs = Double.parseDouble(input.strip());
                 if (secs < 0 ) {
-                    System.out.println("Invalid Song Length. Please try again.");
+                    System.out.println("Invalid com.revature.SongSearcher.Model.Song Length. Please try again.");
                     continue;
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Invalid Song Length. Please try again.");
+                System.out.println("Invalid com.revature.SongSearcher.Model.Song Length. Please try again.");
                 continue;
             }
             break;
         } while (true);
 
         do {
-            //Get Song Lyrics
-            System.out.print("Enter Song Lyrics (Followed by 'DONE' on a new line): ");
+            //Get com.revature.SongSearcher.Model.Song Lyrics
+            System.out.print("Enter com.revature.SongSearcher.Model.Song Lyrics (Followed by 'DONE' on a new line): ");
             StringBuilder builder = new StringBuilder();
             while (scan.hasNextLine()) {
                 String line = scan.nextLine();
@@ -379,12 +384,12 @@ public class MusicApp {
             return checkSong;
         }
 
-        log.info("Attempting to insert Song into IRepository");
+        log.info("Attempting to insert com.revature.SongSearcher.Model.Song into IRepository");
         Song song = new Song(artist_names, album.getTitle(), album.getReleaseYear(), song_title.strip(), secs, lyrics.strip());
         boolean didInsert = repo.createSong(song);
         if (!didInsert) {
             log.warn("Failed to insert song into IRepository.");
-            System.out.println("An error occurred when adding new Song");
+            System.out.println("An error occurred when adding new com.revature.SongSearcher.Model.Song");
             return null;
         }
 
@@ -398,29 +403,29 @@ public class MusicApp {
         double secs = 0;
         String lyrics = "";
 
-        log.info("Getting Song information from user for deletion");
+        log.info("Getting com.revature.SongSearcher.Model.Song information from user for deletion");
 
         do {
-            //Get Song Name
-            System.out.print("Song Title: ");
+            //Get com.revature.SongSearcher.Model.Song Name
+            System.out.print("com.revature.SongSearcher.Model.Song Title: ");
             title = scan.nextLine();
             if (title.isBlank()) {
-                System.out.println("Invalid Song Title. Please try again");
+                System.out.println("Invalid com.revature.SongSearcher.Model.Song Title. Please try again");
             } else { break; }
         } while (true);
 
         do {
             //Get album name
-            System.out.print("Album Name: ");
+            System.out.print("com.revature.SongSearcher.Model.Album Name: ");
             album_name = scan.nextLine().strip();
             if (album_name.isBlank()) {
-                System.out.println("Invalid Album Name. Please try again");
+                System.out.println("Invalid com.revature.SongSearcher.Model.Album Name. Please try again");
             } else { break; }
         } while (true);
 
         do {
             //Get release year
-            System.out.print("Album Release year: ");
+            System.out.print("com.revature.SongSearcher.Model.Album Release year: ");
             String input = scan.nextLine();
             try {
                 release_year = Integer.parseInt(input.strip());
