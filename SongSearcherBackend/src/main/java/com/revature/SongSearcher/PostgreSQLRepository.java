@@ -1,7 +1,12 @@
+package com.revature.SongSearcher;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import com.pgvector.PGvector;
+import com.revature.SongSearcher.Model.Album;
+import com.revature.SongSearcher.Model.Artist;
+import com.revature.SongSearcher.Model.Song;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.postgresql.util.PSQLException;
@@ -49,11 +54,11 @@ public class PostgreSQLRepository implements IRepository, ISongSearcher {
                                 " INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;" +
                                 "CREATE SEQUENCE IF NOT EXISTS \"song_song_id_seq\" " +
                                 " INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;" +
-                                "CREATE TABLE IF NOT EXISTS Music.Artist (  " +
+                                "CREATE TABLE IF NOT EXISTS Music.com.revature.SongSearcher.Model.Artist (  " +
                                 "    artist_id int DEFAULT nextval('artist_artist_id_seq'::regclass) NOT NULL," +
                                 "    name VARCHAR(120) UNIQUE," +
                                 "    CONSTRAINT pk_artist PRIMARY KEY (artist_id));" +
-                                "CREATE TABLE IF NOT EXISTS Music.Album (  " +
+                                "CREATE TABLE IF NOT EXISTS Music.com.revature.SongSearcher.Model.Album (  " +
                                 "    album_id int DEFAULT nextval('album_album_id_seq'::regclass) NOT NULL," +
                                 "    title VARCHAR(120)," +
                                 "    release_year int," +
@@ -64,10 +69,10 @@ public class PostgreSQLRepository implements IRepository, ISongSearcher {
                                 "    album_id int," +
                                 "    CONSTRAINT pk_artist_album PRIMARY KEY (artist_id, album_id)," +
                                 "    CONSTRAINT fk_artist_album_artist_id FOREIGN KEY (artist_id)" +
-                                "        REFERENCES Music.Artist (artist_id) ON DELETE RESTRICT ON UPDATE NO ACTION," +
+                                "        REFERENCES Music.com.revature.SongSearcher.Model.Artist (artist_id) ON DELETE RESTRICT ON UPDATE NO ACTION," +
                                 "    CONSTRAINT fk_artist_album_album_id FOREIGN KEY (album_id)" +
-                                "        REFERENCES Music.Album (album_id) ON DELETE CASCADE ON UPDATE NO ACTION);" +
-                                "CREATE TABLE IF NOT EXISTS Music.Song (  " +
+                                "        REFERENCES Music.com.revature.SongSearcher.Model.Album (album_id) ON DELETE CASCADE ON UPDATE NO ACTION);" +
+                                "CREATE TABLE IF NOT EXISTS Music.com.revature.SongSearcher.Model.Song (  " +
                                 "    song_id int DEFAULT nextval('song_song_id_seq'::regclass) NOT NULL," +
                                 "    title VARCHAR(120)," +
                                 "    album_id int," +
@@ -76,7 +81,7 @@ public class PostgreSQLRepository implements IRepository, ISongSearcher {
                                 "    embedding vector(100)," +
                                 "    CONSTRAINT pk_song PRIMARY KEY (song_id)," +
                                 "    CONSTRAINT fk_song_album_id FOREIGN KEY (album_id)" +
-                                "        REFERENCES Music.Album (album_id) ON DELETE RESTRICT ON UPDATE NO ACTION," +
+                                "        REFERENCES Music.com.revature.SongSearcher.Model.Album (album_id) ON DELETE RESTRICT ON UPDATE NO ACTION," +
                                 "    CONSTRAINT unique_song_per_album UNIQUE (title, album_id));";
                 stmt.execute(sql);
                 log.info("Created Structure");
@@ -92,46 +97,46 @@ public class PostgreSQLRepository implements IRepository, ISongSearcher {
 
     @Override
     public boolean createArtist(Artist artist) {
-        log.info("Attempting to insert Artist into Postgres Database");
+        log.info("Attempting to insert com.revature.SongSearcher.Model.Artist into Postgres Database");
         log.debug(artist.toString());
         String name = artist.getName();
 
         String sql =
-                "INSERT INTO Music.Artist (name)" +
+                "INSERT INTO Music.com.revature.SongSearcher.Model.Artist (name)" +
                         "VALUES (?)" +
                         "ON CONFLICT (name) DO NOTHING;";
         try ( PreparedStatement stmt = connection.prepareStatement(sql) ) {
             stmt.setString(1, name);
             stmt.executeUpdate();
-            log.info("Artist insertion successful");
+            log.info("com.revature.SongSearcher.Model.Artist insertion successful");
             return true;
         } catch (SQLException e) {
-            log.warn("Failed to insert Artist into Postgres Database", e);
+            log.warn("Failed to insert com.revature.SongSearcher.Model.Artist into Postgres Database", e);
         }
         return false;
     }
 
     public boolean deleteArtist(String name) {
-        log.info("Attempting to delete Artist from Postgres Database");
-        log.debug("Artist name: {}", name);
+        log.info("Attempting to delete com.revature.SongSearcher.Model.Artist from Postgres Database");
+        log.debug("com.revature.SongSearcher.Model.Artist name: {}", name);
         String sql =
-                "DELETE FROM Music.Artist " +
-                        "WHERE Artist.name = ?";
+                "DELETE FROM Music.com.revature.SongSearcher.Model.Artist " +
+                        "WHERE com.revature.SongSearcher.Model.Artist.name = ?";
         try ( PreparedStatement stmt = connection.prepareStatement(sql) ) {
             stmt.setString(1, name);
             stmt.executeUpdate();
-            log.info("Artist deletion successful");
+            log.info("com.revature.SongSearcher.Model.Artist deletion successful");
             return true;
         } catch (SQLException e) {
-            log.warn("Failed to remove Artist from Postgres Database", e);
+            log.warn("Failed to remove com.revature.SongSearcher.Model.Artist from Postgres Database", e);
         }
         return false;
     }
 
     public Artist getArtist(String name) {
         String sql =
-                "SELECT name FROM Music.Artist WHERE name = ?;";
-        log.info("Attempting to retrieve Artist from Postgres Database");
+                "SELECT name FROM Music.com.revature.SongSearcher.Model.Artist WHERE name = ?;";
+        log.info("Attempting to retrieve com.revature.SongSearcher.Model.Artist from Postgres Database");
         try ( PreparedStatement stmt = connection.prepareStatement(sql) ) {
             stmt.setString(1, name);
             ResultSet rs = stmt.executeQuery();
@@ -140,15 +145,15 @@ public class PostgreSQLRepository implements IRepository, ISongSearcher {
                 return new Artist(name);
             }
         } catch (SQLException e) {
-            log.warn("Error when retrieving Artist ID from Postgres Database", e);
+            log.warn("Error when retrieving com.revature.SongSearcher.Model.Artist ID from Postgres Database", e);
         }
         return null;
     }
 
     private int getArtistID(String name) {
         String sql =
-                "SELECT artist_id FROM Music.Artist WHERE name = ?;";
-        log.info("Attempting to retrieve Artist ID from Postgres Database");
+                "SELECT artist_id FROM Music.com.revature.SongSearcher.Model.Artist WHERE name = ?;";
+        log.info("Attempting to retrieve com.revature.SongSearcher.Model.Artist ID from Postgres Database");
         int id = -1;
         try ( PreparedStatement stmt = connection.prepareStatement(sql) ) {
             stmt.setString(1, name);
@@ -157,7 +162,7 @@ public class PostgreSQLRepository implements IRepository, ISongSearcher {
                 id = rs.getInt("artist_id"); // By column name
             }
         } catch (SQLException e) {
-            log.warn("Error when retrieving Artist ID from Postgres Database", e);
+            log.warn("Error when retrieving com.revature.SongSearcher.Model.Artist ID from Postgres Database", e);
         }
         return id;
     }
@@ -165,13 +170,13 @@ public class PostgreSQLRepository implements IRepository, ISongSearcher {
     @Override
     public boolean createAlbum(Album album) {
         // Database ignore case sensitivity for now.
-        log.info("Attempting to insert Album into Postgres Database");
+        log.info("Attempting to insert com.revature.SongSearcher.Model.Album into Postgres Database");
         log.debug(album.toString());
         String title = album.getTitle();
         int release_year = album.getReleaseYear();
 
         /*
-        The Album Table has a constraint that album title and year must be unique!
+        The com.revature.SongSearcher.Model.Album Table has a constraint that album title and year must be unique!
         So, the problem of same name albums made in the same year with different artists
         just can't happen. We can't have more than one album title in a single year.
          */
@@ -184,7 +189,7 @@ public class PostgreSQLRepository implements IRepository, ISongSearcher {
             if (id != -1) artist_ids[i] = id;
         }
 
-        String sql = "INSERT INTO Music.Album (title, release_year) " +
+        String sql = "INSERT INTO Music.com.revature.SongSearcher.Model.Album (title, release_year) " +
                         "VALUES (?, ?) " +
                         "RETURNING album_id; " ;
         ResultSet rs = null;
@@ -209,42 +214,42 @@ public class PostgreSQLRepository implements IRepository, ISongSearcher {
                 log.warn("Error occurred when inserting album/artist into Artist_Album Table", e);
                 return false;
             }
-            log.info("Album insertion successful");
+            log.info("com.revature.SongSearcher.Model.Album insertion successful");
             return true;
         } catch (SQLException e) {
-            log.info("Attempted to insert Album that already exists.");
+            log.info("Attempted to insert com.revature.SongSearcher.Model.Album that already exists.");
             return true;
         }
     }
 
     public boolean deleteAlbum(String name, int release_year) {
-        log.info("Attempting to delete Album from Postgres Database");
-        log.debug("Album name: {}", name);
+        log.info("Attempting to delete com.revature.SongSearcher.Model.Album from Postgres Database");
+        log.debug("com.revature.SongSearcher.Model.Album name: {}", name);
         String sql =
-                "DELETE FROM Music.Album " +
-                        "WHERE Album.title = ? AND Album.release_year = ?";
+                "DELETE FROM Music.com.revature.SongSearcher.Model.Album " +
+                        "WHERE com.revature.SongSearcher.Model.Album.title = ? AND com.revature.SongSearcher.Model.Album.release_year = ?";
         try ( PreparedStatement stmt = connection.prepareStatement(sql) ) {
             stmt.setString(1, name);
             stmt.setInt(2, release_year);
             stmt.executeUpdate();
-            log.info("Album deletion successful");
+            log.info("com.revature.SongSearcher.Model.Album deletion successful");
             return true;
         } catch (SQLException e) {
-            log.warn("Failed to remove Album from Postgres Database", e);
+            log.warn("Failed to remove com.revature.SongSearcher.Model.Album from Postgres Database", e);
         }
         return false;
     }
 
     public Album getAlbum(String title, int release_year) {
         String sql =
-                "SELECT Album.title as title, Album.release_year as release_year,  " +
-                        "ARRAY_AGG(Artist.name ORDER BY Artist.name) AS artists " +
-                        "FROM Music.Album " +
-                        "JOIN Music.Artist_Album ON Artist_Album.album_id = Album.album_id " +
-                        "JOIN Music.Artist ON Artist.artist_id = Artist_Album.artist_id " +
-                        "WHERE Album.title = ? AND Album.release_year = ? " +
-                        "GROUP BY Album.title, Album.release_year;";
-        log.info("Attempting to retrieve Album from Postgres Database");
+                "SELECT com.revature.SongSearcher.Model.Album.title as title, com.revature.SongSearcher.Model.Album.release_year as release_year,  " +
+                        "ARRAY_AGG(com.revature.SongSearcher.Model.Artist.name ORDER BY com.revature.SongSearcher.Model.Artist.name) AS artists " +
+                        "FROM Music.com.revature.SongSearcher.Model.Album " +
+                        "JOIN Music.Artist_Album ON Artist_Album.album_id = com.revature.SongSearcher.Model.Album.album_id " +
+                        "JOIN Music.com.revature.SongSearcher.Model.Artist ON com.revature.SongSearcher.Model.Artist.artist_id = Artist_Album.artist_id " +
+                        "WHERE com.revature.SongSearcher.Model.Album.title = ? AND com.revature.SongSearcher.Model.Album.release_year = ? " +
+                        "GROUP BY com.revature.SongSearcher.Model.Album.title, com.revature.SongSearcher.Model.Album.release_year;";
+        log.info("Attempting to retrieve com.revature.SongSearcher.Model.Album from Postgres Database");
         int id = -1;
         try ( PreparedStatement stmt = connection.prepareStatement(sql) ) {
             stmt.setString(1, title);
@@ -257,15 +262,15 @@ public class PostgreSQLRepository implements IRepository, ISongSearcher {
                 return new Album(artists, title, release_year);
             }
         } catch (SQLException e) {
-            log.warn("Error when retrieving Album ID from Postgres Database", e);
+            log.warn("Error when retrieving com.revature.SongSearcher.Model.Album ID from Postgres Database", e);
         }
         return null;
     }
 
     private int getAlbumID(String title, int release_year) {
         String sql =
-                "SELECT album_id FROM Music.Album WHERE title = ? AND release_year = ?;";
-        log.info("Attempting to retrieve Album ID from Postgres Database");
+                "SELECT album_id FROM Music.com.revature.SongSearcher.Model.Album WHERE title = ? AND release_year = ?;";
+        log.info("Attempting to retrieve com.revature.SongSearcher.Model.Album ID from Postgres Database");
         int id = -1;
         try ( PreparedStatement stmt = connection.prepareStatement(sql) ) {
             stmt.setString(1, title);
@@ -275,14 +280,14 @@ public class PostgreSQLRepository implements IRepository, ISongSearcher {
                 id = rs.getInt("album_id"); // By column name
             }
         } catch (SQLException e) {
-            log.warn("Error when retrieving Album ID from Postgres Database", e);
+            log.warn("Error when retrieving com.revature.SongSearcher.Model.Album ID from Postgres Database", e);
         }
         return id;
     }
 
     @Override
     public boolean createSong(Song song) {
-        log.info("Attempting to insert Song into Postgres Database");
+        log.info("Attempting to insert com.revature.SongSearcher.Model.Song into Postgres Database");
         log.debug(song.toString());
         int album_id = this.getAlbumID(song.getAlbum(), song.getRelease_year());
         String lyrics = song.getLyrics();
@@ -292,7 +297,7 @@ public class PostgreSQLRepository implements IRepository, ISongSearcher {
         float[] embedding = this.embedder.getEmbedding(lyrics);
 
         String sql =
-                "INSERT INTO Music.Song (title, album_id, duration, lyrics, embedding) " +
+                "INSERT INTO Music.com.revature.SongSearcher.Model.Song (title, album_id, duration, lyrics, embedding) " +
                         "VALUES (?, ?, ?, ?, ?) " +
                         "ON CONFLICT (title, album_id) DO NOTHING;";
         try ( PreparedStatement stmt = connection.prepareStatement(sql) ) {
@@ -302,7 +307,7 @@ public class PostgreSQLRepository implements IRepository, ISongSearcher {
             stmt.setString(4, lyrics);
             stmt.setObject(5, new PGvector(embedding));
             stmt.executeUpdate();
-            log.info("Song insertion successful");
+            log.info("com.revature.SongSearcher.Model.Song insertion successful");
             return true;
         } catch (SQLException e) {
             log.warn("Error occurred while inserting song into Postgres Database", e);
@@ -312,15 +317,15 @@ public class PostgreSQLRepository implements IRepository, ISongSearcher {
 
     public Song getSong(String title, String album_name, int release_year) {
         String sql =
-                "SELECT Song.title as song_title, Album.title as album_title, " +
-                        "ARRAY_AGG(Artist.name ORDER BY Artist.name) AS artists, " +
-                        "Song.duration as duration, Song.lyrics as lyrics " +
-                        "FROM Music.Song " +
-                        "JOIN Music.Album ON Album.album_id = Song.album_id " +
-                        "JOIN Music.Artist_Album ON Artist_Album.album_id = Album.album_id " +
-                        "JOIN Music.Artist ON Artist.artist_id = Artist_Album.artist_id " +
-                        "WHERE Song.title = ? AND Album.title = ? AND Album.release_year = ? " +
-                        "GROUP BY Song.song_id, Song.title, Album.title;";
+                "SELECT com.revature.SongSearcher.Model.Song.title as song_title, com.revature.SongSearcher.Model.Album.title as album_title, " +
+                        "ARRAY_AGG(com.revature.SongSearcher.Model.Artist.name ORDER BY com.revature.SongSearcher.Model.Artist.name) AS artists, " +
+                        "com.revature.SongSearcher.Model.Song.duration as duration, com.revature.SongSearcher.Model.Song.lyrics as lyrics " +
+                        "FROM Music.com.revature.SongSearcher.Model.Song " +
+                        "JOIN Music.com.revature.SongSearcher.Model.Album ON com.revature.SongSearcher.Model.Album.album_id = com.revature.SongSearcher.Model.Song.album_id " +
+                        "JOIN Music.Artist_Album ON Artist_Album.album_id = com.revature.SongSearcher.Model.Album.album_id " +
+                        "JOIN Music.com.revature.SongSearcher.Model.Artist ON com.revature.SongSearcher.Model.Artist.artist_id = Artist_Album.artist_id " +
+                        "WHERE com.revature.SongSearcher.Model.Song.title = ? AND com.revature.SongSearcher.Model.Album.title = ? AND com.revature.SongSearcher.Model.Album.release_year = ? " +
+                        "GROUP BY com.revature.SongSearcher.Model.Song.song_id, com.revature.SongSearcher.Model.Song.title, com.revature.SongSearcher.Model.Album.title;";
         log.info("Attempting to get song from Postgres Database");
         try ( PreparedStatement stmt = connection.prepareStatement(sql) ) {
             stmt.setString(1, title);
@@ -342,22 +347,22 @@ public class PostgreSQLRepository implements IRepository, ISongSearcher {
     }
 
     public boolean deleteSong(String title, String album_name, int release_year) {
-        log.info("Attempting to delete Song from Postgres Database");
-        log.debug("Song title: {}", title);
+        log.info("Attempting to delete com.revature.SongSearcher.Model.Song from Postgres Database");
+        log.debug("com.revature.SongSearcher.Model.Song title: {}", title);
 
         int album_id = this.getAlbumID(album_name, release_year);
 
         String sql =
-                "DELETE FROM Music.Song " +
-                        "WHERE Song.title = ? AND Song.album_id = ?";
+                "DELETE FROM Music.com.revature.SongSearcher.Model.Song " +
+                        "WHERE com.revature.SongSearcher.Model.Song.title = ? AND com.revature.SongSearcher.Model.Song.album_id = ?";
         try ( PreparedStatement stmt = connection.prepareStatement(sql) ) {
             stmt.setString(1, title);
             stmt.setInt(2, album_id);
             stmt.executeUpdate();
-            log.info("Song deletion successful");
+            log.info("com.revature.SongSearcher.Model.Song deletion successful");
             return true;
         } catch (SQLException e) {
-            log.warn("Failed to remove Song from Postgres Database", e);
+            log.warn("Failed to remove com.revature.SongSearcher.Model.Song from Postgres Database", e);
         }
         return false;
     }
@@ -371,14 +376,14 @@ public class PostgreSQLRepository implements IRepository, ISongSearcher {
     public List<Song> getSimilarSongsByLyrics(float[] embedding, int limit) {
         List<Song> similarSongs = new ArrayList<>();
         String sql =
-                "SELECT Song.title as song_title, Album.title as album_title, " +
-                        "Album.release_year as release_year, ARRAY_AGG(Artist.name ORDER BY Artist.name) AS artists, " +
-                        "Song.duration as duration, Song.lyrics as lyrics " +
-                        "FROM Music.Song " +
-                        "JOIN Music.Album ON Album.album_id = Song.album_id " +
-                        "JOIN Music.Artist_Album ON Artist_Album.album_id = Album.album_id " +
-                        "JOIN Music.Artist ON Artist.artist_id = Artist_Album.artist_id " +
-                        "GROUP BY Song.song_id, Song.title, Album.title, Album.release_year " +
+                "SELECT com.revature.SongSearcher.Model.Song.title as song_title, com.revature.SongSearcher.Model.Album.title as album_title, " +
+                        "com.revature.SongSearcher.Model.Album.release_year as release_year, ARRAY_AGG(com.revature.SongSearcher.Model.Artist.name ORDER BY com.revature.SongSearcher.Model.Artist.name) AS artists, " +
+                        "com.revature.SongSearcher.Model.Song.duration as duration, com.revature.SongSearcher.Model.Song.lyrics as lyrics " +
+                        "FROM Music.com.revature.SongSearcher.Model.Song " +
+                        "JOIN Music.com.revature.SongSearcher.Model.Album ON com.revature.SongSearcher.Model.Album.album_id = com.revature.SongSearcher.Model.Song.album_id " +
+                        "JOIN Music.Artist_Album ON Artist_Album.album_id = com.revature.SongSearcher.Model.Album.album_id " +
+                        "JOIN Music.com.revature.SongSearcher.Model.Artist ON com.revature.SongSearcher.Model.Artist.artist_id = Artist_Album.artist_id " +
+                        "GROUP BY com.revature.SongSearcher.Model.Song.song_id, com.revature.SongSearcher.Model.Song.title, com.revature.SongSearcher.Model.Album.title, com.revature.SongSearcher.Model.Album.release_year " +
                         "ORDER BY embedding <=> ? " +
                         "LIMIT ?;";
         log.info("Attempting to Search for Similar Songs by Lyrics Embedding");
@@ -407,15 +412,15 @@ public class PostgreSQLRepository implements IRepository, ISongSearcher {
     public List<Song> getSongsByTitle(String title, int limit) {
         List<Song> songs = new ArrayList<>();
         String sql =
-                "SELECT Song.title as song_title, Album.title as album_title, " +
-                        "Album.release_year as release_year, ARRAY_AGG(Artist.name ORDER BY Artist.name) AS artists, " +
-                        "Song.duration as duration, Song.lyrics as lyrics " +
-                        "FROM Music.Song " +
-                        "JOIN Music.Album ON Album.album_id = Song.album_id " +
-                        "JOIN Music.Artist_Album ON Artist_Album.album_id = Album.album_id " +
-                        "JOIN Music.Artist ON Artist.artist_id = Artist_Album.artist_id " +
-                        "WHERE Song.title ILIKE ? " +
-                        "GROUP BY Song.song_id, Song.title, Album.title, Album.release_year " +
+                "SELECT com.revature.SongSearcher.Model.Song.title as song_title, com.revature.SongSearcher.Model.Album.title as album_title, " +
+                        "com.revature.SongSearcher.Model.Album.release_year as release_year, ARRAY_AGG(com.revature.SongSearcher.Model.Artist.name ORDER BY com.revature.SongSearcher.Model.Artist.name) AS artists, " +
+                        "com.revature.SongSearcher.Model.Song.duration as duration, com.revature.SongSearcher.Model.Song.lyrics as lyrics " +
+                        "FROM Music.com.revature.SongSearcher.Model.Song " +
+                        "JOIN Music.com.revature.SongSearcher.Model.Album ON com.revature.SongSearcher.Model.Album.album_id = com.revature.SongSearcher.Model.Song.album_id " +
+                        "JOIN Music.Artist_Album ON Artist_Album.album_id = com.revature.SongSearcher.Model.Album.album_id " +
+                        "JOIN Music.com.revature.SongSearcher.Model.Artist ON com.revature.SongSearcher.Model.Artist.artist_id = Artist_Album.artist_id " +
+                        "WHERE com.revature.SongSearcher.Model.Song.title ILIKE ? " +
+                        "GROUP BY com.revature.SongSearcher.Model.Song.song_id, com.revature.SongSearcher.Model.Song.title, com.revature.SongSearcher.Model.Album.title, com.revature.SongSearcher.Model.Album.release_year " +
                         "LIMIT ?;";
         log.info("Attempting to Search for Songs by Title");
         try ( PreparedStatement stmt = connection.prepareStatement(sql) ) {
@@ -443,23 +448,23 @@ public class PostgreSQLRepository implements IRepository, ISongSearcher {
     public List<Song> getSongsByArtist(String artist, int limit) {
         List<Song> songs = new ArrayList<>();
         String sql =
-                "SELECT Song.title as song_title, Album.title as album_title, " +
-                        "Album.release_year as release_year, ARRAY_AGG(DISTINCT Artist.name ORDER BY Artist.name) AS artists, " +
-                        "Song.duration as duration, Song.lyrics as lyrics " +
-                        "FROM Music.Song " +
-                        "JOIN Music.Album ON Album.album_id = Song.album_id " +
-                        "JOIN Music.Artist_Album ON Artist_Album.album_id = Album.album_id " +
-                        "JOIN Music.Artist ON Artist.artist_id = Artist_Album.artist_id " +
-                        "WHERE Album.album_id IN (" +
-                        "    SELECT DISTINCT Album.album_id " +
-                        "    FROM Music.Album " +
-                        "    JOIN Music.Artist_Album ON Artist_Album.album_id = Album.album_id " +
-                        "    JOIN Music.Artist ON Artist.artist_id = Artist_Album.artist_id " +
-                        "    WHERE Artist.name ILIKE ?" +
+                "SELECT com.revature.SongSearcher.Model.Song.title as song_title, com.revature.SongSearcher.Model.Album.title as album_title, " +
+                        "com.revature.SongSearcher.Model.Album.release_year as release_year, ARRAY_AGG(DISTINCT com.revature.SongSearcher.Model.Artist.name ORDER BY com.revature.SongSearcher.Model.Artist.name) AS artists, " +
+                        "com.revature.SongSearcher.Model.Song.duration as duration, com.revature.SongSearcher.Model.Song.lyrics as lyrics " +
+                        "FROM Music.com.revature.SongSearcher.Model.Song " +
+                        "JOIN Music.com.revature.SongSearcher.Model.Album ON com.revature.SongSearcher.Model.Album.album_id = com.revature.SongSearcher.Model.Song.album_id " +
+                        "JOIN Music.Artist_Album ON Artist_Album.album_id = com.revature.SongSearcher.Model.Album.album_id " +
+                        "JOIN Music.com.revature.SongSearcher.Model.Artist ON com.revature.SongSearcher.Model.Artist.artist_id = Artist_Album.artist_id " +
+                        "WHERE com.revature.SongSearcher.Model.Album.album_id IN (" +
+                        "    SELECT DISTINCT com.revature.SongSearcher.Model.Album.album_id " +
+                        "    FROM Music.com.revature.SongSearcher.Model.Album " +
+                        "    JOIN Music.Artist_Album ON Artist_Album.album_id = com.revature.SongSearcher.Model.Album.album_id " +
+                        "    JOIN Music.com.revature.SongSearcher.Model.Artist ON com.revature.SongSearcher.Model.Artist.artist_id = Artist_Album.artist_id " +
+                        "    WHERE com.revature.SongSearcher.Model.Artist.name ILIKE ?" +
                         ") " +
-                        "GROUP BY Song.song_id, Song.title, Album.title, Album.release_year " +
+                        "GROUP BY com.revature.SongSearcher.Model.Song.song_id, com.revature.SongSearcher.Model.Song.title, com.revature.SongSearcher.Model.Album.title, com.revature.SongSearcher.Model.Album.release_year " +
                         "LIMIT ?;";
-        log.info("Attempting to Search for Songs by Artist");
+        log.info("Attempting to Search for Songs by com.revature.SongSearcher.Model.Artist");
         try ( PreparedStatement stmt = connection.prepareStatement(sql) ) {
             artist = "%" + artist + "%";
             stmt.setString(1, artist);
@@ -485,17 +490,17 @@ public class PostgreSQLRepository implements IRepository, ISongSearcher {
     public List<Song> getSongsByAlbum(String album, int limit) {
         List<Song> songs = new ArrayList<>();
         String sql =
-                "SELECT Song.title as song_title, Album.title as album_title, " +
-                        "Album.release_year as release_year, ARRAY_AGG(Artist.name ORDER BY Artist.name) AS artists, " +
-                        "Song.duration as duration, Song.lyrics as lyrics " +
-                        "FROM Music.Song " +
-                        "JOIN Music.Album ON Album.album_id = Song.album_id " +
-                        "JOIN Music.Artist_Album ON Artist_Album.album_id = Album.album_id " +
-                        "JOIN Music.Artist ON Artist.artist_id = Artist_Album.artist_id " +
-                        "WHERE Album.title ILIKE ? " +
-                        "GROUP BY Song.song_id, Song.title, Album.title, Album.release_year " +
+                "SELECT com.revature.SongSearcher.Model.Song.title as song_title, com.revature.SongSearcher.Model.Album.title as album_title, " +
+                        "com.revature.SongSearcher.Model.Album.release_year as release_year, ARRAY_AGG(com.revature.SongSearcher.Model.Artist.name ORDER BY com.revature.SongSearcher.Model.Artist.name) AS artists, " +
+                        "com.revature.SongSearcher.Model.Song.duration as duration, com.revature.SongSearcher.Model.Song.lyrics as lyrics " +
+                        "FROM Music.com.revature.SongSearcher.Model.Song " +
+                        "JOIN Music.com.revature.SongSearcher.Model.Album ON com.revature.SongSearcher.Model.Album.album_id = com.revature.SongSearcher.Model.Song.album_id " +
+                        "JOIN Music.Artist_Album ON Artist_Album.album_id = com.revature.SongSearcher.Model.Album.album_id " +
+                        "JOIN Music.com.revature.SongSearcher.Model.Artist ON com.revature.SongSearcher.Model.Artist.artist_id = Artist_Album.artist_id " +
+                        "WHERE com.revature.SongSearcher.Model.Album.title ILIKE ? " +
+                        "GROUP BY com.revature.SongSearcher.Model.Song.song_id, com.revature.SongSearcher.Model.Song.title, com.revature.SongSearcher.Model.Album.title, com.revature.SongSearcher.Model.Album.release_year " +
                         "LIMIT ?;";
-        log.info("Attempting to Search for Songs by Album");
+        log.info("Attempting to Search for Songs by com.revature.SongSearcher.Model.Album");
         try ( PreparedStatement stmt = connection.prepareStatement(sql) ) {
             album = "%" + album + "%";
             stmt.setString(1, album);

@@ -1,3 +1,5 @@
+package com.revature.SongSearcher.Model;
+
 import java.util.Arrays;
 
 public class Song {
@@ -62,7 +64,7 @@ public class Song {
 
     @Override
     public String toString() {
-        return String.format("Song: \"%s\", Artist: %s, Album: %s (%d), Duration: %.2f",
+        return String.format("com.revature.SongSearcher.Model.Song: \"%s\", com.revature.SongSearcher.Model.Artist: %s, com.revature.SongSearcher.Model.Album: %s (%d), Duration: %.2f",
                 this.title, Arrays.toString(this.artists), this.album, this.release_year, this.length);
     }
 }
