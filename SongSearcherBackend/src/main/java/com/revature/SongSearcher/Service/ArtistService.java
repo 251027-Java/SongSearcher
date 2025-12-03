@@ -1,4 +1,4 @@
-package Service;
+package com.revature.SongSearcher.Service;
 
 import Controller.ArtistDTO;
 import Controller.ArtistWOIDDTO;

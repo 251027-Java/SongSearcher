@@ -1,4 +1,5 @@
-package Repository;
+package com.revature.SongSearcher.Repository;
+
 
 import Model.Song;
 import org.springframework.data.jpa.repository.JpaRepository;

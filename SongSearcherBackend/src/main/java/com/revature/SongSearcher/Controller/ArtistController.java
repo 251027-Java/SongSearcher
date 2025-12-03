@@ -1,5 +1,4 @@
-package Controller;
-
+package com.revature.SongSearcher.Controller;
 import Service.ArtistService;
 
 import java.util.List;

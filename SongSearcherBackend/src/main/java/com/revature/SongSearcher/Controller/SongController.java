@@ -1,36 +1,36 @@
-package Controller;
+package com.revature.SongSearcher.Controller;
 
-import Service.AlbumService;
+import Service.SongService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/albums")
-public class AlbumController {
+@RequestMapping("/api/songs")
+public class SongController {
 
-    private final AlbumService service;
+    private final SongService service;
 
-    public AlbumController(AlbumService service) {
+    public SongController(SongService service) {
         this.service = service;
     }
 
     @GetMapping
-    public List<AlbumDTO> getAll() {
+    public List<SongDTO> getAll() {
         return service.getAll();
     }
 
     @GetMapping("/{id}")
-    public AlbumDTO getById(@PathVariable String id) {
+    public SongDTO getById(@PathVariable String id) {
         return service.getById(id);
     }
 
     @PostMapping
-    public AlbumDTO create(@RequestBody AlbumWOIDDTO dto) {
+    public SongDTO create(@RequestBody SongWOIDDTO dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
-    public AlbumDTO update(@PathVariable String id, @RequestBody AlbumDTO dto) {
+    public SongDTO update(@PathVariable String id, @RequestBody SongDTO dto) {
         return service.update(id, dto);
     }
 

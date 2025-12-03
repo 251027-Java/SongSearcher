@@ -1,4 +1,4 @@
-package Service;
+package com.revature.SongSearcher.Service;
 
 @Service
 public class AlbumService {
