@@ -1,5 +1,6 @@
 package com.revature.SongSearcher.Controller;
-import Service.ArtistService;
+import com.revature.SongSearcher.Service.ArtistService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 

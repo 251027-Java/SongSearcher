@@ -1,7 +1,14 @@
 package com.revature.SongSearcher.Service;
 
-import Controller.SongDTO;
-import Controller.SongWOIDDTO;
+import com.revature.SongSearcher.Controller.SongDTO;
+import com.revature.SongSearcher.Controller.SongWOIDDTO;
+import com.revature.SongSearcher.Model.Album;
+import com.revature.SongSearcher.Model.Song;
+import com.revature.SongSearcher.Repository.AlbumRepository;
+import com.revature.SongSearcher.Repository.SongRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
