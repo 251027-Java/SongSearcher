@@ -12,7 +12,7 @@ const LoginPage = () => {
         setUsername(e.target.value);
     }
 
-    const handleLogin = (e) => {
+    const handleLogin = () => {
         console.log("Login attempted with username: " + username + " and password: " + password);
         setPassword("");
         setUsername("");
