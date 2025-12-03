@@ -1,3 +1,7 @@
+package com.revature.SongSearcher;
+
+import com.revature.SongSearcher.Model.Song;
+
 import java.util.List;
 
 public interface ISongSearcher {

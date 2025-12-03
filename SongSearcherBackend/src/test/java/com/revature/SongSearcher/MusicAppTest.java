@@ -1,3 +1,8 @@
+package com.revature.SongSearcher;
+
+import com.revature.SongSearcher.Model.Album;
+import com.revature.SongSearcher.Model.Artist;
+import com.revature.SongSearcher.Model.Song;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

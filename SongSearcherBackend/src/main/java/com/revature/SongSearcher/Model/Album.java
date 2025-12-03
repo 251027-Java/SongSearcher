@@ -1,3 +1,5 @@
+package com.revature.SongSearcher.Model;
+
 public class Album {
 
     //private final int album_id;
@@ -31,6 +33,6 @@ public class Album {
     }
 
     public String toString() {
-        return "Album: " + this.getTitle() + " (" + this.getReleaseYear() + ")";
+        return "com.revature.SongSearcher.Model.Album: " + this.getTitle() + " (" + this.getReleaseYear() + ")";
     }
 }
