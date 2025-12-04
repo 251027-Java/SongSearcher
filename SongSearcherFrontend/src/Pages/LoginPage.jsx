@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AuthContext } from "../AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
+    const { setIsAuthenticated } = useContext(AuthContext);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const nav = useNavigate();
 
     const handlePassChange = (e) => {
         setPassword(e.target.value);
@@ -13,7 +17,10 @@ const LoginPage = () => {
     }
 
     const handleLogin = () => {
-        console.log("Login attempted with username: " + username + " and password: " + password);
+        // Placeholder login logic
+        setIsAuthenticated(true);
+        console.log("Login with username: " + username + " and password: " + password);
+        nav("/dashboard");
         setPassword("");
         setUsername("");
     }
