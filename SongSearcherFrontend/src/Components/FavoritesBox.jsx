@@ -2,7 +2,8 @@ import { useState } from "react";
 import FavoriteSongItem from "./FavoriteSongItem";
 
 const FavoritesBox = () => {
- const [favoriteSongs, setFavoriteSongs] = useState([
+  // Temporary hardcoded favorite songs
+ const [favoriteSongs] = useState([
     {title: "Test Song 1", artist: "Artist 1"},
     {title: "Test Song 2", artist: "Artist 2"},
     {title: "Test Song 3", artist: "Artist 3"},
