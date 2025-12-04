@@ -1,5 +1,17 @@
 package com.revature.SongSearcher.Service;
 
+import com.revature.SongSearcher.Controller.AlbumDTO;
+import com.revature.SongSearcher.Controller.AlbumWOIDDTO;
+import com.revature.SongSearcher.Model.Album;
+import com.revature.SongSearcher.Model.Artist;
+import com.revature.SongSearcher.Repository.AlbumRepository;
+import com.revature.SongSearcher.Repository.ArtistRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+
 @Service
 public class AlbumService {
 
