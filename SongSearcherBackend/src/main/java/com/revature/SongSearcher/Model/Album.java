@@ -1,38 +1,41 @@
 package com.revature.SongSearcher.Model;
 
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+@Entity
+@Table(name = "albums")
+@Data
 public class Album {
 
-    //private final int album_id;
-    //private final int artist_id;
-    private final String[] artists;
+    @Id
+    @GeneratedValue
+    private String albumId;
+
+    @Column(name = "album_title")
     private final String title;
+
     private final int release_year;
 
-    public Album(String[] artists, String title, int release_year) {
-        this.artists = artists;
+    @ManyToMany(mappedBy = "albums")
+    private Set<Artist> artists = new HashSet<>();
+
+    @OneToMany(mappedBy = "album")
+    @ToString.Exclude
+    private List<Song> albumSongs = new ArrayList<>();
+
+    public Album(String title, int release_year) {
         this.title = title;
         this.release_year = release_year;
     }
 
-//    public int getAlbum_id() {
-//        return this.album_id;
-//    }
-//
-//    public int getArtist_id() {
-//        return this.artist_id;
-//    }
-
-    public String[] getArtists() { return this.artists; }
-
-    public String getTitle() {
-        return this.title;
-    }
-
-    public int getReleaseYear() {
-        return this.release_year;
-    }
-
     public String toString() {
-        return "com.revature.SongSearcher.Model.Album: " + this.getTitle() + " (" + this.getReleaseYear() + ")";
+        return "Album: " + this.title + " (" + this.release_year + ")";
     }
 }

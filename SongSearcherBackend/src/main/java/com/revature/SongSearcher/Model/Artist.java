@@ -1,27 +1,42 @@
 package com.revature.SongSearcher.Model;
 
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.ToString;
+
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "artists")
+@Data
 public class Artist {
 
-    private final String name;
-    //private final int artist_id;
+    @Id
+    @GeneratedValue
+    private String artistId;
 
-    // Albums ?
-    // Songs ?
+    @Column(name = "artist_name")
+    private String name;
+
+    @ManyToMany
+    @JoinTable(
+            name = "artist_album",
+            joinColumns = @JoinColumn(name = "artistId"),
+            inverseJoinColumns = @JoinColumn(name = "albumId")
+    )
+    @ToString.Exclude
+    private Set<Album> albums = new HashSet<>();
+
+    @ManyToMany(mappedBy = "artists")
+    @ToString.Exclude
+    private Set<Song> songs = new HashSet<>();
 
     public Artist(String name) {
-        //this.artist_id = artist_id;
         this.name = name;
     }
 
-//    public int getArtist_id() {
-//        return this.artist_id;
-//    }
-
-    public String getName() {
-        return this.name;
-    }
-
     public String toString() {
-        return "com.revature.SongSearcher.Model.Artist: " + this.getName();
+        return "Artist: " + this.getName();
     }
 }
