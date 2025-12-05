@@ -2,6 +2,7 @@ package com.revature.SongSearcher.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.HashSet;
@@ -10,6 +11,7 @@ import java.util.Set;
 @Entity
 @Table(name = "playlists")
 @Data
+@NoArgsConstructor
 public class Playlist {
 
     @Id @GeneratedValue
@@ -29,7 +31,7 @@ public class Playlist {
     @ManyToOne
     @JoinColumn(name = "userId")
     @ToString.Exclude
-    private User user;
+    private AppUser user;
 
     public Playlist ( String name ) {
         this.playlistName = name;

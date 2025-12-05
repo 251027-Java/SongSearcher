@@ -30,10 +30,10 @@ public class AlbumController {
         return service.create(dto);
     }
 
-    @PutMapping("/{id}")
-    public AlbumDTO update(@PathVariable String id, @RequestBody AlbumDTO dto) {
-        return service.update(id, dto);
-    }
+//    @PutMapping("/{id}")
+//    public AlbumDTO update(@PathVariable String id, @RequestBody AlbumDTO dto) {
+//        return service.update(id, dto);
+//    }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable String id) {

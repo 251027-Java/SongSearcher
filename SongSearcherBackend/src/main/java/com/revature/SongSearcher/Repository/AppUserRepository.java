@@ -1,0 +1,7 @@
+package com.revature.SongSearcher.Repository;
+
+import com.revature.SongSearcher.Model.AppUser;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface AppUserRepository extends JpaRepository<AppUser, Long> {
+}
