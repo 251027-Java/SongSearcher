@@ -1,15 +1,20 @@
 import AppRoutes from "./AppRoutes";
 import AppBar from "./Components/AppBar";
 import AuthProvider from "./AuthProvider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <div className="relative h-lvh min-w-full overflow-hidden">
-      <AuthProvider>
-        <AppBar />
-        <AppRoutes />
-      </AuthProvider>
-    </div>
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <div className="relative h-lvh min-w-full overflow-hidden">
+          <AppBar />
+          <AppRoutes />
+        </div>
+      </QueryClientProvider>
+    </AuthProvider>
   );
 }
 
