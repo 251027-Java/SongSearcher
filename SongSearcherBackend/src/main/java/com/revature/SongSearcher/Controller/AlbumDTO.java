@@ -1,3 +1,5 @@
 package com.revature.SongSearcher.Controller;
 
-public record AlbumDTO(String id, String title, int releaseYear, String artistId) {}
+import java.util.List;
+
+public record AlbumDTO(String id, String title, int releaseYear, List<ArtistDTO> artists) {}

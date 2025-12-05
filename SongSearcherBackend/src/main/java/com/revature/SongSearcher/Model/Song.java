@@ -2,9 +2,12 @@ package com.revature.SongSearcher.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
-import com.vladmihalcea.hibernate.type.array.DoubleArrayType;
+import org.hibernate.annotations.Array;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -13,6 +16,7 @@ import java.util.Set;
 @Entity
 @Table(name = "songs")
 @Data
+@NoArgsConstructor
 public class Song {
 
     @Id @GeneratedValue
@@ -27,10 +31,11 @@ public class Song {
     private String lyrics;
 
 
-    @Type(DoubleArrayType.class)
-    @Column(name = "embedding", columnDefinition = "vector(100)")
+    @Column
+    @JdbcTypeCode(SqlTypes.VECTOR)
+    @Array(length = 100)
     @ToString.Exclude
-    private Double[] embedding;
+    private float[] embedding;
 
     @ManyToOne()
     @JoinColumn(name = "albumId")
@@ -48,16 +53,17 @@ public class Song {
     @ToString.Exclude
     private Set<Playlist> playlists = new HashSet<>();
 
-    public Song(String title, BigDecimal length, String lyrics) {
-        this.title = title;
-        this.length = length;
-        this.lyrics = lyrics;
-    }
+//    public Song(String title, BigDecimal length, String lyrics) {
+//        this.title = title;
+//        this.length = length;
+//        this.lyrics = lyrics;
+//    }
 
-    public Song(String title, BigDecimal length, String lyrics, Double[] embedding) {
+    public Song(String title, BigDecimal length, String lyrics, Set<Artist> artists, float[] embedding) {
         this.title = title;
         this.length = length;
         this.lyrics = lyrics;
+        this.artists = artists;
         this.embedding = embedding;
     }
 

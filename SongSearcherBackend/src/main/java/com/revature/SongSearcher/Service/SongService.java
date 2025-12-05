@@ -1,8 +1,12 @@
 package com.revature.SongSearcher.Service;
 
+import com.revature.SongSearcher.Controller.AlbumDTO;
+import com.revature.SongSearcher.Controller.ArtistDTO;
 import com.revature.SongSearcher.Controller.SongDTO;
 import com.revature.SongSearcher.Controller.SongWOIDDTO;
+import com.revature.SongSearcher.IEmbedder;
 import com.revature.SongSearcher.Model.Album;
+import com.revature.SongSearcher.Model.Artist;
 import com.revature.SongSearcher.Model.Song;
 import com.revature.SongSearcher.Repository.AlbumRepository;
 import com.revature.SongSearcher.Repository.SongRepository;
@@ -11,21 +15,46 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SongService {
 
     private final SongRepository repo;
-    private final AlbumRepository albumRepo;
+    //private final AlbumRepository albumRepo;
+    private final IEmbedder embedder;
 
-    public SongService(SongRepository repo, AlbumRepository albumRepo) {
+    public SongService(SongRepository repo, IEmbedder embedder) {
         this.repo = repo;
-        this.albumRepo = albumRepo;
+        //this.albumRepo = albumRepo;
+        this.embedder = embedder;
+    }
+
+    private ArtistDTO ArtistToDTO(Artist artist ) {
+        return new ArtistDTO(artist.getArtistId(), artist.getName());
+    }
+    private Artist DTOToArtist ( ArtistDTO dto ) {
+        return new Artist(dto.id(), dto.name());
+    }
+    private AlbumDTO AlbumToDTO (Album album) {
+        return new AlbumDTO(album.getAlbumId(), album.getTitle(), album.getRelease_year(), album.getArtists().stream().map(this::ArtistToDTO).toList());
+    }
+    private SongDTO SongToDTO (Song song) {
+        return new SongDTO(song.getSongId(), song.getTitle(), song.getLength(),
+                song.getLyrics(),
+                AlbumToDTO(song.getAlbum()),
+                song.getArtists().stream().map(this::ArtistToDTO).toList());
+    }
+    private Song DTOToSong (SongWOIDDTO dto) {
+        return new Song(dto.title(), dto.length(),
+                dto.lyrics(),
+                dto.artists().stream().map(this::DTOToArtist).collect(Collectors.toSet()),
+                this.embedder.getEmbedding(dto.lyrics()));
     }
 
     public List<SongDTO> getAll() {
         return repo.findAll().stream()
-                .map(s -> new SongDTO(s.getId(), s.getTitle(), s.getLength(), s.getLyrics(), s.getAlbum().getId()))
+                .map(this::SongToDTO)
                 .toList();
     }
 
@@ -33,40 +62,39 @@ public class SongService {
         Song song = repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        return new SongDTO(song.getId(), song.getTitle(), song.getLength(), song.getLyrics(), song.getAlbum().getId());
+        return SongToDTO(song);
     }
 
     public SongDTO create(SongWOIDDTO dto) {
-        Album album = albumRepo.findById(dto.albumId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        Song song = new Song();
-        song.setTitle(dto.title());
-        song.setLength(dto.length());
-        song.setLyrics(dto.lyrics());
-        song.setAlbum(album);
+        Song song = DTOToSong(dto);
 
-        Song saved = repo.save(song);
+        song.getAlbum().getAlbumSongs().add(song);
 
-        return new SongDTO(saved.getId(), saved.getTitle(), saved.getLength(), saved.getLyrics(), album.getId());
-    }
+        for (Artist a : song.getArtists()) {
+            a.getSongs().add(song);
+        }
 
-    public SongDTO update(String id, SongDTO dto) {
-        Song song = repo.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return SongToDTO(this.repo.save(song));
 
-        Album album = albumRepo.findById(dto.albumId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        }
 
-        song.setTitle(dto.title());
-        song.setLength(dto.length());
-        song.setLyrics(dto.lyrics());
-        song.setAlbum(album);
-
-        repo.save(song);
-
-        return dto;
-    }
+//    public SongDTO update(String id, SongDTO dto) {
+//        Song song = repo.findById(id)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+//
+//        Album album = albumRepo.findById(dto.albumId())
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+//
+//        song.setTitle(dto.title());
+//        song.setLength(dto.length());
+//        song.setLyrics(dto.lyrics());
+//        song.setAlbum(album);
+//
+//        repo.save(song);
+//
+//        return dto;
+//    }
 
     public void delete(String id) {
         repo.deleteById(id);

@@ -2,6 +2,7 @@ package com.revature.SongSearcher.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.HashSet;
@@ -10,6 +11,7 @@ import java.util.Set;
 @Entity
 @Table(name = "artists")
 @Data
+@NoArgsConstructor
 public class Artist {
 
     @Id
@@ -33,6 +35,11 @@ public class Artist {
     private Set<Song> songs = new HashSet<>();
 
     public Artist(String name) {
+        this.name = name;
+    }
+
+    public Artist ( String id, String name) {
+        this.artistId = id;
         this.name = name;
     }
 
