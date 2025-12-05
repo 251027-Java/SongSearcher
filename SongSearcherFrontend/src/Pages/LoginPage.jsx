@@ -1,6 +1,13 @@
+import { useState } from "react";
 import LoginBox from "../Components/LoginBox";
+import SignUpBox from "../Components/SignUpBox";
 
 const LoginPage = () => {
+  const [login, setLogin] = useState(true);
+
+  const toggleLogin = () => {
+    setLogin((prev) => !prev);
+  };
 
   return (
     <main className="flex h-full w-full items-center justify-center">
@@ -13,9 +20,15 @@ const LoginPage = () => {
           enjoy! Simply pick some favorite songs and get recommendations, or
           search for similar songs based on artist, album, or song.
         </p>
-        <p className="text-lg">Please login or create a new account to get started!</p>
+        <p className="text-lg">
+          Please login or create a new account to get started!
+        </p>
       </div>
-      <LoginBox />
+      {login ? (
+        <LoginBox toggle={toggleLogin} />
+      ) : (
+        <SignUpBox toggle={toggleLogin} />
+      )}
     </main>
   );
 };
