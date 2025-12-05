@@ -5,12 +5,16 @@ import CRUDBox from "../Components/CRUDBox";
 
 const DashboardPage = () => {
   return (
-    <div className="grid grid-cols-3 gap-4 p-5">
-      <SearchBox />
-      <FavoritesBox />
-      <CRUDBox />
-      <RecommendationsBox />
-    </div>
+    <>
+      {/* Empty div is spacing for the AppBar */}
+      <div className="h-[3rem]"/>
+      <main className="grid grid-cols-3 gap-4 p-5">
+        <SearchBox />
+        <FavoritesBox />
+        <CRUDBox />
+        <RecommendationsBox />
+      </main>
+    </>
   );
 };
 
