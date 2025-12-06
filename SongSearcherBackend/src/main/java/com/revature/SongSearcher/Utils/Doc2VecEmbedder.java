@@ -1,7 +1,8 @@
-package com.revature.SongSearcher;
+package com.revature.SongSearcher.Utils;
 
 import java.io.File;
 import java.io.IOException;
+
 import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.paragraphvectors.ParagraphVectors;
 import org.deeplearning4j.text.tokenization.tokenizer.preprocessor.CommonPreprocessor;
@@ -10,6 +11,7 @@ import org.deeplearning4j.text.tokenization.tokenizerfactory.TokenizerFactory;
 import org.nd4j.linalg.exception.ND4JIllegalStateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /*
 This code was sourced from :
@@ -17,7 +19,7 @@ https://github.com/deeplearning4j/deeplearning4j-examples/blob/master/dl4j-examp
 
 I have modified the below code for my needs.
  */
-
+@Component
 public class Doc2VecEmbedder implements IEmbedder {
 
     private final String doc2vecPretrained = "./src/main/resources/dl4j-examples-data/dl4j-examples/nlp/paravec/simple.pv";
@@ -26,7 +28,7 @@ public class Doc2VecEmbedder implements IEmbedder {
 
     public Doc2VecEmbedder() throws IOException {
         //The line below was used to download the pretrained model.
-        //dataLocalPath = DownloaderUtility.NLPDATA.Download();
+        //dataLocalPath = com.revature.SongSearcher.Utils.DownloaderUtility.NLPDATA.Download();
 
         File resource = new File(this.doc2vecPretrained);
         log.info("Loading Tokenizer for Paragraph Vectors");

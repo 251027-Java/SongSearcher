@@ -1,4 +1,4 @@
-package com.revature.SongSearcher;
+package com.revature.SongSearcher.Utils;
 
 import com.revature.SongSearcher.Model.Album;
 import com.revature.SongSearcher.Model.Artist;

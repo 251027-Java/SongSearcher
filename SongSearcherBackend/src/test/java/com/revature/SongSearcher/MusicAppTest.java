@@ -3,6 +3,9 @@ package com.revature.SongSearcher;
 import com.revature.SongSearcher.Model.Album;
 import com.revature.SongSearcher.Model.Artist;
 import com.revature.SongSearcher.Model.Song;
+import com.revature.SongSearcher.Utils.IEmbedder;
+import com.revature.SongSearcher.Utils.IRepository;
+import com.revature.SongSearcher.Utils.ISongSearcher;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
