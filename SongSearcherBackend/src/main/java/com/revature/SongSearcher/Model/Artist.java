@@ -1,32 +1,28 @@
 package com.revature.SongSearcher.Model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.IdGeneratorType;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "artists")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Artist {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String artistId;
 
     @Column(name = "artist_name")
     private String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "artist_album",
-            joinColumns = @JoinColumn(name = "artistId"),
-            inverseJoinColumns = @JoinColumn(name = "albumId")
-    )
+    @ManyToMany(mappedBy = "artists")
     @ToString.Exclude
     private Set<Album> albums = new HashSet<>();
 
@@ -43,7 +39,7 @@ public class Artist {
         this.name = name;
     }
 
-    public String toString() {
-        return "Artist: " + this.getName();
-    }
+//    public String toString() {
+//        return "Artist: " + this.getName();
+//    }
 }

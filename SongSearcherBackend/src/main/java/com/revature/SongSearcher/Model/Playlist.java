@@ -1,20 +1,19 @@
 package com.revature.SongSearcher.Model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "playlists")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Playlist {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.UUID)
     private String playlistId;
 
     private String playlistName;
@@ -26,6 +25,7 @@ public class Playlist {
             inverseJoinColumns = @JoinColumn(name = "songId")
 
     )
+    @ToString.Exclude
     private Set<Song> songs = new HashSet<>();
 
     @ManyToOne
@@ -33,8 +33,9 @@ public class Playlist {
     @ToString.Exclude
     private AppUser user;
 
-    public Playlist ( String name ) {
+    public Playlist ( String name, AppUser user) {
         this.playlistName = name;
+        this.user = user;
     }
 
 }

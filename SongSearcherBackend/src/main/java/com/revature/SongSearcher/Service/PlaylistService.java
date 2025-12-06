@@ -1,0 +1,98 @@
+package com.revature.SongSearcher.Service;
+
+import com.revature.SongSearcher.Controller.*;
+import com.revature.SongSearcher.Model.*;
+import com.revature.SongSearcher.Repository.AppUserRepository;
+import com.revature.SongSearcher.Repository.PlaylistRepository;
+import com.revature.SongSearcher.Repository.SongRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+public class PlaylistService {
+
+    private final PlaylistRepository repo;
+    private final AppUserRepository userRepo;
+    private final SongRepository songRepo;
+
+    public PlaylistService(PlaylistRepository repo,
+                           AppUserRepository userRepo,
+                           SongRepository songRepo) {
+        this.repo = repo;
+        this.userRepo = userRepo;
+        this.songRepo = songRepo;
+    }
+
+    private ArtistDTO ArtistToDTO(Artist artist ) {
+        return new ArtistDTO(artist.getArtistId(), artist.getName());
+    }
+    private AlbumDTO AlbumToDTO (Album album) {
+        return new AlbumDTO(album.getAlbumId(), album.getTitle(), album.getRelease_year(),
+                new ArrayList<>(album.getArtists()).stream().map(this::ArtistToDTO).toList());
+    }
+    private AlbumSlimDTO AlbumToSlimDTO ( Album album ) {
+        return new AlbumSlimDTO(
+                album.getAlbumId(),
+                album.getTitle(),
+                album.getRelease_year()
+        );
+    }
+    private SongDTO SongToDTO (Song song) {
+        return new SongDTO(song.getSongId(), song.getTitle(), song.getLength(),
+                song.getLyrics(),
+                AlbumToSlimDTO(song.getAlbum()),
+                new ArrayList<>(song.getArtists()).stream().map(this::ArtistToDTO).toList());
+    }
+
+    private PlaylistDTO PlaylistToDTO (Playlist playlist) {
+        return new PlaylistDTO(playlist.getPlaylistId(),
+                playlist.getPlaylistName(),
+                playlist.getUser().getUser_id(),
+                new ArrayList<>(playlist.getSongs()).stream().map(this::SongToDTO).collect(Collectors.toSet()));
+    }
+    private Playlist DTOToPlaylist (PlaylistWOIDDTO dto) {
+        AppUser user = userRepo.findById(dto.userid()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+
+        return new Playlist(dto.name(), user);
+    }
+
+    public List<PlaylistDTO> getAll() {
+        return repo.findAll().stream()
+                .map(this::PlaylistToDTO)
+                .toList();
+    }
+
+    public PlaylistDTO getById(String id) {
+        Playlist playlist = repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        return PlaylistToDTO(playlist);
+    }
+
+    public PlaylistDTO create(PlaylistWOIDDTO dto) {
+
+        Playlist playlist = DTOToPlaylist(dto);
+
+        List<Optional<Song>> songs = dto.songs().stream().map(s -> songRepo.findById(s.id())).toList();
+
+        for (Optional<Song> song : songs) {
+            song.ifPresent(value -> playlist.getSongs().add(value));
+        }
+
+        return PlaylistToDTO(this.repo.save(playlist));
+
+    }
+
+    // update
+
+    public void delete(String id) {
+        repo.deleteById(id);
+    }
+}
+
