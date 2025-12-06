@@ -46,7 +46,7 @@ public class SongSearcherApplication {
 
             String l = "These are the lyrics";
             var s1 = new Song("Die With a Smile",
-                    new BigDecimal("433"), ab1, Set.of(a1, a2), l,
+                    new BigDecimal("433"), ab1, Set.of(a2), l,
                     embedder.getEmbedding(l));
 
             var p1 = new Playlist("Favorites", u1);

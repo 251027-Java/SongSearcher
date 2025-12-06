@@ -44,10 +44,15 @@ public class PlaylistService {
         );
     }
     private SongDTO SongToDTO (Song song) {
+
+        List<ArtistDTO> artists  = new ArrayList<>(new ArrayList<>(song.getAlbum().getArtists()).stream().map(this::ArtistToDTO).toList());
+        List<ArtistDTO> secondaries = new ArrayList<>(song.getArtists()).stream().map(this::ArtistToDTO).toList();
+        artists.addAll(secondaries);
+
         return new SongDTO(song.getSongId(), song.getTitle(), song.getLength(),
                 song.getLyrics(),
                 AlbumToSlimDTO(song.getAlbum()),
-                new ArrayList<>(song.getArtists()).stream().map(this::ArtistToDTO).toList());
+                artists);
     }
 
     private PlaylistDTO PlaylistToDTO (Playlist playlist) {
