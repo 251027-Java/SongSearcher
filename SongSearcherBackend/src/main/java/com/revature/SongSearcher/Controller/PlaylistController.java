@@ -20,6 +20,11 @@ public class PlaylistController {
         return service.getAll();
     }
 
+    @GetMapping("/user/{userid}") //This is user id
+    public List<PlaylistDTO> getByUserId(@PathVariable Long userid) {
+        return service.getByUserId(userid);
+    }
+
     @GetMapping("/{id}")
     public PlaylistDTO getById(@PathVariable String id) {
         return service.getById(id);

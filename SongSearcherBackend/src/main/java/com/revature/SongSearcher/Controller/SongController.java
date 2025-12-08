@@ -39,5 +39,10 @@ public class SongController {
     public void delete(@PathVariable String id) {
         service.delete(id);
     }
+
+    @PostMapping("/similar")
+    public List<SongDTO> searchByLyrics(@RequestBody SearchDTO dto) {
+        return service.searchByLyrics(dto);
+    }
 }
 

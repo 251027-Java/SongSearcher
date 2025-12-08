@@ -58,7 +58,7 @@ public class PlaylistService {
     private PlaylistDTO PlaylistToDTO (Playlist playlist) {
         return new PlaylistDTO(playlist.getPlaylistId(),
                 playlist.getPlaylistName(),
-                playlist.getUser().getUser_id(),
+                playlist.getUser().getUserId(),
                 new ArrayList<>(playlist.getSongs()).stream().map(this::SongToDTO).collect(Collectors.toSet()));
     }
     private Playlist DTOToPlaylist (PlaylistWOIDDTO dto) {
@@ -73,11 +73,19 @@ public class PlaylistService {
                 .toList();
     }
 
+    // TODO
+    // Need to enforce requested playlist belongs to requester.
     public PlaylistDTO getById(String id) {
         Playlist playlist = repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         return PlaylistToDTO(playlist);
+    }
+
+    // TODO
+    // Need to enforce the id is of user actually requesting
+    public List<PlaylistDTO> getByUserId(Long userId) {
+        return repo.findByUser_UserId(userId).stream().map(this::PlaylistToDTO).toList();
     }
 
     public PlaylistDTO create(PlaylistWOIDDTO dto) {
