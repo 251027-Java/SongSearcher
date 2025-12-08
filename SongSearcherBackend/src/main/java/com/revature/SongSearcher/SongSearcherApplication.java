@@ -49,13 +49,17 @@ public class SongSearcherApplication {
                     new BigDecimal("433"), ab1, Set.of(a2), l,
                     embedder.getEmbedding(l));
 
+            l = "These are some new lyrics that are probably not as similar";
+            var s2 = new Song("Abracadabra", new BigDecimal("400"), ab1,
+                    Set.of(), l, embedder.getEmbedding(l));
+
             var p1 = new Playlist("Favorites", u1);
             p1.setSongs(Set.of(s1));
 
             try {
                 artistRepo.saveAll(List.of(a1, a2));
                 albumRepo.save(ab1);
-                songRepo.save(s1);
+                songRepo.saveAll(List.of(s1, s2));
                 playlistRepo.save(p1);
             } catch (Exception e) {
                 System.out.println("Failed to insert information");

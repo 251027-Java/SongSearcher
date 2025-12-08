@@ -25,5 +25,19 @@ public interface SongRepository extends JpaRepository<Song, String> {
             @Param("limit") int limit
     );
 
+    @Query(
+            value = """
+            SELECT *
+            FROM songs
+            ORDER BY embedding <-> CAST(:embedding AS vector)
+            LIMIT :limit
+            """,
+            nativeQuery = true
+    )
+    List<Song> findMostSimilar(
+            @Param("embedding") float[] embedding,
+            @Param("limit") int limit
+    );
+
 }
 

@@ -14,7 +14,7 @@ import java.util.List;
 public class AppUser {
 
     @Id @GeneratedValue
-    private long user_id;
+    private long userId;
 
     @Column(unique = true)
     private String username;

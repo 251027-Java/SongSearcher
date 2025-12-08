@@ -117,5 +117,12 @@ public class SongService {
     public void delete(String id) {
         repo.deleteById(id);
     }
+
+    public List<SongDTO> searchByLyrics (SearchDTO dto) {
+        List<SongDTO> similarSongs = repo.findMostSimilar(embedder.getEmbedding(dto.lyrics()), 10)
+                .stream().map(this::SongToDTO).toList();
+
+        return similarSongs;
+    }
 }
 
