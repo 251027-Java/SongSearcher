@@ -1,7 +1,7 @@
 package com.revature.SongSearcher.Service;
 
-import com.revature.SongSearcher.Controller.ArtistDTO;
-import com.revature.SongSearcher.Controller.ArtistWOIDDTO;
+import com.revature.SongSearcher.Controller.DTO.ArtistDTO;
+import com.revature.SongSearcher.Controller.DTO.ArtistWOIDDTO;
 import com.revature.SongSearcher.Model.Artist;
 import com.revature.SongSearcher.Repository.ArtistRepository;
 import org.springframework.http.HttpStatus;

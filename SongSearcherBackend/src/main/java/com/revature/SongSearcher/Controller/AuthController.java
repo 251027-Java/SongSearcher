@@ -14,8 +14,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Optional;
 
 // Use your own records
-record AuthRequest(String username, String password) {}
-record AuthResponse(String token) {}
+//record AuthRequest(String username, String password) {}
+//record AuthResponse(String token) {}
 
 @RestController
 @RequestMapping("/api/auth")
@@ -44,11 +44,11 @@ public class AuthController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
-        if (!passwordEncoder.matches(request.password(), user.get().getUser_password())) {
+        if (!passwordEncoder.matches(request.password(), user.get().getUserpassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid password");
         }
 
-        String token = jwtUtil.generateToken(user.get().getUser_name());
+        String token = jwtUtil.generateToken(user.get().getUsername());
 
         return new AuthResponse(token);
     }

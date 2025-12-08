@@ -1,5 +1,7 @@
 package com.revature.SongSearcher.Controller;
 
+import com.revature.SongSearcher.Controller.DTO.PlaylistDTO;
+import com.revature.SongSearcher.Controller.DTO.PlaylistWOIDDTO;
 import com.revature.SongSearcher.Service.PlaylistService;
 import org.springframework.web.bind.annotation.*;
 

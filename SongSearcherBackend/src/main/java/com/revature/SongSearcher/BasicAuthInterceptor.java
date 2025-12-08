@@ -1,6 +1,7 @@
 package com.revature.SongSearcher;
 
-import com.revature.SongSearcher.Model.User;
+import com.revature.SongSearcher.Model.AppUser;
+import com.revature.SongSearcher.Repository.AppUserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
@@ -13,10 +14,10 @@ import java.util.Optional;
 @Component
 public class BasicAuthInterceptor implements HandlerInterceptor {
     // Fields
-    private final UserRepository repo;
+    private final AppUserRepository repo;
 
     // Constructor
-    public BasicAuthInterceptor(UserRepository repo) {
+    public BasicAuthInterceptor(AppUserRepository repo) {
         this.repo = repo;
     }
 
@@ -38,10 +39,10 @@ public class BasicAuthInterceptor implements HandlerInterceptor {
                 String username = parts[0];
                 String password = parts[1];
                 // check if the user is in the db
-                Optional<User> user = repo.findByUsername(username);
+                Optional<AppUser> user = repo.findByUsername(username);
 
                 // check if the pass is correct
-                if (user.isPresent() && user.get().getPassword().equals(password)) {
+                if (user.isPresent() && user.get().getUserpassword().equals(password)) {
                     return true;
                 }
             }

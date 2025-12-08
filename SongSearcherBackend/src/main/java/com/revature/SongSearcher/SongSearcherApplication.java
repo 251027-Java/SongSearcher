@@ -7,6 +7,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,23 +22,29 @@ public class SongSearcherApplication {
 	}
 
     @Bean
+    public PasswordEncoder getEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+
+    @Bean
     CommandLineRunner seedData (ArtistRepository artistRepo,
                                       AlbumRepository albumRepo,
                                       SongRepository songRepo,
                                       PlaylistRepository playlistRepo,
                                       AppUserRepository userRepo,
-                                      IEmbedder embedder) {
+                                      IEmbedder embedder, PasswordEncoder encoder) {
 
         return args -> {
 
-            var u1 = new AppUser("user1", "password1", "USER");
-            var u2 = new AppUser("admin",  "password2", "ADMIN");
+            var u1 = new AppUser("user1", encoder.encode("password1"), "USER");
+            var u2 = new AppUser("admin",  encoder.encode("password2"), "ADMIN");
 
             try {
                 userRepo.saveAll(List.of(u1, u2));
             } catch (Exception e) {
                 System.out.println("Failed to insert users");
-                u1 = userRepo.findByUsername("user1");
+                u1 = userRepo.findByUsername("user1").orElseThrow(() -> new Exception("Unable to find test user"));
             }
 
             var a1 = new Artist("Lady Gaga");

@@ -1,6 +1,4 @@
-package com.revature.SongSearcher.Controller;
-
-import com.revature.SongSearcher.Model.AppUser;
+package com.revature.SongSearcher.Controller.DTO;
 
 import java.util.Set;
 

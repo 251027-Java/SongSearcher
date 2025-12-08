@@ -1,5 +1,7 @@
 package com.revature.SongSearcher.Controller;
 
+import com.revature.SongSearcher.Controller.DTO.AlbumDTO;
+import com.revature.SongSearcher.Controller.DTO.AlbumWOIDDTO;
 import com.revature.SongSearcher.Service.AlbumService;
 import org.springframework.web.bind.annotation.*;
 
