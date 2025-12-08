@@ -1,8 +1,8 @@
 package com.revature.SongSearcher.Service;
 
-import com.revature.SongSearcher.Controller.AlbumDTO;
-import com.revature.SongSearcher.Controller.AlbumWOIDDTO;
-import com.revature.SongSearcher.Controller.ArtistDTO;
+import com.revature.SongSearcher.Controller.DTO.AlbumDTO;
+import com.revature.SongSearcher.Controller.DTO.AlbumWOIDDTO;
+import com.revature.SongSearcher.Controller.DTO.ArtistDTO;
 import com.revature.SongSearcher.Model.Album;
 import com.revature.SongSearcher.Model.Artist;
 import com.revature.SongSearcher.Repository.AlbumRepository;

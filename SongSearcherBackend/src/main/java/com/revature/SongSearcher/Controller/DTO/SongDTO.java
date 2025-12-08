@@ -1,4 +1,4 @@
-package com.revature.SongSearcher.Controller;
+package com.revature.SongSearcher.Controller.DTO;
 
 import java.math.BigDecimal;
 import java.util.List;

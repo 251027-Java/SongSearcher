@@ -1,6 +1,6 @@
 package com.revature.SongSearcher.Service;
 
-import com.revature.SongSearcher.Controller.*;
+import com.revature.SongSearcher.Controller.DTO.*;
 import com.revature.SongSearcher.Model.*;
 import com.revature.SongSearcher.Repository.AppUserRepository;
 import com.revature.SongSearcher.Repository.PlaylistRepository;
@@ -36,7 +36,7 @@ public class PlaylistService {
         return new AlbumDTO(album.getAlbumId(), album.getTitle(), album.getRelease_year(),
                 new ArrayList<>(album.getArtists()).stream().map(this::ArtistToDTO).toList());
     }
-    private AlbumSlimDTO AlbumToSlimDTO ( Album album ) {
+    private AlbumSlimDTO AlbumToSlimDTO (Album album ) {
         return new AlbumSlimDTO(
                 album.getAlbumId(),
                 album.getTitle(),

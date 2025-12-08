@@ -1,4 +1,4 @@
-package com.revature.SongSearcher.Controller;
+package com.revature.SongSearcher.Controller.DTO;
 
 public record AlbumSlimDTO(
         String id,
