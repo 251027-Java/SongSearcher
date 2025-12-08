@@ -1,19 +1,16 @@
 package com.revature.SongSearcher.Service;
 
-import com.revature.SongSearcher.Controller.AlbumDTO;
-import com.revature.SongSearcher.Controller.ArtistDTO;
-import com.revature.SongSearcher.Controller.SongDTO;
-import com.revature.SongSearcher.Controller.SongWOIDDTO;
-import com.revature.SongSearcher.IEmbedder;
+import com.revature.SongSearcher.Controller.DTO.*;
+import com.revature.SongSearcher.Utils.IEmbedder;
 import com.revature.SongSearcher.Model.Album;
 import com.revature.SongSearcher.Model.Artist;
 import com.revature.SongSearcher.Model.Song;
-import com.revature.SongSearcher.Repository.AlbumRepository;
 import com.revature.SongSearcher.Repository.SongRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,21 +36,42 @@ public class SongService {
     private AlbumDTO AlbumToDTO (Album album) {
         return new AlbumDTO(album.getAlbumId(), album.getTitle(), album.getRelease_year(), album.getArtists().stream().map(this::ArtistToDTO).toList());
     }
+    private AlbumSlimDTO AlbumToSlimDTO (Album album ) {
+        return new AlbumSlimDTO(
+                album.getAlbumId(),
+                album.getTitle(),
+                album.getRelease_year()
+        );
+    }
+    private Album DTOToAlbum (AlbumDTO dto) {
+        return new Album(dto.id(), dto.title(), dto.releaseYear(),
+                dto.artists().stream().map(this::DTOToArtist).collect(Collectors.toSet()));
+    }
     private SongDTO SongToDTO (Song song) {
+
+        List<ArtistDTO> artists  = new ArrayList<>(new ArrayList<>(song.getAlbum().getArtists()).stream().map(this::ArtistToDTO).toList());
+        List<ArtistDTO> secondaries = new ArrayList<>(song.getArtists()).stream().map(this::ArtistToDTO).toList();
+        artists.addAll(secondaries);
+
         return new SongDTO(song.getSongId(), song.getTitle(), song.getLength(),
                 song.getLyrics(),
-                AlbumToDTO(song.getAlbum()),
-                song.getArtists().stream().map(this::ArtistToDTO).toList());
+                AlbumToSlimDTO(song.getAlbum()),
+                artists);
     }
     private Song DTOToSong (SongWOIDDTO dto) {
         return new Song(dto.title(), dto.length(),
-                dto.lyrics(),
+                DTOToAlbum(dto.album()),
                 dto.artists().stream().map(this::DTOToArtist).collect(Collectors.toSet()),
+                dto.lyrics(),
                 this.embedder.getEmbedding(dto.lyrics()));
     }
 
     public List<SongDTO> getAll() {
-        return repo.findAll().stream()
+
+
+
+        return repo.findAll()
+                .stream()
                 .map(this::SongToDTO)
                 .toList();
     }
@@ -98,6 +116,13 @@ public class SongService {
 
     public void delete(String id) {
         repo.deleteById(id);
+    }
+
+    public List<SongDTO> searchByLyrics (SearchDTO dto) {
+        List<SongDTO> similarSongs = repo.findMostSimilar(embedder.getEmbedding(dto.lyrics()), 10)
+                .stream().map(this::SongToDTO).toList();
+
+        return similarSongs;
     }
 }
 

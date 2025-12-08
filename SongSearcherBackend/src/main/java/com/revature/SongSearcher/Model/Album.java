@@ -1,9 +1,7 @@
 package com.revature.SongSearcher.Model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,12 +10,13 @@ import java.util.Set;
 
 @Entity
 @Table(name = "albums")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Album {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String albumId;
 
     @Column(name = "album_title")
@@ -25,7 +24,13 @@ public class Album {
 
     private int release_year;
 
-    @ManyToMany(mappedBy = "albums")
+    @ManyToMany
+    @JoinTable(
+            name = "artist_album",
+            joinColumns = @JoinColumn(name = "albumId"),
+            inverseJoinColumns = @JoinColumn(name = "artistId")
+    )
+    @ToString.Exclude
     private Set<Artist> artists = new HashSet<>();
 
     @OneToMany(mappedBy = "album")
@@ -38,7 +43,14 @@ public class Album {
         this.artists = artists;
     }
 
-    public String toString() {
-        return "Album: " + this.title + " (" + this.release_year + ")";
+    public Album(String id, String title, int release_year, Set<Artist> artists) {
+        this.albumId = id;
+        this.title = title;
+        this.release_year = release_year;
+        this.artists = artists;
     }
+
+//    public String toString() {
+//        return "Album: " + this.title + " (" + this.release_year + ")";
+//    }
 }

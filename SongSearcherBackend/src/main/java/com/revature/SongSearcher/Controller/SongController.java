@@ -1,5 +1,8 @@
 package com.revature.SongSearcher.Controller;
 
+import com.revature.SongSearcher.Controller.DTO.SearchDTO;
+import com.revature.SongSearcher.Controller.DTO.SongDTO;
+import com.revature.SongSearcher.Controller.DTO.SongWOIDDTO;
 import com.revature.SongSearcher.Service.SongService;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +41,11 @@ public class SongController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable String id) {
         service.delete(id);
+    }
+
+    @PostMapping("/similar")
+    public List<SongDTO> searchByLyrics(@RequestBody SearchDTO dto) {
+        return service.searchByLyrics(dto);
     }
 }
 
