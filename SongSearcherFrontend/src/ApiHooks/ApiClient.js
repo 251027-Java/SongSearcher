@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8080/api";
+import { BASE_URL } from "../constants";
 
 export const apiClient = async (endpoint, { method = "GET", body } = {}) => {
   const config = {
@@ -15,6 +15,6 @@ export const apiClient = async (endpoint, { method = "GET", body } = {}) => {
     throw new Error(`${response.status}: ${message}`);
   }
 
-  if (response.status === 204) return null; // Spring Boot empty response
+  if (response.status === 204) return null;
   return response.json();
 };

@@ -8,10 +8,16 @@ const SignUpBox = ({ toggle }) => {
 
   const handlePassChange = (e) => {
     setPassword(e.target.value);
+    if (passError) {
+      setPassError(false);
+    }
   };
 
   const handleConfirmPassChange = (e) => {
     setConfirmPass(e.target.value);
+    if (passError) {
+      setPassError(false);
+    }
   };
 
   const handleUsernameChange = (e) => {
@@ -24,6 +30,7 @@ const SignUpBox = ({ toggle }) => {
       console.log(
         "Sign up with username: " + username + " and password: " + password
       );
+      toggle();
     } else {
       setPassError(true);
       setConfirmPass("");
@@ -46,7 +53,9 @@ const SignUpBox = ({ toggle }) => {
         <h2 className="text-lg font-medium">Password</h2>
         <input
           id="password"
-          className="bg-grey-200 rounded-sm p-1 border border-grey-500"
+          className={`bg-grey-200 rounded-sm p-1 border ${
+            passError ? "border-red-500" : "border-grey-500"
+          }`}
           type="password"
           onChange={handlePassChange}
           value={password}
@@ -56,14 +65,15 @@ const SignUpBox = ({ toggle }) => {
         <h2 className="text-lg font-medium">Confirm Password</h2>
         <input
           id="confirm-password"
-          className={`bg-grey-200 mb-3 rounded-sm p-1 border ${
-            passError ? "border-red-500" : "border-grey-500"
+          className={`bg-grey-200 rounded-sm p-1 border ${
+            passError ? "border-red-500" : "border-grey-500 mb-3"
           }`}
           type="password"
           onChange={handleConfirmPassChange}
           value={confirmPass}
         />
       </div>
+      {passError && <p className="text-red-500 mb-3 w-50 text-center">Passwords did not match</p>}
       <button
         className="bg-mint-300 p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-400 hover:cursor-pointer"
         type="submit"
@@ -73,7 +83,10 @@ const SignUpBox = ({ toggle }) => {
       </button>
       <div className="flex items-center gap-2">
         <p>Already have an account?</p>
-        <button className="text-blue-800 hover:text-blue-900 hover:cursor-pointer p-1" onClick={toggle}>
+        <button
+          className="text-blue-800 hover:text-blue-900 hover:cursor-pointer p-1"
+          onClick={toggle}
+        >
           Log In
         </button>
       </div>
