@@ -36,6 +36,11 @@ public class ArtistController {
 //        return service.update(id, dto);
 //    }
 
+    @PatchMapping("/{id}")
+    public ArtistDTO patch(@PathVariable String id, @RequestBody ArtistDTO dto) {
+        return service.patch(id, dto);
+    }
+
     @DeleteMapping("/{id}")
     public void delete(@PathVariable String id) {
         service.delete(id);
