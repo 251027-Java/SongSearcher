@@ -5,38 +5,24 @@ import { useState } from "react";
 const AddAlbumForm = ({ onSubmit }) => {
   const { artistsQuery } = useArtistsApi();
   const { data, isLoading } = artistsQuery;
-  const [mainArtist, setMainArtist] = useState(null);
-  const [selectedArtists, setSelectedArtists] = useState([]);
+  const [mainArtists, setMainArtists] = useState([]);
 
   const artists = data ?? [];
-  const additionalArtists = mainArtist
-    ? artists.filter((artist) => artist.name != mainArtist.value.name)
-    : artists;
-
-  const addArtistOptions = additionalArtists.map((artist) => ({
-    value: artist,
-    label: artist.name,
-  }));
 
   const artistOptions = artists.map((artist) => ({
     value: artist,
     label: artist.name,
   }));
 
-  const mainArtistChangeHandler = (selectedOption) => {
-    setMainArtist(selectedOption);
-  };
-
-  const addArtistsChangeHandler = (artists) => {
-    setSelectedArtists(artists);
+  const mainArtistsChangeHandler = (artists) => {
+    setMainArtists(artists);
   };
 
   const submitHandler = (event) => {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
-    const addArtists = selectedArtists.map((artistOption) => artistOption.value);
-    const artists = [mainArtist.value, ...addArtists];
+    const artists = mainArtists.map((artistOption) => artistOption.value);
     onSubmit({
       title: data.get("title"),
       releaseYear: Math.round(data.get("release-year")),
@@ -76,39 +62,13 @@ const AddAlbumForm = ({ onSubmit }) => {
           />
         </div>
         <div className="flex w-full items-center">
-          <label className="px-1 mx-1" for="main-artist">
+          <label className="px-1 mx-1" for="main-artists">
             Main Artist:
           </label>
           <Select
-            required
-            name="main-artist"
-            styles={{
-              container: (base) => ({
-                ...base,
-                width: "100%",
-              }),
-              valueContainer: (base) => ({
-                ...base,
-                padding: "0 4px",
-                maxHeight: "100px",
-                overflowY: "auto",
-              }),
-            }}
-            value={mainArtist}
-            onChange={mainArtistChangeHandler}
-            options={artistOptions}
-            isLoading={isLoading}
-            isSearchable={true}
-            classNamePrefix="select"
-          />
-        </div>
-        <div className="flex w-full items-center">
-          <label className="px-1 mx-1" for="add-artists">
-            Additional Artists:
-          </label>
-          <Select
             isMulti
-            name="add-artists"
+            required
+            name="main-artists"
             styles={{
               container: (base) => ({
                 ...base,
@@ -121,9 +81,9 @@ const AddAlbumForm = ({ onSubmit }) => {
                 overflowY: "auto",
               }),
             }}
-            value={selectedArtists}
-            onChange={addArtistsChangeHandler}
-            options={addArtistOptions}
+            value={mainArtists}
+            onChange={mainArtistsChangeHandler}
+            options={artistOptions}
             isLoading={isLoading}
             isSearchable={true}
             classNamePrefix="select"

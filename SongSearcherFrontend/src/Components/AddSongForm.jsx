@@ -7,6 +7,7 @@ const AddSongForm = ({ onSubmit }) => {
   const { artistsQuery } = useArtistsApi();
   const { albumsQuery } = useAlbumsApi();
   const [selectedAlbum, setSelectedAlbum] = useState(null);
+  const [selectedArtists, setSelectedArtists] = useState(null);
 
   const { data: artistsData, isLoading: isLoadingArtists } = artistsQuery;
   const { data: albumsData, isLoading: isLoadingAlbums } = albumsQuery;
@@ -15,12 +16,11 @@ const AddSongForm = ({ onSubmit }) => {
   const albums = albumsData ?? [];
 
   const albumOptions = albums.map((album) => ({
-    value: album.title,
+    value: album,
     label: album.title,
-    album: album,
   }));
 
-  const selectedArtistName = selectedAlbum?.artists?.[0]?.name;
+  const selectedArtistName = selectedAlbum?.value.artists?.[0]?.name;
   const additionalArtists = selectedArtistName
     ? artists.filter((a) => a.name !== selectedArtistName)
     : artists;
@@ -35,17 +35,24 @@ const AddSongForm = ({ onSubmit }) => {
     setSelectedAlbum(selectedOption);
   };
 
+  const addArtistsChangeHandler = (artist) => {
+    setSelectedArtists(artist);
+  };
+
   const submitHandler = (event) => {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
-    const artists = [selectedAlbum?.artists[0],data.get("artists")];
+    const addArtists = selectedArtists.map(
+      (artistOption) => artistOption.value
+    );
+    const artists = [...selectedAlbum.value.artists, ...addArtists];
     onSubmit({
       title: data.get("title"),
       length: Math.round(data.get("length")),
       lyrics: data.get("lyrics"),
+      album: selectedAlbum.value,
       artists: artists,
-      album: data.get("album"),
     });
   };
 
@@ -86,6 +93,7 @@ const AddSongForm = ({ onSubmit }) => {
               Album:
             </label>
             <Select
+              required
               className="w-full"
               name="album"
               styles={{
@@ -108,6 +116,20 @@ const AddSongForm = ({ onSubmit }) => {
               classNamePrefix="select"
             />
           </div>
+          <div className="flex w-full min-w-0">
+            <label className="px-1 mx-1" for="primary-artist">
+              Primary Artist:
+            </label>
+            <input
+              required
+              disabled
+              value={selectedAlbum ? selectedAlbum.value.artists[0].name : ""}
+              className="border border-grey-200 rounded-sm px-1 flex-1 min-w-0 bg-white text-grey-400"
+              type="text"
+              id="primary-artist"
+              name="primary-artist"
+            />
+          </div>
           <div className="flex w-full items-center">
             <label className="px-1 mx-1" for="artists">
               Additional Artists:
@@ -127,6 +149,8 @@ const AddSongForm = ({ onSubmit }) => {
                   overflowY: "auto",
                 }),
               }}
+              value={selectedArtists}
+              onChange={addArtistsChangeHandler}
               options={addArtistOptions}
               isLoading={isLoadingArtists}
               isClearable={true}
