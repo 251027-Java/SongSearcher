@@ -14,10 +14,10 @@ const AddArtistForm = ({ onSubmit }) => {
         </label>
         <input
           required
-          className="border rounded-sm px-1 w-full"
+          className="border border-grey-200 rounded-sm px-1 w-full bg-white"
           type="text"
-          id="title"
-          name="title"
+          id="name"
+          name="name"
           placeholder="Artist name..."
         />
       </div>

@@ -1,9 +1,42 @@
+import { useArtistsApi } from "../ApiHooks/useArtistsApi";
+import Select from "react-select";
+import { useState } from "react";
+
 const AddAlbumForm = ({ onSubmit }) => {
+  const { artistsQuery } = useArtistsApi();
+  const { data, isLoading } = artistsQuery;
+  const [mainArtist, setMainArtist] = useState(null);
+  const [selectedArtists, setSelectedArtists] = useState([]);
+
+  const artists = data ?? [];
+  const additionalArtists = mainArtist
+    ? artists.filter((artist) => artist.name != mainArtist.value.name)
+    : artists;
+
+  const addArtistOptions = additionalArtists.map((artist) => ({
+    value: artist,
+    label: artist.name,
+  }));
+
+  const artistOptions = artists.map((artist) => ({
+    value: artist,
+    label: artist.name,
+  }));
+
+  const mainArtistChangeHandler = (selectedOption) => {
+    setMainArtist(selectedOption);
+  };
+
+  const addArtistsChangeHandler = (artists) => {
+    setSelectedArtists(artists);
+  };
+
   const submitHandler = (event) => {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
-    const artists = data.get("artists").split(",");
+    const addArtists = selectedArtists.map((artistOption) => artistOption.value);
+    const artists = [mainArtist.value, ...addArtists];
     onSubmit({
       title: data.get("title"),
       releaseYear: Math.round(data.get("release-year")),
@@ -20,7 +53,7 @@ const AddAlbumForm = ({ onSubmit }) => {
           </label>
           <input
             required
-            className="border rounded-sm px-1 flex-1 min-w-0"
+            className="border border-grey-200 rounded-sm px-1 flex-1 min-w-0 bg-white"
             type="text"
             id="title"
             name="title"
@@ -33,7 +66,7 @@ const AddAlbumForm = ({ onSubmit }) => {
           </label>
           <input
             required
-            className="border rounded-sm px-1 flex-1 min-w-0"
+            className="border border-grey-200 rounded-sm px-1 flex-1 min-w-0 bg-white"
             type="number"
             step="1"
             min="0"
@@ -42,17 +75,58 @@ const AddAlbumForm = ({ onSubmit }) => {
             placeholder="Album release year..."
           />
         </div>
-        <div className="flex w-full min-w-0">
-          <label className="px-1 mx-1" for="artists">
-            Artist(s):
+        <div className="flex w-full items-center">
+          <label className="px-1 mx-1" for="main-artist">
+            Main Artist:
           </label>
-          <input
+          <Select
             required
-            className="border rounded-sm px-1 flex-1 min-w-0"
-            type="text"
-            id="artists"
-            name="artists"
-            placeholder="Artist name(s)..."
+            name="main-artist"
+            styles={{
+              container: (base) => ({
+                ...base,
+                width: "100%",
+              }),
+              valueContainer: (base) => ({
+                ...base,
+                padding: "0 4px",
+                maxHeight: "100px",
+                overflowY: "auto",
+              }),
+            }}
+            value={mainArtist}
+            onChange={mainArtistChangeHandler}
+            options={artistOptions}
+            isLoading={isLoading}
+            isSearchable={true}
+            classNamePrefix="select"
+          />
+        </div>
+        <div className="flex w-full items-center">
+          <label className="px-1 mx-1" for="add-artists">
+            Additional Artists:
+          </label>
+          <Select
+            isMulti
+            name="add-artists"
+            styles={{
+              container: (base) => ({
+                ...base,
+                width: "100%",
+              }),
+              valueContainer: (base) => ({
+                ...base,
+                padding: "0 4px",
+                maxHeight: "100px",
+                overflowY: "auto",
+              }),
+            }}
+            value={selectedArtists}
+            onChange={addArtistsChangeHandler}
+            options={addArtistOptions}
+            isLoading={isLoading}
+            isSearchable={true}
+            classNamePrefix="select"
           />
         </div>
       </div>

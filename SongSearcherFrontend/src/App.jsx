@@ -9,7 +9,7 @@ function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
-        <div className="relative h-lvh min-w-full overflow-hidden">
+        <div className="relative h-lvh min-w-full">
           <AppBar />
           <AppRoutes />
         </div>

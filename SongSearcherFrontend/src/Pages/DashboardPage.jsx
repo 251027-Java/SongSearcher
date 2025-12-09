@@ -8,7 +8,7 @@ const DashboardPage = () => {
     <>
       {/* Empty div is spacing for the AppBar */}
       <div className="h-[3rem]"/>
-      <main className="grid grid-cols-3 gap-4 p-5">
+      <main className="grid grid-cols-3 gap-4 p-5 overflow-auto">
         <SearchBox />
         <FavoritesBox />
         <AddToDatabaseBox />

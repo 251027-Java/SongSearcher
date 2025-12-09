@@ -1,9 +1,45 @@
+import { useArtistsApi } from "../ApiHooks/useArtistsApi";
+import { useAlbumsApi } from "../ApiHooks/useAlbumsApi";
+import { useState } from "react";
+import Select from "react-select";
+
 const AddSongForm = ({ onSubmit }) => {
+  const { artistsQuery } = useArtistsApi();
+  const { albumsQuery } = useAlbumsApi();
+  const [selectedAlbum, setSelectedAlbum] = useState(null);
+
+  const { data: artistsData, isLoading: isLoadingArtists } = artistsQuery;
+  const { data: albumsData, isLoading: isLoadingAlbums } = albumsQuery;
+
+  const artists = artistsData ?? [];
+  const albums = albumsData ?? [];
+
+  const albumOptions = albums.map((album) => ({
+    value: album.title,
+    label: album.title,
+    album: album,
+  }));
+
+  const selectedArtistName = selectedAlbum?.artists?.[0]?.name;
+  const additionalArtists = selectedArtistName
+    ? artists.filter((a) => a.name !== selectedArtistName)
+    : artists;
+
+  const addArtistOptions = additionalArtists.map((artist) => ({
+    value: artist.name,
+    label: artist.name,
+    artist: artist,
+  }));
+
+  const albumSelectHandler = (selectedOption) => {
+    setSelectedAlbum(selectedOption);
+  };
+
   const submitHandler = (event) => {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
-    const artists = data.get("artists").split(",");
+    const artists = [selectedAlbum?.artists[0],data.get("artists")];
     onSubmit({
       title: data.get("title"),
       length: Math.round(data.get("length")),
@@ -23,7 +59,7 @@ const AddSongForm = ({ onSubmit }) => {
             </label>
             <input
               required
-              className="border rounded-sm px-1 flex-1 min-w-0"
+              className="border border-grey-200 rounded-sm px-1 flex-1 min-w-0 bg-white"
               type="text"
               id="title"
               name="title"
@@ -36,7 +72,7 @@ const AddSongForm = ({ onSubmit }) => {
             </label>
             <input
               required
-              className="border rounded-sm px-1 flex-1 min-w-0"
+              className="border border-grey-200 rounded-sm px-1 flex-1 min-w-0 bg-white"
               type="number"
               step="1"
               min="0"
@@ -45,40 +81,67 @@ const AddSongForm = ({ onSubmit }) => {
               placeholder="Song length..."
             />
           </div>
-          <div className="flex w-full min-w-0">
-            <label className="px-1 mx-1" for="artists">
-              Artist(s):
-            </label>
-            <input
-              required
-              className="border rounded-sm px-1 flex-1 min-w-0"
-              type="text"
-              id="artists"
-              name="artists"
-              placeholder="Artist name(s)..."
-            />
-          </div>
-          <div className="flex w-full min-w-0">
+          <div className="flex w-full items-center">
             <label className="px-1 mx-1" for="album">
               Album:
             </label>
-            <input
-              required
-              className="border rounded-sm px-1 flex-1 min-w-0"
-              type="text"
-              id="album"
+            <Select
+              className="w-full"
               name="album"
-              placeholder="Album name..."
+              styles={{
+                container: (base) => ({
+                  ...base,
+                  width: "100%",
+                }),
+                valueContainer: (base) => ({
+                  ...base,
+                  padding: "0 4px",
+                  maxHeight: "100px",
+                  overflowY: "auto",
+                }),
+              }}
+              value={selectedAlbum}
+              onChange={albumSelectHandler}
+              options={albumOptions}
+              isLoading={isLoadingAlbums}
+              isSearchable={true}
+              classNamePrefix="select"
+            />
+          </div>
+          <div className="flex w-full items-center">
+            <label className="px-1 mx-1" for="artists">
+              Additional Artists:
+            </label>
+            <Select
+              isMulti
+              name="artists"
+              styles={{
+                container: (base) => ({
+                  ...base,
+                  width: "100%",
+                }),
+                valueContainer: (base) => ({
+                  ...base,
+                  padding: "0 4px",
+                  maxHeight: "100px",
+                  overflowY: "auto",
+                }),
+              }}
+              options={addArtistOptions}
+              isLoading={isLoadingArtists}
+              isClearable={true}
+              isSearchable={true}
+              classNamePrefix="select"
             />
           </div>
         </div>
-        <div className="flex w-full flex-2">
+        <div className="flex w-full flex-1">
           <label className="px-1 mx-1" for="lyrics">
             Lyrics:
           </label>
           <textarea
             required
-            className="border rounded-sm px-1 resize-none w-full min-w-20"
+            className="border border-grey-200 rounded-sm px-1 resize-none w-full min-w-20 bg-white"
             type="text"
             id="lyrics"
             name="lyrics"
