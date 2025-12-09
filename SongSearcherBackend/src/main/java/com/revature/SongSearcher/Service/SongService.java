@@ -55,17 +55,55 @@ public class SongService {
         Song song = repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        Album album = albumRepo.findById(dto.albumId())
+        Album album = albumRepo.findById(dto.album().id())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         song.setTitle(dto.title());
         song.setLength(dto.length());
         song.setLyrics(dto.lyrics());
         song.setAlbum(album);
+        if (!album.getAlbumSongs().contains(song)) {
+            album.getAlbumSongs().add(song);
+        }
 
-        repo.save(song);
+        Song saved = repo.save(song);
 
-        return dto;
+        return SongToDTO(saved);
+    }
+
+    public SongDTO patch(String id, SongDTO dto) {
+
+        Song song = repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        if (dto.title() != null) song.setTitle(dto.title());
+        if (dto.length() != null) song.setLength(dto.length());
+
+        if (dto.lyrics() != null) {
+            song.setLyrics(dto.lyrics());
+            song.setEmbedding(embedder.getEmbedding(dto.lyrics()));
+        }
+
+        if (dto.album() != null) {
+            Album newAlbum = DTOToAlbum(dto.album());
+            song.setAlbum(newAlbum);
+            if (!newAlbum.getAlbumSongs().contains(song)) {
+                newAlbum.getAlbumSongs().add(song);
+            }
+        }
+
+        if (dto.artists() != null && !dto.artists().isEmpty()) {
+            song.getArtists().clear();
+            dto.artists().stream()
+                    .map(this::DTOToArtist)
+                    .forEach(a -> {
+                        song.getArtists().add(a);
+                        a.getSongs().add(song);
+                    });
+        }
+
+        Song saved = repo.save(song);
+        return SongToDTO(saved);
     }
 
     public void delete(String id) {

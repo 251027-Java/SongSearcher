@@ -43,8 +43,25 @@ public class ArtistService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         a.setName(dto.name());
-        return new ArtistDTO(repo.save(a).getId(), a.getName());
+        Artist saved = repo.save(a);
+
+        return ArtistToDTO(saved);
+//        return new ArtistDTO(repo.save(a).getId(), a.getName());
     }
+
+    public ArtistDTO patch(String id, ArtistDTO dto) {
+
+        Artist artist = repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        if (dto.name() != null)
+            artist.setName(dto.name());
+
+        Artist saved = repo.save(artist);
+
+        return ArtistToDTO(saved);
+    }
+
 
     public void delete(String id) {
         repo.deleteById(id);

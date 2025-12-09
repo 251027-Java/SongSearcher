@@ -48,20 +48,67 @@ public class AlbumService {
         return new AlbumDTO(repo.save(album).getId(), dto.title(), dto.releaseYear(), artist.getId());
     }
 
+    // working here!!!
+
     public AlbumDTO update(String id, AlbumDTO dto) {
         Album album = repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        Artist artist = artistRepo.findById(dto.artistId())
+//        Artist artist = artistRepo.findById(dto.artistId())
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+//
+//        album.setTitle(dto.title());
+//        album.setReleaseYear(dto.releaseYear());
+//        album.setArtist(artist);
+//
+//        repo.save(album);
+//
+//        return dto;
+        album.setTitle(dto.title());
+        album.setRelease_year(dto.releaseYear());
+
+        album.getArtists().clear();
+
+        dto.artists().stream()
+                .map(this::DTOToArtist)
+                .forEach(a -> {
+                    album.getArtists().add(a);
+                    a.getAlbums().add(album);   // maintain bi-directional relationship
+                });
+
+        Album saved = repo.save(album);
+
+        return AlbumToDTO(saved);
+    }
+
+    public AlbumDTO patch(String id, AlbumDTO dto) {
+
+        Album album = repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        album.setTitle(dto.title());
-        album.setReleaseYear(dto.releaseYear());
-        album.setArtist(artist);
+        if (dto.title() != null) {
+            album.setTitle(dto.title());
+        }
 
-        repo.save(album);
+        if (dto.releaseYear() != 0) {
+            album.setRelease_year(dto.releaseYear());
+        }
 
-        return dto;
+        if (dto.artists() != null && !dto.artists().isEmpty()) {
+
+            album.getArtists().clear();
+
+            dto.artists().stream()
+                    .map(this::DTOToArtist)
+                    .forEach(a -> {
+                        album.getArtists().add(a);
+                        a.getAlbums().add(album);
+                    });
+        }
+
+        Album saved = repo.save(album);
+
+        return AlbumToDTO(saved);
     }
 
     public void delete(String id) {

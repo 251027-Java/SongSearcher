@@ -35,6 +35,11 @@ public class AlbumController {
         return service.update(id, dto);
     }
 
+    @PatchMapping("/{id}")
+    public AlbumDTO patch(@PathVariable String id, @RequestBody AlbumDTO dto) {
+        return service.patch(id, dto);
+    }
+
     @DeleteMapping("/{id}")
     public void delete(@PathVariable String id) {
         service.delete(id);

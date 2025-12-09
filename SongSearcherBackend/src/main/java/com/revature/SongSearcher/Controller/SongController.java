@@ -35,6 +35,11 @@ public class SongController {
         return service.update(id, dto);
     }
 
+    @PatchMapping("/{id}")
+    public SongDTO patch(@PathVariable String id, @RequestBody SongDTO dto) {
+        return service.patch(id, dto);
+    }
+
     @DeleteMapping("/{id}")
     public void delete(@PathVariable String id) {
         service.delete(id);
