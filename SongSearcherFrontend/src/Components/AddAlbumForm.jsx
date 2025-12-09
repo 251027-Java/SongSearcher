@@ -1,9 +1,28 @@
+import { useArtistsApi } from "../ApiHooks/useArtistsApi";
+import Select from "react-select";
+import { useState } from "react";
+
 const AddAlbumForm = ({ onSubmit }) => {
+  const { artistsQuery } = useArtistsApi();
+  const { data, isLoading } = artistsQuery;
+  const [mainArtists, setMainArtists] = useState([]);
+
+  const artists = data ?? [];
+
+  const artistOptions = artists.map((artist) => ({
+    value: artist,
+    label: artist.name,
+  }));
+
+  const mainArtistsChangeHandler = (artists) => {
+    setMainArtists(artists);
+  };
+
   const submitHandler = (event) => {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
-    const artists = data.get("artists").split(",");
+    const artists = mainArtists.map((artistOption) => artistOption.value);
     onSubmit({
       title: data.get("title"),
       releaseYear: Math.round(data.get("release-year")),
@@ -20,7 +39,7 @@ const AddAlbumForm = ({ onSubmit }) => {
           </label>
           <input
             required
-            className="border rounded-sm px-1 flex-1 min-w-0"
+            className="border border-grey-200 rounded-sm px-1 flex-1 min-w-0 bg-white"
             type="text"
             id="title"
             name="title"
@@ -33,7 +52,7 @@ const AddAlbumForm = ({ onSubmit }) => {
           </label>
           <input
             required
-            className="border rounded-sm px-1 flex-1 min-w-0"
+            className="border border-grey-200 rounded-sm px-1 flex-1 min-w-0 bg-white"
             type="number"
             step="1"
             min="0"
@@ -42,17 +61,32 @@ const AddAlbumForm = ({ onSubmit }) => {
             placeholder="Album release year..."
           />
         </div>
-        <div className="flex w-full min-w-0">
-          <label className="px-1 mx-1" for="artists">
-            Artist(s):
+        <div className="flex w-full items-center">
+          <label className="px-1 mx-1" for="main-artists">
+            Main Artist:
           </label>
-          <input
+          <Select
+            isMulti
             required
-            className="border rounded-sm px-1 flex-1 min-w-0"
-            type="text"
-            id="artists"
-            name="artists"
-            placeholder="Artist name(s)..."
+            name="main-artists"
+            styles={{
+              container: (base) => ({
+                ...base,
+                width: "100%",
+              }),
+              valueContainer: (base) => ({
+                ...base,
+                padding: "0 4px",
+                maxHeight: "100px",
+                overflowY: "auto",
+              }),
+            }}
+            value={mainArtists}
+            onChange={mainArtistsChangeHandler}
+            options={artistOptions}
+            isLoading={isLoading}
+            isSearchable={true}
+            classNamePrefix="select"
           />
         </div>
       </div>
@@ -61,7 +95,7 @@ const AddAlbumForm = ({ onSubmit }) => {
           type="submit"
           className="bg-mint-300 bottom-0 right-2 p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-400 hover:cursor-pointer"
         >
-          Add Song
+          Add Album
         </button>
       </div>
     </form>
