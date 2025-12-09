@@ -57,7 +57,7 @@ public class SongSearcherApplication {
                     new BigDecimal("433"), ab1, Set.of(a2), l,
                     embedder.getEmbedding(l));
 
-            l = "These are some new lyrics that are probably not as similar";
+            l = "in her tongue she said, death or love tonight";
             var s2 = new Song("Abracadabra", new BigDecimal("400"), ab1,
                     Set.of(), l, embedder.getEmbedding(l));
 

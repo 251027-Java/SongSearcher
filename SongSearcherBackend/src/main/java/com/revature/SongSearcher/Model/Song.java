@@ -61,6 +61,16 @@ public class Song {
         this.embedding = embedding;
     }
 
+    public Song(String id, String title, BigDecimal length, Album album, Set<Artist> additionalArtists, String lyrics, float[] embedding) {
+        this.songId = id;
+        this.title = title;
+        this.length = length;
+        this.album = album;
+        this.lyrics = lyrics;
+        this.artists = additionalArtists;
+        this.embedding = embedding;
+    }
+
 //    @Override
 //    public String toString() {
 //        return String.format("Song: \"%s\", Artist: %s, Album: %s (%d), Duration: %.2f",

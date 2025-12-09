@@ -1,8 +1,11 @@
 package com.revature.SongSearcher.Controller;
 
+import com.revature.SongSearcher.Controller.DTO.AppUserDTO;
+import com.revature.SongSearcher.Controller.DTO.AppUserWOIDDTO;
 import com.revature.SongSearcher.JwtUtil;
 import com.revature.SongSearcher.Model.AppUser;
 import com.revature.SongSearcher.Repository.AppUserRepository;
+import com.revature.SongSearcher.Service.AppUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,13 +30,16 @@ public class AuthController {
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final AppUserService service;
 
     public AuthController(AppUserRepository appUserRepository,
                           PasswordEncoder passwordEncoder,
-                          JwtUtil jwtUtil) {
+                          JwtUtil jwtUtil,
+                          AppUserService service) {
         this.appUserRepository = appUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
+        this.service = service;
     }
 
     @PostMapping("/login")
@@ -48,8 +54,13 @@ public class AuthController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid password");
         }
 
-        String token = jwtUtil.generateToken(user.get().getUsername());
+        String token = jwtUtil.generateToken(String.valueOf(user.get().getUserId()));
 
         return new AuthResponse(token);
+    }
+
+    @PostMapping("/register")
+    public AppUserDTO register(@RequestBody AppUserWOIDDTO dto) {
+        return service.createUser(dto);
     }
 }

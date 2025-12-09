@@ -39,5 +39,20 @@ public interface SongRepository extends JpaRepository<Song, String> {
             @Param("limit") int limit
     );
 
+    @Query(
+            value = """
+        SELECT * FROM songs
+        WHERE song_id NOT IN (:exclude)
+        ORDER BY embedding <-> CAST(:target AS vector)
+        LIMIT :limit
+        """,
+            nativeQuery = true
+    )
+    List<Song> recommend(
+            @Param("target") float[] targetVector,
+            @Param("exclude") List<String> exclude,
+            @Param("limit") int limit
+    );
+
 }
 

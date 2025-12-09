@@ -1,6 +1,7 @@
 package com.revature.SongSearcher.Service;
 
 import com.revature.SongSearcher.Controller.DTO.*;
+import com.revature.SongSearcher.Repository.AlbumRepository;
 import com.revature.SongSearcher.Utils.IEmbedder;
 import com.revature.SongSearcher.Model.Album;
 import com.revature.SongSearcher.Model.Artist;
@@ -8,6 +9,7 @@ import com.revature.SongSearcher.Model.Song;
 import com.revature.SongSearcher.Repository.SongRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -18,13 +20,17 @@ import java.util.stream.Collectors;
 public class SongService {
 
     private final SongRepository repo;
-    //private final AlbumRepository albumRepo;
+    private final AlbumRepository albumRepo;
     private final IEmbedder embedder;
+    private final PlaylistService playlistService;
 
-    public SongService(SongRepository repo, IEmbedder embedder) {
+    public SongService(SongRepository repo, IEmbedder embedder,
+                       PlaylistService playlistService,
+                       AlbumRepository albumRepo) {
         this.repo = repo;
-        //this.albumRepo = albumRepo;
+        this.albumRepo = albumRepo;
         this.embedder = embedder;
+        this.playlistService = playlistService;
     }
 
     private ArtistDTO ArtistToDTO(Artist artist ) {
@@ -43,9 +49,8 @@ public class SongService {
                 album.getRelease_year()
         );
     }
-    private Album DTOToAlbum (AlbumDTO dto) {
-        return new Album(dto.id(), dto.title(), dto.releaseYear(),
-                dto.artists().stream().map(this::DTOToArtist).collect(Collectors.toSet()));
+    private Album DTOToAlbum (AlbumSlimDTO dto) {
+        return albumRepo.findById(dto.id()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find album"));
     }
     private SongDTO SongToDTO (Song song) {
 
@@ -65,10 +70,15 @@ public class SongService {
                 dto.lyrics(),
                 this.embedder.getEmbedding(dto.lyrics()));
     }
+    private Song DTOToSong (SongDTO dto) {
+        return new Song(dto.id(), dto.title(), dto.length(),
+                DTOToAlbum(dto.album()),
+                dto.artists().stream().map(this::DTOToArtist).collect(Collectors.toSet()),
+                dto.lyrics(),
+                this.embedder.getEmbedding(dto.lyrics()));
+    }
 
     public List<SongDTO> getAll() {
-
-
 
         return repo.findAll()
                 .stream()
@@ -123,6 +133,53 @@ public class SongService {
                 .stream().map(this::SongToDTO).toList();
 
         return similarSongs;
+    }
+
+    public List<SongDTO> getUserSongRecommendations(Long userid) {
+        PlaylistDTO favorites = playlistService.getByUserIdAndName(userid, "Favorites");
+
+        List<Song> songs = favorites.songs().stream().map(this::DTOToSong).toList();
+
+        float[] centroidEmbedding = this.computeCentroid(songs.stream().map(Song::getEmbedding).toList());
+
+        List<String> ids = songs.stream().map(Song::getSongId).toList();
+
+        return repo.recommend(centroidEmbedding, ids, 10)
+                .stream().map(this::SongToDTO).toList();
+    }
+
+
+
+    private float[] computeCentroid(List<float[]> vectors) {
+        if (vectors == null || vectors.isEmpty()) {
+            throw new IllegalArgumentException("Vector list cannot be empty");
+        }
+
+        int dim = vectors.get(0).length;
+        float[] centroid = new float[dim];
+
+        // Initialize sum array
+        for (int i = 0; i < dim; i++) {
+            centroid[i] = 0f;
+        }
+
+        // Accumulate
+        for (float[] vec : vectors) {
+            if (vec.length != dim) {
+                throw new IllegalArgumentException("All vectors must have the same length");
+            }
+            for (int i = 0; i < dim; i++) {
+                centroid[i] += vec[i];
+            }
+        }
+
+        // Divide by count
+        int count = vectors.size();
+        for (int i = 0; i < dim; i++) {
+            centroid[i] /= count;
+        }
+
+        return centroid;
     }
 }
 
