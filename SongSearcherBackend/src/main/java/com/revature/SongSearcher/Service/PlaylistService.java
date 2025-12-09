@@ -103,6 +103,59 @@ public class PlaylistService {
     }
 
     // update
+    public PlaylistDTO update(String id, PlaylistDTO dto) {
+
+        Playlist playlist = repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        playlist.setPlaylistName(dto.name());
+
+        if (dto.userid() != null) {
+            AppUser user = userRepo.findById(dto.userid())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+            playlist.setUser(user);
+        }
+
+        playlist.getSongs().clear();
+
+        dto.songs().stream()
+                .map(songDto -> songRepo.findById(songDto.id())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)))
+                .forEach(song -> playlist.getSongs().add(song));
+
+        Playlist saved = repo.save(playlist);
+
+        return PlaylistToDTO(saved);
+    }
+
+    public PlaylistDTO patch(String id, PlaylistDTO dto) {
+
+        Playlist playlist = repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        if (dto.name() != null) {
+            playlist.setPlaylistName(dto.name());
+        }
+
+        if (dto.userid() != null) {
+            AppUser user = userRepo.findById(dto.userid())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+            playlist.setUser(user);
+        }
+
+        if (dto.songs() != null) {
+            playlist.getSongs().clear();
+
+            dto.songs().stream()
+                    .map(songDto -> songRepo.findById(songDto.id())
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)))
+                    .forEach(song -> playlist.getSongs().add(song));
+        }
+
+        Playlist saved = repo.save(playlist);
+
+        return PlaylistToDTO(saved);
+    }
 
     public void delete(String id) {
         repo.deleteById(id);

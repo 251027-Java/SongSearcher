@@ -24,10 +24,10 @@ public class PlaylistController {
         this.authService = authService;
     }
 
-//    @GetMapping
-//    public List<PlaylistDTO> getAll() {
-//        return service.getAll();
-//    }
+    @GetMapping
+    public List<PlaylistDTO> getAll() {
+        return service.getAll();
+    }
 
 
     @GetMapping("/user/{userid}") //This is user id
@@ -52,10 +52,15 @@ public class PlaylistController {
         return service.create(dto);
     }
 
-//    @PutMapping("/{id}")
-//    public PlaylistDTO update(@PathVariable String id, @RequestBody PlayList dto) {
-//        return service.update(id, dto);
-//    }
+    @PutMapping("/{id}")
+    public PlaylistDTO update(@PathVariable String id, @RequestBody PlaylistDTO dto) {
+        return service.update(id, dto);
+    }
+
+    @PatchMapping("/{id}")
+    public PlaylistDTO patch(@PathVariable String id, @RequestBody PlaylistDTO dto) {
+        return service.patch(id, dto);
+    }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable String id, HttpServletRequest request) {
