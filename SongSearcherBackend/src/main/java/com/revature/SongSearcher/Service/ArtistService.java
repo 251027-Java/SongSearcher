@@ -1,7 +1,7 @@
 package com.revature.SongSearcher.Service;
 
-import com.revature.SongSearcher.Controller.ArtistDTO;
-import com.revature.SongSearcher.Controller.ArtistWOIDDTO;
+import com.revature.SongSearcher.Controller.DTO.ArtistDTO;
+import com.revature.SongSearcher.Controller.DTO.ArtistWOIDDTO;
 import com.revature.SongSearcher.Model.Artist;
 import com.revature.SongSearcher.Repository.ArtistRepository;
 import org.springframework.http.HttpStatus;
@@ -19,9 +19,16 @@ public class ArtistService {
         this.repo = repo;
     }
 
+    private ArtistDTO ArtistToDTO(Artist artist ) {
+        return new ArtistDTO(artist.getArtistId(), artist.getName());
+    }
+    private Artist DTOToArtist ( ArtistDTO dto ) {
+        return new Artist(dto.id(), dto.name());
+    }
+
     public List<ArtistDTO> getAll() {
         return repo.findAll().stream()
-                .map(a -> new ArtistDTO(a.getId(), a.getName()))
+                .map(this::ArtistToDTO)
                 .toList();
     }
 
@@ -29,13 +36,12 @@ public class ArtistService {
         Artist a = repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        return new ArtistDTO(a.getId(), a.getName());
+        return ArtistToDTO(a);
     }
 
     public ArtistDTO create(ArtistWOIDDTO dto) {
-        Artist a = new Artist();
-        a.setName(dto.name());
-        return new ArtistDTO(repo.save(a).getId(), a.getName());
+        Artist a = new Artist(dto.name());
+        return ArtistToDTO(repo.save(a));
     }
 
     public ArtistDTO update(String id, ArtistDTO dto) {

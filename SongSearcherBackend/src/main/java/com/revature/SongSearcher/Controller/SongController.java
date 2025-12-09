@@ -1,5 +1,8 @@
 package com.revature.SongSearcher.Controller;
 
+import com.revature.SongSearcher.Controller.DTO.SearchDTO;
+import com.revature.SongSearcher.Controller.DTO.SongDTO;
+import com.revature.SongSearcher.Controller.DTO.SongWOIDDTO;
 import com.revature.SongSearcher.Service.SongService;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,10 +33,10 @@ public class SongController {
         return service.create(dto);
     }
 
-    @PutMapping("/{id}")
-    public SongDTO update(@PathVariable String id, @RequestBody SongDTO dto) {
-        return service.update(id, dto);
-    }
+//    @PutMapping("/{id}")
+//    public SongDTO update(@PathVariable String id, @RequestBody SongDTO dto) {
+//        return service.update(id, dto);
+//    }
 
     @PatchMapping("/{id}")
     public SongDTO patch(@PathVariable String id, @RequestBody SongDTO dto) {
@@ -43,6 +46,16 @@ public class SongController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable String id) {
         service.delete(id);
+    }
+
+    @PostMapping("/similar")
+    public List<SongDTO> searchByLyrics(@RequestBody SearchDTO dto) {
+        return service.searchByLyrics(dto);
+    }
+
+    @GetMapping("/recommend/{userid}")
+    public List<SongDTO> getUserSongRecommendations(@PathVariable Long userid) {
+        return service.getUserSongRecommendations(userid);
     }
 }
 

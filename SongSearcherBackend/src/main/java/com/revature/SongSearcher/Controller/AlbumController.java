@@ -1,5 +1,7 @@
 package com.revature.SongSearcher.Controller;
 
+import com.revature.SongSearcher.Controller.DTO.AlbumDTO;
+import com.revature.SongSearcher.Controller.DTO.AlbumWOIDDTO;
 import com.revature.SongSearcher.Service.AlbumService;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,10 +32,10 @@ public class AlbumController {
         return service.create(dto);
     }
 
-    @PutMapping("/{id}")
-    public AlbumDTO update(@PathVariable String id, @RequestBody AlbumDTO dto) {
-        return service.update(id, dto);
-    }
+//    @PutMapping("/{id}")
+//    public AlbumDTO update(@PathVariable String id, @RequestBody AlbumDTO dto) {
+//        return service.update(id, dto);
+//    }
 
     @PatchMapping("/{id}")
     public AlbumDTO patch(@PathVariable String id, @RequestBody AlbumDTO dto) {

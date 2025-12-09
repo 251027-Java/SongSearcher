@@ -1,4 +1,6 @@
 package com.revature.SongSearcher.Controller;
+import com.revature.SongSearcher.Controller.DTO.ArtistDTO;
+import com.revature.SongSearcher.Controller.DTO.ArtistWOIDDTO;
 import com.revature.SongSearcher.Service.ArtistService;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,10 +31,10 @@ public class ArtistController {
         return service.create(dto);
     }
 
-    @PutMapping("/{id}")
-    public ArtistDTO update(@PathVariable String id, @RequestBody ArtistDTO dto) {
-        return service.update(id, dto);
-    }
+//    @PutMapping("/{id}")
+//    public ArtistDTO update(@PathVariable String id, @RequestBody ArtistDTO dto) {
+//        return service.update(id, dto);
+//    }
 
     @PatchMapping("/{id}")
     public ArtistDTO patch(@PathVariable String id, @RequestBody ArtistDTO dto) {

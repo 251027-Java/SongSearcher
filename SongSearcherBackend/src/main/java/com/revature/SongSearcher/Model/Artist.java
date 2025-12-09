@@ -1,27 +1,45 @@
 package com.revature.SongSearcher.Model;
 
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.IdGeneratorType;
+
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "artists")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Artist {
 
-    private final String name;
-    //private final int artist_id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String artistId;
 
-    // Albums ?
-    // Songs ?
+    @Column(name = "artist_name")
+    private String name;
+
+    @ManyToMany(mappedBy = "artists")
+    @ToString.Exclude
+    private Set<Album> albums = new HashSet<>();
+
+    @ManyToMany(mappedBy = "artists")
+    @ToString.Exclude
+    private Set<Song> songs = new HashSet<>();
 
     public Artist(String name) {
-        //this.artist_id = artist_id;
         this.name = name;
     }
 
-//    public int getArtist_id() {
-//        return this.artist_id;
+    public Artist ( String id, String name) {
+        this.artistId = id;
+        this.name = name;
+    }
+
+//    public String toString() {
+//        return "Artist: " + this.getName();
 //    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public String toString() {
-        return "com.revature.SongSearcher.Model.Artist: " + this.getName();
-    }
 }

@@ -19,9 +19,9 @@ public class JwtUtil {
     // Constructor
 
     // Methods
-    public String generateToken(String username){
+    public String generateToken(String userId){
         return Jwts.builder()
-                .subject(username)
+                .subject(userId)
                 .issuedAt( new Date())
                 .expiration(new Date(System.currentTimeMillis() + (expiration * 1000)))
                 .signWith(key)
@@ -37,7 +37,7 @@ public class JwtUtil {
         }
     }
 
-    public String getUsernameFromToken(String token){
+    public String getUserIdFromToken(String token){
         return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload().getSubject();
     }
 }

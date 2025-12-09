@@ -1,38 +1,56 @@
 package com.revature.SongSearcher.Model;
 
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+@Entity
+@Table(name = "albums")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Album {
 
-    //private final int album_id;
-    //private final int artist_id;
-    private final String[] artists;
-    private final String title;
-    private final int release_year;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String albumId;
 
-    public Album(String[] artists, String title, int release_year) {
-        this.artists = artists;
+    @Column(name = "album_title")
+    private String title;
+
+    private int release_year;
+
+    @ManyToMany
+    @JoinTable(
+            name = "artist_album",
+            joinColumns = @JoinColumn(name = "albumId"),
+            inverseJoinColumns = @JoinColumn(name = "artistId")
+    )
+    @ToString.Exclude
+    private Set<Artist> artists = new HashSet<>();
+
+    @OneToMany(mappedBy = "album")
+    @ToString.Exclude
+    private List<Song> albumSongs = new ArrayList<>();
+
+    public Album(String title, int release_year, Set<Artist> artists) {
         this.title = title;
         this.release_year = release_year;
+        this.artists = artists;
     }
 
-//    public int getAlbum_id() {
-//        return this.album_id;
+    public Album(String id, String title, int release_year, Set<Artist> artists) {
+        this.albumId = id;
+        this.title = title;
+        this.release_year = release_year;
+        this.artists = artists;
+    }
+
+//    public String toString() {
+//        return "Album: " + this.title + " (" + this.release_year + ")";
 //    }
-//
-//    public int getArtist_id() {
-//        return this.artist_id;
-//    }
-
-    public String[] getArtists() { return this.artists; }
-
-    public String getTitle() {
-        return this.title;
-    }
-
-    public int getReleaseYear() {
-        return this.release_year;
-    }
-
-    public String toString() {
-        return "com.revature.SongSearcher.Model.Album: " + this.getTitle() + " (" + this.getReleaseYear() + ")";
-    }
 }

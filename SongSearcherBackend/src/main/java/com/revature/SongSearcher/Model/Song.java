@@ -1,70 +1,79 @@
 package com.revature.SongSearcher.Model;
 
-import java.util.Arrays;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.Array;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "songs")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Song {
 
-    //private final int song_id;
-    //private final int artist_id;
-    private final String[] artists;
-    //private final int album_id;
-    private final String album;
-    private final String title;
-    private final double length;
-    private final String lyrics;
-    private final int release_year;
-    //Not sure if want to include embedding here?
+    @Id @GeneratedValue(strategy = GenerationType.UUID)
+    private String songId;
 
-    public Song(String[] artists, String album, int release_year, String title, double length, String lyrics) {
-        //this.song_id = song_id;
-        this.artists = artists;
-        this.album = album;
+    @Column(name = "song_title")
+    private String title;
+
+    private BigDecimal length;
+
+    @Column(name = "song_lyrics", columnDefinition = "TEXT")
+    private String lyrics;
+
+    @Column
+    @JdbcTypeCode(SqlTypes.VECTOR)
+    @Array(length = 100)
+    @ToString.Exclude
+    private float[] embedding;
+
+    @ManyToOne()
+    @JoinColumn(name = "albumId")
+    @ToString.Exclude
+    private Album album;
+
+    @ManyToMany
+    @JoinTable(
+            name = "artist_song",
+            joinColumns = @JoinColumn(name = "songId"),
+            inverseJoinColumns = @JoinColumn(name = "artistId")
+    )
+    @ToString.Exclude
+    private Set<Artist> artists = new HashSet<>();
+
+    @ManyToMany(mappedBy = "songs")
+    @ToString.Exclude
+    private Set<Playlist> playlists = new HashSet<>();
+
+    public Song(String title, BigDecimal length, Album album, Set<Artist> additionalArtists, String lyrics, float[] embedding) {
         this.title = title;
         this.length = length;
+        this.album = album;
         this.lyrics = lyrics;
-        this.release_year = release_year;
+        this.artists = additionalArtists;
+        this.embedding = embedding;
     }
 
+    public Song(String id, String title, BigDecimal length, Album album, Set<Artist> additionalArtists, String lyrics, float[] embedding) {
+        this.songId = id;
+        this.title = title;
+        this.length = length;
+        this.album = album;
+        this.lyrics = lyrics;
+        this.artists = additionalArtists;
+        this.embedding = embedding;
+    }
 
-//    public int getSong_id() {
-//        return this.song_id;
+//    @Override
+//    public String toString() {
+//        return String.format("Song: \"%s\", Artist: %s, Album: %s (%d), Duration: %.2f",
+//                this.title, this.album.getArtists().toString(), this.album, this.album.getRelease_year(), this.length);
 //    }
-
-//    public int getArtist_id() {
-//        return this.artist_id;
-//    }
-//
-//    public int getAlbum_id() {
-//        return this.album_id;
-//    }
-
-    public String[] getArtists() {
-        return this.artists;
-    }
-
-    public String getAlbum() {
-        return this.album;
-    }
-
-    public String getTitle() {
-        return this.title;
-    }
-
-    public double getLength() {
-        return this.length;
-    }
-
-    public String getLyrics() {
-        return this.lyrics;
-    }
-
-    public int getRelease_year() {
-        return this.release_year;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("com.revature.SongSearcher.Model.Song: \"%s\", com.revature.SongSearcher.Model.Artist: %s, com.revature.SongSearcher.Model.Album: %s (%d), Duration: %.2f",
-                this.title, Arrays.toString(this.artists), this.album, this.release_year, this.length);
-    }
 }
