@@ -7,12 +7,11 @@ import { useSongsApi } from "../ApiHooks/useSongsApi";
 import { useAlbumsApi } from "../ApiHooks/useAlbumsApi";
 import { useArtistsApi } from "../ApiHooks/useArtistsApi";
 
-const CRUDBox = () => {
+const AddToDatabaseBox = () => {
   const [modelType, setModelType] = useState(MODEL_TYPE.SONG);
   const { createSong } = useSongsApi();
   const { createAlbum } = useAlbumsApi();
   const { createArtist } = useArtistsApi();
-  const title = modelType == MODEL_TYPE.SONG ? "Add a:" : "Add an:";
 
   const submitHandler = (data) => {
     if (modelType == MODEL_TYPE.SONG) {
@@ -27,23 +26,31 @@ const CRUDBox = () => {
   return (
     <div className="flex flex-col col-span-2 h-75 bg-slate-200 rounded-lg p-5 relative">
       <div className="flex gap-2">
-        <h1 className="font-bold">{title}</h1>
-        <select
-          className="font-bold"
-          id="model-type"
-          value={modelType}
-          onChange={(e) => setModelType(e.target.value)}
+        <h1 className="font-bold">Add to database</h1>
+        <button
+          className={`${
+            modelType == MODEL_TYPE.SONG ? "bg-mint-300" : "bg-mint-500"
+          } p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-400 hover:cursor-pointer`}
+          onClick={() => setModelType(MODEL_TYPE.SONG)}
         >
-          <option value={MODEL_TYPE.SONG} className="font-bold">
-            Song
-          </option>
-          <option value={MODEL_TYPE.ALBUM} className="font-bold">
-            Album
-          </option>
-          <option value={MODEL_TYPE.ARTIST} className="font-bold">
-            Artist
-          </option>
-        </select>
+          Song
+        </button>
+        <button
+          className={`${
+            modelType == MODEL_TYPE.ALBUM ? "bg-mint-300" : "bg-mint-500"
+          } p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-400 hover:cursor-pointer`}
+          onClick={() => setModelType(MODEL_TYPE.ALBUM)}
+        >
+          Album
+        </button>
+        <button
+          className={`${
+            modelType == MODEL_TYPE.ARTIST ? "bg-mint-300" : "bg-mint-500"
+          } p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-400 hover:cursor-pointer`}
+          onClick={() => setModelType(MODEL_TYPE.ARTIST)}
+        >
+          Artist
+        </button>
       </div>
       {modelType == MODEL_TYPE.SONG && <AddSongForm onSubmit={submitHandler} />}
       {modelType == MODEL_TYPE.ARTIST && (
@@ -56,4 +63,4 @@ const CRUDBox = () => {
   );
 };
 
-export default CRUDBox;
+export default AddToDatabaseBox;

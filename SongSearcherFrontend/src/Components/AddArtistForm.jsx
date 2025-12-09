@@ -14,7 +14,7 @@ const AddArtistForm = ({ onSubmit }) => {
         </label>
         <input
           required
-          className="border rounded-sm px-1"
+          className="border rounded-sm px-1 w-full"
           type="text"
           id="title"
           name="title"

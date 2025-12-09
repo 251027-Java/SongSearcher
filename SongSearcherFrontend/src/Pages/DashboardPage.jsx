@@ -1,7 +1,7 @@
 import RecommendationsBox from "../Components/RecommendationsBox";
 import SearchBox from "../Components/SearchBox";
 import FavoritesBox from "../Components/FavoritesBox";
-import CRUDBox from "../Components/CRUDBox";
+import AddToDatabaseBox from "../Components/AddToDatabaseBox";
 
 const DashboardPage = () => {
   return (
@@ -11,7 +11,7 @@ const DashboardPage = () => {
       <main className="grid grid-cols-3 gap-4 p-5">
         <SearchBox />
         <FavoritesBox />
-        <CRUDBox />
+        <AddToDatabaseBox />
         <RecommendationsBox />
       </main>
     </>
