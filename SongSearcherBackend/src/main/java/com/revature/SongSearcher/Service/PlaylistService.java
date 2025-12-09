@@ -107,5 +107,9 @@ public class PlaylistService {
     public void delete(String id) {
         repo.deleteById(id);
     }
+
+    public PlaylistDTO getByUserIdAndName(Long userId, String playlistName) {
+        return PlaylistToDTO(repo.findByPlaylistNameAndUser_UserId(playlistName, userId));
+    }
 }
 

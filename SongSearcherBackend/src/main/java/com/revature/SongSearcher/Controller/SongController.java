@@ -47,5 +47,10 @@ public class SongController {
     public List<SongDTO> searchByLyrics(@RequestBody SearchDTO dto) {
         return service.searchByLyrics(dto);
     }
+
+    @GetMapping("/recommend/{userid}")
+    public List<SongDTO> getUserSongRecommendations(@PathVariable Long userid) {
+        return service.getUserSongRecommendations(userid);
+    }
 }
 

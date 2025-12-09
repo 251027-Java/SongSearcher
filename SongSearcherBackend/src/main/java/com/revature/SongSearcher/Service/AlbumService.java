@@ -44,7 +44,7 @@ public class AlbumService {
         Album album = repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        return new AlbumDTO(album.getAlbumId(), album.getTitle(), album.getRelease_year(), album.getArtists().stream().map(this::ArtistToDTO).toList());
+        return AlbumToDTO(album);
     }
 
     public AlbumDTO create(AlbumWOIDDTO dto) {
