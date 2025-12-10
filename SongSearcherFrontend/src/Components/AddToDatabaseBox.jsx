@@ -24,9 +24,9 @@ const AddToDatabaseBox = () => {
   };
 
   return (
-    <div className="flex flex-col col-span-2 bg-slate-200 rounded-lg p-5 relative">
-      <div className="flex gap-2 items-center">
-        <h1 className="font-bold">Add to database</h1>
+    <div className="flex flex-col col-span-2 h-90 bg-slate-200 rounded-lg p-5 relative">
+      <div className="flex gap-2">
+        <h1 className="font-bold text-2xl">Add to database</h1>
         <button
           className={`${
             modelType == MODEL_TYPE.SONG ? "bg-mint-300" : "bg-mint-500"
