@@ -48,7 +48,22 @@ public class SongController {
         service.delete(id);
     }
 
-    @PostMapping("/similar")
+    @GetMapping("/search/title/{title}")
+    public List<SongDTO> searchTitle(@PathVariable String title) {
+        return service.searchByTitle(title);
+    }
+
+    @GetMapping("/search/album/{title}")
+    public List<SongDTO> searchAlbum(@PathVariable String title) {
+        return service.searchByAlbum(title);
+    }
+
+    @GetMapping("/search/artist/{name}")
+    public List<SongDTO> searchArtist(@PathVariable String name) {
+        return service.searchByArtist(name);
+    }
+
+    @PostMapping("/search/similar")
     public List<SongDTO> searchByLyrics(@RequestBody SearchDTO dto) {
         return service.searchByLyrics(dto);
     }
