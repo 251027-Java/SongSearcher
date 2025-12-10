@@ -1,26 +1,44 @@
-import SearchSongItem from "./SearchSongItem";
+import SongSearchItem from "./SongSearchItem";
+import AlbumSearchItem from "./AlbumSearchItem";
+import ArtistSearchItem from "./ArtistSearchItem";
 import { useState } from "react";
 import { SEARCH_MODEL } from "../constants";
+import { useSongsApi } from "../ApiHooks/useSongsApi";
+import { useArtistsApi } from "../ApiHooks/useArtistsApi";
+import { useAlbumsApi } from "../ApiHooks/useAlbumsApi";
 
 const SearchBox = () => {
   const [searchModel, setSearchModel] = useState(SEARCH_MODEL.SONG_TITLE);
+  const [searchQuery, setSearchQuery] = useState(null);
   const [search, setSearch] = useState("");
+  const { similarSongs } = useSongsApi();
+
+  let placeholder;
+  if (searchModel == SEARCH_MODEL.SONG_TITLE) {
+    placeholder = "Song Title...";
+  } else if (searchModel == SEARCH_MODEL.SONG_LYRICS) {
+    placeholder = "Song Lyrics...";
+  } else if (searchModel == SEARCH_MODEL.ALBUM) {
+    placeholder = "Album Title...";
+  } else if (searchModel == SEARCH_MODEL.ARTIST) {
+    placeholder = "Artist Name...";
+  }
 
   const searchChangeHandler = (e) => {
     setSearch(e.target.value);
   };
 
-  const submitSearchHandler = () => {
+  const submitSearchHandler = async () => {
     if (searchModel == SEARCH_MODEL.SONG_TITLE) {
       //Query for song by title
     } else if (searchModel == SEARCH_MODEL.SONG_LYRICS) {
-      // Query similar by lyrics
+      setSearchQuery(await similarSongs.mutateAsync({ lyrics: search }));
     } else if (searchModel == SEARCH_MODEL.ALBUM) {
       // Query for album
     } else if (searchModel == SEARCH_MODEL.ARTIST) {
       // Query for artist
     }
-  }
+  };
 
   return (
     <div className="flex flex-col gap-2 col-span-2 h-90 bg-slate-200 rounded-lg p-5">
@@ -66,6 +84,7 @@ const SearchBox = () => {
       <div className="flex gap-1">
         <input
           className="bg-white rounded-md w-full border border-grey-200 px-1"
+          placeholder={placeholder}
           value={search}
           onChange={searchChangeHandler}
         />
@@ -75,6 +94,20 @@ const SearchBox = () => {
         >
           Search
         </button>
+      </div>
+      <div className="flex flex-col gap-2 overflow-auto">
+        {searchQuery &&
+          (searchModel == SEARCH_MODEL.SONG_LYRICS ||
+            searchModel == SEARCH_MODEL.SONG_TITLE) &&
+          searchQuery.map((song) => (
+            <SongSearchItem id={song.id} song={song} />
+          ))}
+        {searchQuery && searchModel == SEARCH_MODEL.ALBUM && (
+          <AlbumSearchItem id={searchQuery.id} album={searchQuery} />
+        )}
+        {searchQuery && searchModel == SEARCH_MODEL.ARTIST && (
+          <ArtistSearchItem id={searchQuery.id} artist={searchQuery} />
+        )}
       </div>
     </div>
   );

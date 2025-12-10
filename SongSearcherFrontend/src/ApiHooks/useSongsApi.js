@@ -27,6 +27,14 @@ export const useSongsApi = () => {
     },
   });
 
+  const similarSongs = useMutation({
+    mutationFn: (lyrics) =>
+      apiClient("/songs/similar", {
+        method: "POST",
+        body: lyrics,
+      }),
+  });
+
   const deleteSong = useMutation({
     mutationFn: (id) =>
       apiClient(`/songs/${id}`, {
@@ -41,6 +49,7 @@ export const useSongsApi = () => {
     songsQuery,
     useSong,
     createSong,
-    deleteSong
-  }
+    similarSongs,
+    deleteSong,
+  };
 };
