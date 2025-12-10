@@ -16,6 +16,18 @@ export const useSongsApi = () => {
       enabled: !!id,
     });
 
+  const searchSongsByTitle = useMutation({
+    mutationFn: (title) => apiClient(`/songs/search/title/${title}`),
+  });
+
+  const searchSongsByAlbum = useMutation({
+    mutationFn: (title) => apiClient(`/songs/search/album/${title}`),
+  });
+
+  const searchSongsByArtist = useMutation({
+    mutationFn: (name) => apiClient(`/songs/search/artist/${name}`),
+  });
+
   const createSong = useMutation({
     mutationFn: (song) =>
       apiClient("/songs", {
@@ -48,6 +60,9 @@ export const useSongsApi = () => {
   return {
     songsQuery,
     useSong,
+    searchSongsByTitle,
+    searchSongsByAlbum,
+    searchSongsByArtist,
     createSong,
     similarSongs,
     deleteSong,

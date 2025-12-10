@@ -4,14 +4,17 @@ import ArtistSearchItem from "./ArtistSearchItem";
 import { useState } from "react";
 import { SEARCH_MODEL } from "../constants";
 import { useSongsApi } from "../ApiHooks/useSongsApi";
-import { useArtistsApi } from "../ApiHooks/useArtistsApi";
-import { useAlbumsApi } from "../ApiHooks/useAlbumsApi";
 
 const SearchBox = () => {
   const [searchModel, setSearchModel] = useState(SEARCH_MODEL.SONG_TITLE);
   const [searchQuery, setSearchQuery] = useState(null);
   const [search, setSearch] = useState("");
-  const { similarSongs } = useSongsApi();
+  const {
+    similarSongs,
+    searchSongsByTitle,
+    searchSongsByAlbum,
+    searchSongsByArtist,
+  } = useSongsApi();
 
   let placeholder;
   if (searchModel == SEARCH_MODEL.SONG_TITLE) {
@@ -30,13 +33,14 @@ const SearchBox = () => {
 
   const submitSearchHandler = async () => {
     if (searchModel == SEARCH_MODEL.SONG_TITLE) {
-      //Query for song by title
+      const data = await searchSongsByTitle.mutateAsync(search);
+      setSearchQuery([data]);
     } else if (searchModel == SEARCH_MODEL.SONG_LYRICS) {
       setSearchQuery(await similarSongs.mutateAsync({ lyrics: search }));
     } else if (searchModel == SEARCH_MODEL.ALBUM) {
-      // Query for album
+      setSearchQuery(await searchSongsByAlbum.mutateAsync(search));
     } else if (searchModel == SEARCH_MODEL.ARTIST) {
-      // Query for artist
+      setSearchQuery(await searchSongsByArtist.mutateAsync(search));
     }
   };
 
@@ -97,17 +101,9 @@ const SearchBox = () => {
       </div>
       <div className="flex flex-col gap-2 overflow-auto">
         {searchQuery &&
-          (searchModel == SEARCH_MODEL.SONG_LYRICS ||
-            searchModel == SEARCH_MODEL.SONG_TITLE) &&
           searchQuery.map((song) => (
             <SongSearchItem id={song.id} song={song} />
           ))}
-        {searchQuery && searchModel == SEARCH_MODEL.ALBUM && (
-          <AlbumSearchItem id={searchQuery.id} album={searchQuery} />
-        )}
-        {searchQuery && searchModel == SEARCH_MODEL.ARTIST && (
-          <ArtistSearchItem id={searchQuery.id} artist={searchQuery} />
-        )}
       </div>
     </div>
   );
