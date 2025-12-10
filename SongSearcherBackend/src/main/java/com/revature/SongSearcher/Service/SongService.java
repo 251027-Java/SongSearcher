@@ -166,6 +166,18 @@ public class SongService {
         repo.deleteById(id);
     }
 
+    public List<SongDTO> searchByTitle (String title) {
+        return repo.findByTitleContainingIgnoreCase(title).stream().map(this::SongToDTO).toList();
+    }
+
+    public List<SongDTO> searchByAlbum (String title) {
+        return repo.findByAlbum_TitleContainingIgnoreCase(title).stream().map(this::SongToDTO).toList();
+    }
+
+    public List<SongDTO> searchByArtist (String name) {
+        return repo.findSongsByArtistName(name).stream().map(this::SongToDTO).toList();
+    }
+
     public List<SongDTO> searchByLyrics (SearchDTO dto) {
         List<SongDTO> similarSongs = repo.findMostSimilar(embedder.getEmbedding(dto.lyrics()), 10)
                 .stream().map(this::SongToDTO).toList();
