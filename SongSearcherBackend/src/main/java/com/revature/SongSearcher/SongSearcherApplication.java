@@ -38,7 +38,7 @@ public class SongSearcherApplication {
         return args -> {
 
             var u1 = new AppUser("user1", encoder.encode("password1"), "USER");
-            var u2 = new AppUser("admin",  encoder.encode("password2"), "ADMIN");
+            var u2 = new AppUser("admin",  encoder.encode("admin"), "ADMIN");
 
             try {
                 userRepo.saveAll(List.of(u1, u2));

@@ -18,7 +18,7 @@ const LoginPage = () => {
         <p className="text-lg">
           Song Searcher is the perfect place to find new songs that you will
           enjoy! Simply pick some favorite songs and get recommendations, or
-          search for similar songs based on artist, album, or song.
+          search for similar songs based on artist, album, or song lyrics.
         </p>
         <p className="text-lg">
           Please login or create a new account to get started!

@@ -2,6 +2,7 @@ package com.revature.SongSearcher;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -17,6 +18,12 @@ public class JwtInterceptor implements HandlerInterceptor {
 
     // Methods
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
+        // if is an options request, approve
+        if (HttpMethod.OPTIONS.name().equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
+
         // is the auth header attached/included
         String authHeader = request.getHeader("Authorization");
         // is the token included?

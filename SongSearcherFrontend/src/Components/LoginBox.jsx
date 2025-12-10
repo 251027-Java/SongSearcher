@@ -1,30 +1,50 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
+import { apiClient } from "../ApiHooks/ApiClient";
 
 const LoginBox = ({ toggle }) => {
-  const { setIsAuthenticated } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [invalidMessage, setInvalidMessage] = useState("");
   const nav = useNavigate();
 
   const handlePassChange = (e) => {
-    setPassword(e.target.value);
+    setPassword(e.target.value)
+    setInvalidMessage("");
   };
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
+    setInvalidMessage("");
   };
 
-  const handleLogin = () => {
-    // Placeholder login logic
-    setIsAuthenticated(true);
-    console.log(
-      "Login with username: " + username + " and password: " + password
-    );
-    nav("/dashboard");
-    setPassword("");
-    setUsername("");
+
+  const handleLogin = async () => {
+    try {
+      const data = await apiClient('/auth/login', {
+        method: 'POST',
+        body: { username, password },
+      });
+
+      const token = data?.token || data?.accessToken || null;
+      if (!token) {
+        console.error('No token returned from login', data);
+        return;
+      }
+
+      login(token);
+      nav('/dashboard');
+      setPassword('');
+      setUsername('');
+    } catch (err) {
+      if (err.message.startsWith("401")) {
+        setInvalidMessage("Invalid username or password");
+      } else {
+        console.error('Login failed', err.message);
+      }
+    }
   };
 
   return (
@@ -48,6 +68,7 @@ const LoginBox = ({ toggle }) => {
           onChange={handlePassChange}
           value={password}
         />
+        {<p className="text-red-500">{invalidMessage}</p>}
       </div>
       <button
         className="bg-mint-300 p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-400 hover:cursor-pointer"
