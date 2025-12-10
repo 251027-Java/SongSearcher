@@ -47,7 +47,7 @@ public class AuthController {
 
         Optional<AppUser> user = appUserRepository.findByUsername(request.username());
         if (user.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found");
         }
 
         if (!passwordEncoder.matches(request.password(), user.get().getUserpassword())) {
@@ -61,6 +61,9 @@ public class AuthController {
 
     @PostMapping("/register")
     public AppUserDTO register(@RequestBody AppUserWOIDDTO dto) {
+        //TODO
+        // Add handling here to generate a token
+        // client should not receive appuserdto, just success and a token
         return service.createUser(dto);
     }
 }
