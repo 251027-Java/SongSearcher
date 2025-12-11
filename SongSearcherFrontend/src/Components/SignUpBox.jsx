@@ -38,12 +38,16 @@ const SignUpBox = ({ toggle }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center border border-slate-400 bg-slate-200 rounded-2xl m-5 py-10 px-15 gap-1">
+    <div className="flex flex-col items-center justify-center theme-main shadow-md rounded-2xl m-5 py-10 px-15 gap-1 duration-200 ease-in-out hover:shadow-lg">
+      <div className="mb-5 mx-20 max-w-[20vw] text-center">
+        <h1 className="text-4xl font-bold mb-1">Create Account</h1>
+        <p className="text-gray-600">Sign up for a new account</p>
+      </div>
       <div className="flex flex-col items-center justify-center">
         <h2 className="text-lg font-medium">Username</h2>
         <input
           id="username"
-          className="bg-grey-200 rounded-sm p-1 border border-grey-500"
+          className="bg-grey-100 rounded-md p-1 border"
           type="text"
           onChange={handleUsernameChange}
           value={username}
@@ -53,8 +57,8 @@ const SignUpBox = ({ toggle }) => {
         <h2 className="text-lg font-medium">Password</h2>
         <input
           id="password"
-          className={`bg-grey-200 rounded-sm p-1 border ${
-            passError ? "border-red-500" : "border-grey-500"
+          className={`bg-grey-100 rounded-md p-1 border ${
+            passError ? "border-red-500" : "border-black"
           }`}
           type="password"
           onChange={handlePassChange}
@@ -65,8 +69,8 @@ const SignUpBox = ({ toggle }) => {
         <h2 className="text-lg font-medium">Confirm Password</h2>
         <input
           id="confirm-password"
-          className={`bg-grey-200 rounded-sm p-1 border ${
-            passError ? "border-red-500" : "border-grey-500 mb-3"
+          className={`bg-grey-100 rounded-md p-1 border ${
+            passError ? "border-red-500" : "border-black mb-3"
           }`}
           type="password"
           onChange={handleConfirmPassChange}

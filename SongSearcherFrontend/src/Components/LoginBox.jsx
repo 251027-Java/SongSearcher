@@ -53,12 +53,17 @@ const LoginBox = ({ toggle }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center border border-slate-400 bg-slate-200 rounded-2xl m-5 py-10 px-15 gap-1">
+    <div className="flex flex-col items-center justify-center theme-main shadow-md rounded-2xl m-5 py-10 px-15 gap-1 duration-200 ease-in-out hover:shadow-lg">
+      <div className="mb-5 mx-22 max-w-[20vw] text-center">
+        <h1 className="text-4xl font-bold mb-1">Welcome Back</h1>
+        <p className="text-gray-600">Login to your dashboard</p>
+      </div>
+      
       <div className="flex flex-col items-center justify-center">
         <h2 className="text-lg font-medium">Username</h2>
         <input
           id="username"
-          className="bg-grey-200 rounded-sm p-1 border border-grey-500"
+          className="bg-grey-100 rounded-md p-1 border"
           type="text"
           onChange={handleUsernameChange}
           value={username}
@@ -68,7 +73,7 @@ const LoginBox = ({ toggle }) => {
         <h2 className="text-lg font-medium">Password</h2>
         <input
           id="password"
-          className="bg-grey-200 mb-3 rounded-sm p-1 border border-grey-500"
+          className="bg-grey-100 mb-3 rounded-md p-1 border"
           type="password"
           onChange={handlePassChange}
           onKeyDown={handleKeyDown}

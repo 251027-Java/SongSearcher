@@ -61,3 +61,32 @@
   --color-grey-900: oklch(21.33% 0.006 337.83);
   --color-grey-950: oklch(18.05% 0.004 345.69);
 }
+
+.theme-background {
+  background-color: var(--color-mint-50);
+  color: var(--color-ash-grey-950);
+}
+
+.theme-main {
+  background-color: var(--color-mint-100);
+  color: var(--color-ash-grey-950);
+}
+
+.theme-secondary {
+  background-color: var(--color-mint-300);
+  color: var(--color-ash-grey-950);
+}
+
+.theme-tertiary {
+  background-color: var(--color-mint-400);
+  color: var(--color-ash-grey-950);
+}
+
+.divider {
+  display: inline-block;
+  width: 2px;
+  background-color: black;
+  margin: 0 10px;
+  height: 10em;
+  opacity: 50%;
+}
