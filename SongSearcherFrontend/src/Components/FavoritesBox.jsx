@@ -26,7 +26,7 @@ const FavoritesBox = () => {
         <Spinner />
       ) : (
         favoritePlaylist && (
-          <ul className="w-full">
+          <ul className="w-full overflow-auto">
             {favoritePlaylist.songs.map((song) => (
               <FavoriteSongItem
                 key={song.id}

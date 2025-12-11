@@ -11,7 +11,7 @@ const LoginBox = ({ toggle }) => {
   const nav = useNavigate();
 
   const handlePassChange = (e) => {
-    setPassword(e.target.value)
+    setPassword(e.target.value);
     setInvalidMessage("");
   };
 
@@ -20,30 +20,35 @@ const LoginBox = ({ toggle }) => {
     setInvalidMessage("");
   };
 
-
   const handleLogin = async () => {
     try {
-      const data = await apiClient('/auth/login', {
-        method: 'POST',
+      const data = await apiClient("/auth/login", {
+        method: "POST",
         body: { username, password },
       });
 
       const token = data?.token || data?.accessToken || null;
       if (!token) {
-        console.error('No token returned from login', data);
+        console.error("No token returned from login", data);
         return;
       }
 
       login(token);
-      nav('/dashboard');
-      setPassword('');
-      setUsername('');
+      nav("/dashboard");
+      setPassword("");
+      setUsername("");
     } catch (err) {
       if (err.message.startsWith("401")) {
         setInvalidMessage("Invalid username or password");
       } else {
-        console.error('Login failed', err.message);
+        console.error("Login failed", err.message);
       }
+    }
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleLogin();
     }
   };
 
@@ -66,6 +71,7 @@ const LoginBox = ({ toggle }) => {
           className="bg-grey-200 mb-3 rounded-sm p-1 border border-grey-500"
           type="password"
           onChange={handlePassChange}
+          onKeyDown={handleKeyDown}
           value={password}
         />
         {<p className="text-red-500">{invalidMessage}</p>}
@@ -79,7 +85,10 @@ const LoginBox = ({ toggle }) => {
       </button>
       <div className="flex items-center gap-2">
         <p>Don't have an account?</p>
-        <button className="text-blue-800 hover:text-blue-900 hover:cursor-pointer p-1" onClick={toggle}>
+        <button
+          className="text-blue-800 hover:text-blue-900 hover:cursor-pointer p-1"
+          onClick={toggle}
+        >
           Sign Up
         </button>
       </div>

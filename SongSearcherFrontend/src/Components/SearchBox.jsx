@@ -48,6 +48,7 @@ const SearchBox = () => {
   });
 
   const submitSearchHandler = async () => {
+    if (search == "") return;
     const result = await searchMutation.mutateAsync({
       model: searchModel,
       search,
@@ -76,6 +77,12 @@ const SearchBox = () => {
     setSearch("");
     setSearchQuery("");
   };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      submitSearchHandler();
+    }
+  }
 
   return (
     <div className="flex flex-col gap-2 col-span-2 h-90 bg-slate-200 rounded-lg p-5">
@@ -123,6 +130,7 @@ const SearchBox = () => {
           className="bg-white rounded-md w-full border border-grey-200 px-1"
           placeholder={placeholder}
           value={search}
+          onKeyDown={handleKeyDown}
           onChange={searchChangeHandler}
         />
         <button
@@ -134,10 +142,10 @@ const SearchBox = () => {
       </div>
       {searchMutation.isPending && <Spinner />}
       {searchMutation.isError && (
-        <p className="color-red">Error: {searchMutation.error.message}</p>
+        <p className="text-red-500">Error: {searchMutation.error.message}</p>
       )}
       <div className="flex flex-col gap-2 overflow-auto">
-        {searchQuery &&
+        {searchQuery ? (
           searchQuery.map((song) => (
             <SongSearchItem
               id={song.id}
@@ -146,7 +154,10 @@ const SearchBox = () => {
               toggleFavorite={toggleFavoriteHandler}
               resetSearch={submitSearchHandler}
             />
-          ))}
+          ))
+        ) : (
+          <p>Begin your search for songs!</p>
+        )}
       </div>
     </div>
   );
