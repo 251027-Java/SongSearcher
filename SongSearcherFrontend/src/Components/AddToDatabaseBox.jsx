@@ -6,6 +6,7 @@ import AddArtistForm from "./AddArtistForm";
 import { useSongsApi } from "../ApiHooks/useSongsApi";
 import { useAlbumsApi } from "../ApiHooks/useAlbumsApi";
 import { useArtistsApi } from "../ApiHooks/useArtistsApi";
+import { toast, ToastContainer } from "react-toastify";
 
 const AddToDatabaseBox = () => {
   const [modelType, setModelType] = useState(MODEL_TYPE.SONG);
@@ -16,10 +17,13 @@ const AddToDatabaseBox = () => {
   const submitHandler = (data) => {
     if (modelType == MODEL_TYPE.SONG) {
       createSong.mutateAsync(data);
+      toast(`Successfully added a ${modelType}!`);
     } else if (modelType == MODEL_TYPE.ALBUM) {
       createAlbum.mutateAsync(data);
+      toast(`Successfully added an ${modelType}!`);
     } else if (modelType == MODEL_TYPE.ARTIST) {
       createArtist.mutateAsync(data);
+      toast(`Successfully added an ${modelType}!`);
     }
   };
 
@@ -59,6 +63,18 @@ const AddToDatabaseBox = () => {
       {modelType == MODEL_TYPE.ALBUM && (
         <AddAlbumForm onSubmit={submitHandler} />
       )}
+      <ToastContainer
+        position="bottom-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 };
