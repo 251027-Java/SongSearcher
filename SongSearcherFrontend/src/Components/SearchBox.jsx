@@ -1,6 +1,4 @@
 import SongSearchItem from "./SongSearchItem";
-import AlbumSearchItem from "./AlbumSearchItem";
-import ArtistSearchItem from "./ArtistSearchItem";
 import { useState } from "react";
 import { SEARCH_MODEL } from "../constants";
 import { useSongsApi } from "../ApiHooks/useSongsApi";
@@ -33,8 +31,7 @@ const SearchBox = () => {
 
   const submitSearchHandler = async () => {
     if (searchModel == SEARCH_MODEL.SONG_TITLE) {
-      const data = await searchSongsByTitle.mutateAsync(search);
-      setSearchQuery([data]);
+      setSearchQuery(await searchSongsByTitle.mutateAsync(search));
     } else if (searchModel == SEARCH_MODEL.SONG_LYRICS) {
       setSearchQuery(await similarSongs.mutateAsync({ lyrics: search }));
     } else if (searchModel == SEARCH_MODEL.ALBUM) {
@@ -43,6 +40,12 @@ const SearchBox = () => {
       setSearchQuery(await searchSongsByArtist.mutateAsync(search));
     }
   };
+
+  const modelButtonClickHandler = (model) => {
+    setSearchModel(model);
+    setSearch("");
+    setSearchQuery("");
+  }
 
   return (
     <div className="flex flex-col gap-2 col-span-2 h-90 bg-slate-200 rounded-lg p-5">
@@ -54,7 +57,7 @@ const SearchBox = () => {
               ? "bg-mint-300"
               : "bg-mint-500"
           } p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-300 hover:cursor-pointer`}
-          onClick={() => setSearchModel(SEARCH_MODEL.SONG_TITLE)}
+          onClick={() => modelButtonClickHandler(SEARCH_MODEL.SONG_TITLE)}
         >
           Song Title
         </button>
@@ -64,7 +67,7 @@ const SearchBox = () => {
               ? "bg-mint-300"
               : "bg-mint-500"
           } p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-300 hover:cursor-pointer`}
-          onClick={() => setSearchModel(SEARCH_MODEL.SONG_LYRICS)}
+          onClick={() => modelButtonClickHandler(SEARCH_MODEL.SONG_LYRICS)}
         >
           Song Lyrics
         </button>
@@ -72,7 +75,7 @@ const SearchBox = () => {
           className={`${
             searchModel == SEARCH_MODEL.ALBUM ? "bg-mint-300" : "bg-mint-500"
           } p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-300 hover:cursor-pointer`}
-          onClick={() => setSearchModel(SEARCH_MODEL.ALBUM)}
+          onClick={() => modelButtonClickHandler(SEARCH_MODEL.ALBUM)}
         >
           Album
         </button>
@@ -80,7 +83,7 @@ const SearchBox = () => {
           className={`${
             searchModel == SEARCH_MODEL.ARTIST ? "bg-mint-300" : "bg-mint-500"
           } p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-300 hover:cursor-pointer`}
-          onClick={() => setSearchModel(SEARCH_MODEL.ARTIST)}
+          onClick={() => modelButtonClickHandler(SEARCH_MODEL.ARTIST)}
         >
           Artist
         </button>
@@ -93,7 +96,7 @@ const SearchBox = () => {
           onChange={searchChangeHandler}
         />
         <button
-          className="bg-mint-400 border border-mint-400 p-1 px-2 rounded-md hover:bg-mint-300"
+          className="bg-mint-400 border border-mint-400 p-1 px-2 rounded-md hover:bg-mint-300 hover:cursor-pointer"
           onClick={submitSearchHandler}
         >
           Search

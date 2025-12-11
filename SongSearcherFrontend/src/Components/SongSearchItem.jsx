@@ -1,6 +1,5 @@
 import { MAX_LENGTH } from "../constants";
-import { FcLikePlaceholder } from "react-icons/fc";
-import { FaTrash } from "react-icons/fa";
+import { TrashIcon, HeartIcon } from "@heroicons/react/24/outline";
 
 const SongSearchItem = ({ song }) => {
   return (
@@ -20,12 +19,12 @@ const SongSearchItem = ({ song }) => {
             {song.lyrics.substring(0, MAX_LENGTH) + "..."}
           </p>
         </div>
-        <div className="flex flex-col gap-6 mr-3">
-          <button className="">
-            <FcLikePlaceholder />
+        <div className="flex flex-col gap-5 mr-3">
+          <button className="p-1 hover:bg-red-200 hover:cursor-pointer rounded-full">
+            <HeartIcon className="size-6 text-red-500"/>
           </button>
-          <button className="">
-            <FaTrash />
+          <button className="p-1 hover:bg-mint-200 hover:cursor-pointer rounded-full">
+            <TrashIcon className="size-6"/>
           </button>
         </div>
       </div>

@@ -41,7 +41,7 @@ export const useSongsApi = () => {
 
   const similarSongs = useMutation({
     mutationFn: (lyrics) =>
-      apiClient("/songs/similar", {
+      apiClient("/songs/search/similar", {
         method: "POST",
         body: lyrics,
       }),
