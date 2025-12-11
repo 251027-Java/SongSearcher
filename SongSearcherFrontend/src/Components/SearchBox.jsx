@@ -1,8 +1,10 @@
 import SongSearchItem from "./SongSearchItem";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { SEARCH_MODEL } from "../constants";
 import { useSongsApi } from "../ApiHooks/useSongsApi";
 import { useSongsSearch } from "../ApiHooks/useSongsSearch";
+import Spinner from "./Spinner";
+import { usePlaylistsApi } from "../ApiHooks/usePlaylistsApi";
 
 const SearchBox = () => {
   const [searchModel, setSearchModel] = useState(SEARCH_MODEL.SONG_TITLE);
@@ -14,6 +16,14 @@ const SearchBox = () => {
     searchSongsByAlbum,
     searchSongsByArtist,
   } = useSongsApi();
+  const { addSongToPlaylist, userPlaylistsQuery, removeSongFromPlaylist } =
+    usePlaylistsApi();
+
+  const { data: playlists } = userPlaylistsQuery;
+  const favoritePlaylist = useMemo(() => {
+    if (!playlists) return null;
+    return playlists.find((p) => p.name === "Favorites") || null;
+  }, [playlists]);
 
   let placeholder;
   if (searchModel == SEARCH_MODEL.SONG_TITLE) {
@@ -44,6 +54,21 @@ const SearchBox = () => {
     });
 
     setSearchQuery(result);
+  };
+
+  const toggleFavoriteHandler = async (songId) => {
+    const isFav = favoritePlaylist?.songs.some((s) => s.id === songId);
+    if (!isFav) {
+      await addSongToPlaylist.mutateAsync({
+        playlistId: favoritePlaylist.id,
+        songId,
+      });
+    } else {
+      await removeSongFromPlaylist.mutateAsync({
+        playlistId: favoritePlaylist.id,
+        songId,
+      });
+    }
   };
 
   const modelButtonClickHandler = (model) => {
@@ -107,9 +132,7 @@ const SearchBox = () => {
           Search
         </button>
       </div>
-      {searchMutation.isPending && (
-        <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-      )}
+      {searchMutation.isPending && <Spinner />}
       {searchMutation.isError && (
         <p className="color-red">Error: {searchMutation.error.message}</p>
       )}
@@ -119,6 +142,8 @@ const SearchBox = () => {
             <SongSearchItem
               id={song.id}
               song={song}
+              isFav={favoritePlaylist?.songs.some((s) => s.id === song.id)}
+              toggleFavorite={toggleFavoriteHandler}
               resetSearch={submitSearchHandler}
             />
           ))}

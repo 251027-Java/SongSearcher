@@ -4,16 +4,10 @@ import { apiClient } from "./ApiClient";
 export const usePlaylistsApi = () => {
   const queryClient = useQueryClient();
 
-  const playlistsQuery = useQuery({
+  const userPlaylistsQuery = useQuery({
     queryKey: ["playlists"],
-    queryFn: () => apiClient("/playlists"),
-  })
-
-  const useUserPlaylists = () =>
-    useQuery({
-      queryKey: ["userPlaylists"],
-      queryFn: () => apiClient(`/playlists/user/`),
-    });
+    queryFn: () => apiClient(`/playlists`),
+  });
 
   const usePlaylist = (id) =>
     useQuery({
@@ -29,7 +23,6 @@ export const usePlaylistsApi = () => {
         body: playlist,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries(["userPlaylists"]);
       queryClient.invalidateQueries(["playlists"]);
     },
   });
@@ -40,9 +33,8 @@ export const usePlaylistsApi = () => {
         method: "PUT",
         body: data,
       }),
-    onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries(["playlist", id]);
-      queryClient.invalidateQueries(["userPlaylists"]);
+    onSuccess: (updatedPlaylist) => {
+      queryClient.invalidateQueries(["playlist", updatedPlaylist.id]);
     },
   });
 
@@ -53,39 +45,37 @@ export const usePlaylistsApi = () => {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries(["playlists"]);
-      queryClient.invalidateQueries(["userPlaylists"]);
     },
   });
 
   const addSongToPlaylist = useMutation({
     mutationFn: async ({ playlistId, songId }) => {
-      return apiClient(`/playlists/${playlistId}`, {
+      return apiClient(`/playlists/addSong/${playlistId}`, {
         method: "POST",
-        body: songId,
+        body: { song_id: songId },
       });
     },
-    onSuccess: (_, { playlist }) => {
-      queryClient.invalidateQueries(["playlist", playlist.id]);
-      queryClient.invalidateQueries(["userPlaylists", playlist.userId]);
+    onSuccess: (updatedPlaylist) => {
+      queryClient.invalidateQueries(["playlist", updatedPlaylist.id]);
+      queryClient.invalidateQueries(["playlists"]);
     },
   });
 
   const removeSongFromPlaylist = useMutation({
-    mutationFn: async ({playlistId, songId }) => {
-      return apiClient(`/playlists/${playlistId}`, {
+    mutationFn: async ({ playlistId, songId }) => {
+      return apiClient(`/playlists/removeSong/${playlistId}`, {
         method: "POST",
-        body: songId,
+        body: { song_id: songId },
       });
     },
-    onSuccess: (_, { playlist }) => {
-      queryClient.invalidateQueries(["playlist", playlist.id]);
-      queryClient.invalidateQueries(["userPlaylists", playlist.userId]);
+    onSuccess: (updatedPlaylist) => {
+      queryClient.invalidateQueries(["playlist", updatedPlaylist.id]);
+      queryClient.invalidateQueries(["playlists"]);
     },
   });
 
   return {
-    playlistsQuery,
-    useUserPlaylists,
+    userPlaylistsQuery,
     usePlaylist,
     createPlaylist,
     updatePlaylist,
