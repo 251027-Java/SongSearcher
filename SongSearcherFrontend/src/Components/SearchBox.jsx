@@ -1,8 +1,10 @@
 import SongSearchItem from "./SongSearchItem";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { SEARCH_MODEL } from "../constants";
 import { useSongsApi } from "../ApiHooks/useSongsApi";
 import { useSongsSearch } from "../ApiHooks/useSongsSearch";
+import Spinner from "./Spinner";
+import { usePlaylistsApi } from "../ApiHooks/usePlaylistsApi";
 
 const SearchBox = () => {
   const [searchModel, setSearchModel] = useState(SEARCH_MODEL.SONG_TITLE);
@@ -14,6 +16,14 @@ const SearchBox = () => {
     searchSongsByAlbum,
     searchSongsByArtist,
   } = useSongsApi();
+  const { addSongToPlaylist, userPlaylistsQuery, removeSongFromPlaylist } =
+    usePlaylistsApi();
+
+  const { data: playlists } = userPlaylistsQuery;
+  const favoritePlaylist = useMemo(() => {
+    if (!playlists) return null;
+    return playlists.find((p) => p.name === "Favorites") || null;
+  }, [playlists]);
 
   let placeholder;
   if (searchModel == SEARCH_MODEL.SONG_TITLE) {
@@ -38,6 +48,7 @@ const SearchBox = () => {
   });
 
   const submitSearchHandler = async () => {
+    if (search == "") return;
     const result = await searchMutation.mutateAsync({
       model: searchModel,
       search,
@@ -46,11 +57,32 @@ const SearchBox = () => {
     setSearchQuery(result);
   };
 
+  const toggleFavoriteHandler = async (songId) => {
+    const isFav = favoritePlaylist?.songs.some((s) => s.id === songId);
+    if (!isFav) {
+      await addSongToPlaylist.mutateAsync({
+        playlistId: favoritePlaylist.id,
+        songId,
+      });
+    } else {
+      await removeSongFromPlaylist.mutateAsync({
+        playlistId: favoritePlaylist.id,
+        songId,
+      });
+    }
+  };
+
   const modelButtonClickHandler = (model) => {
     setSearchModel(model);
     setSearch("");
     setSearchQuery("");
   };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      submitSearchHandler();
+    }
+  }
 
   return (
     <div className="flex flex-col gap-2 col-span-2 h-90 bg-slate-200 rounded-lg p-5">
@@ -98,6 +130,7 @@ const SearchBox = () => {
           className="bg-white rounded-md w-full border border-grey-200 px-1"
           placeholder={placeholder}
           value={search}
+          onKeyDown={handleKeyDown}
           onChange={searchChangeHandler}
         />
         <button
@@ -107,21 +140,24 @@ const SearchBox = () => {
           Search
         </button>
       </div>
-      {searchMutation.isPending && (
-        <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-      )}
+      {searchMutation.isPending && <Spinner />}
       {searchMutation.isError && (
-        <p className="color-red">Error: {searchMutation.error.message}</p>
+        <p className="text-red-500">Error: {searchMutation.error.message}</p>
       )}
       <div className="flex flex-col gap-2 overflow-auto">
-        {searchQuery &&
+        {searchQuery ? (
           searchQuery.map((song) => (
             <SongSearchItem
               id={song.id}
               song={song}
+              isFav={favoritePlaylist?.songs.some((s) => s.id === song.id)}
+              toggleFavorite={toggleFavoriteHandler}
               resetSearch={submitSearchHandler}
             />
-          ))}
+          ))
+        ) : (
+          <p>Begin your search for songs!</p>
+        )}
       </div>
     </div>
   );

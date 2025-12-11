@@ -1,10 +1,14 @@
 import { MAX_LENGTH } from "../constants";
-import { TrashIcon, HeartIcon } from "@heroicons/react/24/outline";
+import {
+  TrashIcon,
+  HeartIcon as HeartOutlineIcon,
+} from "@heroicons/react/24/outline";
+import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
 import DeleteConfirmDialog from "./DeleteConfirmDialog";
 import { useState } from "react";
 import { useSongsApi } from "../ApiHooks/useSongsApi";
 
-const SongSearchItem = ({ song, resetSearch }) => {
+const SongSearchItem = ({ song, resetSearch, toggleFavorite, isFav }) => {
   const [open, setOpen] = useState(false);
   const { deleteSong } = useSongsApi();
 
@@ -37,8 +41,15 @@ const SongSearchItem = ({ song, resetSearch }) => {
           </p>
         </div>
         <div className="flex flex-col gap-5 mr-3">
-          <button className="p-1 hover:bg-red-200 hover:cursor-pointer rounded-full">
-            <HeartIcon className="size-6 text-red-500" />
+          <button
+            className="p-1 hover:bg-red-200 hover:cursor-pointer rounded-full"
+            onClick={() => toggleFavorite(song.id)}
+          >
+            {isFav ? (
+              <HeartSolidIcon className="size-6 text-red-500" />
+            ) : (
+              <HeartOutlineIcon className="size-6 text-red-500" />
+            )}
           </button>
           <button
             onClick={openDialogHandler}
