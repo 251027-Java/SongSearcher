@@ -2,6 +2,7 @@ package com.revature.SongSearcher.Controller;
 
 import com.revature.SongSearcher.Controller.DTO.PlaylistDTO;
 import com.revature.SongSearcher.Controller.DTO.PlaylistWOIDDTO;
+import com.revature.SongSearcher.Controller.DTO.SongID;
 import com.revature.SongSearcher.Service.AuthorizeService;
 import com.revature.SongSearcher.Service.PlaylistService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,6 +56,32 @@ public class PlaylistController {
     @PutMapping("/{id}")
     public PlaylistDTO update(@PathVariable String id, @RequestBody PlaylistDTO dto) {
         return service.update(id, dto);
+    }
+
+    @PostMapping("/addSong/{playlistId}")
+    public PlaylistDTO addSongToPlaylist(@PathVariable String playlistId,
+                                         @RequestBody SongID songId,
+                                         HttpServletRequest request) {
+
+        PlaylistDTO dto = service.getById(playlistId);
+
+        authService.authorizeSelfAccess(request, dto.userid());
+
+        return service.addSongToPlaylist(playlistId, songId.song_id());
+
+    }
+
+    @PostMapping("/removeSong/{playlistId}")
+    public PlaylistDTO removeSongFromPlaylist(@PathVariable String playlistId,
+                                              @RequestBody SongID songId,
+                                              HttpServletRequest request) {
+
+        PlaylistDTO dto = service.getById(playlistId);
+
+        authService.authorizeSelfAccess(request, dto.userid());
+
+        return service.removeSongFromPlaylist(playlistId, songId.song_id());
+
     }
 
     @PatchMapping("/{id}")

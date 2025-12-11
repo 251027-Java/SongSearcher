@@ -73,8 +73,6 @@ public class PlaylistService {
                 .toList();
     }
 
-    // TODO
-    // Need to enforce requested playlist belongs to requester.
     public PlaylistDTO getById(String id) {
         Playlist playlist = repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -82,8 +80,6 @@ public class PlaylistService {
         return PlaylistToDTO(playlist);
     }
 
-    // TODO
-    // Need to enforce the id is of user actually requesting
     public List<PlaylistDTO> getByUserId(Long userId) {
         return repo.findByUser_UserId(userId).stream().map(this::PlaylistToDTO).toList();
     }
@@ -163,6 +159,30 @@ public class PlaylistService {
 
     public PlaylistDTO getByUserIdAndName(Long userId, String playlistName) {
         return PlaylistToDTO(repo.findByPlaylistNameAndUser_UserId(playlistName, userId));
+    }
+
+    public PlaylistDTO addSongToPlaylist(String playlistId, String songId) {
+        Playlist playlist = repo.findById(playlistId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Playlist not found"));
+
+        Song song = songRepo.findById(songId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Song not found"));
+
+        playlist.getSongs().add(song);
+
+        return PlaylistToDTO(repo.save(playlist));
+    }
+
+    public PlaylistDTO removeSongFromPlaylist(String playlistId, String songId) {
+        Playlist playlist = repo.findById(playlistId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Playlist not found"));
+
+        Song song = songRepo.findById(songId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Song not found"));
+
+        playlist.getSongs().remove(song);
+
+        return PlaylistToDTO(repo.save(playlist));
     }
 }
 
