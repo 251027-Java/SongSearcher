@@ -4,6 +4,7 @@ import com.revature.SongSearcher.Controller.DTO.SearchDTO;
 import com.revature.SongSearcher.Controller.DTO.SongDTO;
 import com.revature.SongSearcher.Controller.DTO.SongWOIDDTO;
 import com.revature.SongSearcher.Service.SongService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,17 +30,17 @@ public class SongController {
     }
 
     @PostMapping
-    public SongDTO create(@RequestBody SongWOIDDTO dto) {
+    public SongDTO create(@Valid @RequestBody SongWOIDDTO dto) {
         return service.create(dto);
     }
 
 //    @PutMapping("/{id}")
-//    public SongDTO update(@PathVariable String id, @RequestBody SongDTO dto) {
+//    public SongDTO update(@PathVariable String id, @Valid @RequestBody SongDTO dto) {
 //        return service.update(id, dto);
 //    }
 
     @PatchMapping("/{id}")
-    public SongDTO patch(@PathVariable String id, @RequestBody SongDTO dto) {
+    public SongDTO patch(@PathVariable String id, @Valid @RequestBody SongDTO dto) {
         return service.patch(id, dto);
     }
 
@@ -64,7 +65,7 @@ public class SongController {
     }
 
     @PostMapping("/search/similar")
-    public List<SongDTO> searchByLyrics(@RequestBody SearchDTO dto) {
+    public List<SongDTO> searchByLyrics(@Valid @RequestBody SearchDTO dto) {
         return service.searchByLyrics(dto);
     }
 

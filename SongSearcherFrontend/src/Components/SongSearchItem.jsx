@@ -52,6 +52,7 @@ const SongSearchItem = ({ song, resetSearch }) => {
         open={open}
         setOpen={setOpen}
         onDelete={deleteHandler}
+        song={song}
       />
     </div>
   );
