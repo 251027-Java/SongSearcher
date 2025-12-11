@@ -26,9 +26,8 @@ const AddSongForm = ({ onSubmit }) => {
     : artists;
 
   const addArtistOptions = additionalArtists.map((artist) => ({
-    value: artist.name,
+    value: artist,
     label: artist.name,
-    artist: artist,
   }));
 
   const albumSelectHandler = (selectedOption) => {
@@ -43,7 +42,7 @@ const AddSongForm = ({ onSubmit }) => {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
-    const addArtists = selectedArtists.map(
+    const addArtists = !selectedArtists ? [] : selectedArtists.map(
       (artistOption) => artistOption.value
     );
     const artists = [...selectedAlbum.value.artists, ...addArtists];
@@ -54,6 +53,9 @@ const AddSongForm = ({ onSubmit }) => {
       album: selectedAlbum.value,
       artists: artists,
     });
+    event.target.reset();
+    setSelectedAlbum(null);
+    setSelectedArtists(null);
   };
 
   return (

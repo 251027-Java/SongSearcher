@@ -10,7 +10,7 @@ const FavoritesBox = () => {
   ]);
 
   return (
-    <div className="flex flex-col items-center col-span-1 h-75 bg-slate-200 rounded-lg p-5">
+    <div className="flex flex-col items-center col-span-1 h-90 bg-slate-200 rounded-lg p-5">
       <h1 className="text-lg font-bold">Favorites</h1>
       <ul>
         {favoriteSongs.map((song, index) => (
