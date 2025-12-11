@@ -16,17 +16,21 @@ export const useSongsApi = () => {
       enabled: !!id,
     });
 
-  const searchSongsByTitle = useMutation({
-    mutationFn: (title) => apiClient(`/songs/search/title/${title}`),
-  });
+  // The searches are not a mutation as I am using a single mutation to wrap them all with useSongsSearch
+  const searchSongsByTitle = (title) =>
+    apiClient(`/songs/search/title/${title}`);
 
-  const searchSongsByAlbum = useMutation({
-    mutationFn: (title) => apiClient(`/songs/search/album/${title}`),
-  });
+  const searchSongsByAlbum = (album) =>
+    apiClient(`/songs/search/album/${album}`);
 
-  const searchSongsByArtist = useMutation({
-    mutationFn: (name) => apiClient(`/songs/search/artist/${name}`),
-  });
+  const searchSongsByArtist = (name) =>
+    apiClient(`/songs/search/artist/${name}`);
+
+  const similarSongs = (lyrics) =>
+    apiClient("/songs/search/similar", {
+      method: "POST",
+      body: lyrics,
+    });
 
   const createSong = useMutation({
     mutationFn: (song) =>
@@ -37,14 +41,6 @@ export const useSongsApi = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(["songs"]);
     },
-  });
-
-  const similarSongs = useMutation({
-    mutationFn: (lyrics) =>
-      apiClient("/songs/search/similar", {
-        method: "POST",
-        body: lyrics,
-      }),
   });
 
   const deleteSong = useMutation({

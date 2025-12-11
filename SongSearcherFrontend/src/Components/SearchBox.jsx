@@ -2,6 +2,7 @@ import SongSearchItem from "./SongSearchItem";
 import { useState } from "react";
 import { SEARCH_MODEL } from "../constants";
 import { useSongsApi } from "../ApiHooks/useSongsApi";
+import { useSongsSearch } from "../ApiHooks/useSongsSearch";
 
 const SearchBox = () => {
   const [searchModel, setSearchModel] = useState(SEARCH_MODEL.SONG_TITLE);
@@ -29,23 +30,27 @@ const SearchBox = () => {
     setSearch(e.target.value);
   };
 
+  const searchMutation = useSongsSearch({
+    searchSongsByTitle,
+    similarSongs,
+    searchSongsByAlbum,
+    searchSongsByArtist,
+  });
+
   const submitSearchHandler = async () => {
-    if (searchModel == SEARCH_MODEL.SONG_TITLE) {
-      setSearchQuery(await searchSongsByTitle.mutateAsync(search));
-    } else if (searchModel == SEARCH_MODEL.SONG_LYRICS) {
-      setSearchQuery(await similarSongs.mutateAsync({ lyrics: search }));
-    } else if (searchModel == SEARCH_MODEL.ALBUM) {
-      setSearchQuery(await searchSongsByAlbum.mutateAsync(search));
-    } else if (searchModel == SEARCH_MODEL.ARTIST) {
-      setSearchQuery(await searchSongsByArtist.mutateAsync(search));
-    }
+    const result = await searchMutation.mutateAsync({
+      model: searchModel,
+      search,
+    });
+
+    setSearchQuery(result);
   };
 
   const modelButtonClickHandler = (model) => {
     setSearchModel(model);
     setSearch("");
     setSearchQuery("");
-  }
+  };
 
   return (
     <div className="flex flex-col gap-2 col-span-2 h-90 bg-slate-200 rounded-lg p-5">
@@ -102,6 +107,14 @@ const SearchBox = () => {
           Search
         </button>
       </div>
+      {searchMutation.isPending && (
+        <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      )}
+      {searchMutation.isError && (
+        <p className="color-red">
+          Error: {searchMutation.error.message}
+        </p>
+      )}
       <div className="flex flex-col gap-2 overflow-auto">
         {searchQuery &&
           searchQuery.map((song) => (
