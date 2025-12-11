@@ -9,11 +9,10 @@ export const usePlaylistsApi = () => {
     queryFn: () => apiClient("/playlists"),
   })
 
-  const useUserPlaylists = (userId) =>
+  const useUserPlaylists = () =>
     useQuery({
-      queryKey: ["userPlaylists", userId],
-      queryFn: () => apiClient(`/playlists/user/${userId}`),
-      enabled: !!userId,
+      queryKey: ["userPlaylists"],
+      queryFn: () => apiClient(`/playlists/user/`),
     });
 
   const usePlaylist = (id) =>
@@ -59,15 +58,10 @@ export const usePlaylistsApi = () => {
   });
 
   const addSongToPlaylist = useMutation({
-    mutationFn: async ({ playlist, song }) => {
-      const updated = {
-        ...playlist,
-        songs: [...playlist.songs, song],
-      };
-
-      return apiClient(`/playlists/${playlist.id}`, {
-        method: "PUT",
-        body: updated,
+    mutationFn: async ({ playlistId, songId }) => {
+      return apiClient(`/playlists/${playlistId}`, {
+        method: "POST",
+        body: songId,
       });
     },
     onSuccess: (_, { playlist }) => {
@@ -77,15 +71,10 @@ export const usePlaylistsApi = () => {
   });
 
   const removeSongFromPlaylist = useMutation({
-    mutationFn: async ({ playlist, songId }) => {
-      const updated = {
-        ...playlist,
-        songs: playlist.songs.filter((s) => s.id !== songId),
-      };
-
-      return apiClient(`/playlists/${playlist.id}`, {
-        method: "PUT",
-        body: updated,
+    mutationFn: async ({playlistId, songId }) => {
+      return apiClient(`/playlists/${playlistId}`, {
+        method: "POST",
+        body: songId,
       });
     },
     onSuccess: (_, { playlist }) => {
