@@ -37,6 +37,15 @@ export const apiClient = async (endpoint, { method = "GET", body } = {}) => {
     throw new Error(`${response.status}: ${message}`);
   }
 
-  if (response.status === 204) return null;
-  return response.json();
+  const contentType = response.headers.get("content-type") || "";
+
+  // If no JSON body exists, return null
+  if (!contentType.includes("application/json")) {
+    return null;
+  }
+
+  const text = await response.text();
+  if (!text) return null; // empty body
+
+  return JSON.parse(text);
 };

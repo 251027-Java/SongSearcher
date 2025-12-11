@@ -111,14 +111,16 @@ const SearchBox = () => {
         <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       )}
       {searchMutation.isError && (
-        <p className="color-red">
-          Error: {searchMutation.error.message}
-        </p>
+        <p className="color-red">Error: {searchMutation.error.message}</p>
       )}
       <div className="flex flex-col gap-2 overflow-auto">
         {searchQuery &&
           searchQuery.map((song) => (
-            <SongSearchItem id={song.id} song={song} />
+            <SongSearchItem
+              id={song.id}
+              song={song}
+              resetSearch={submitSearchHandler}
+            />
           ))}
       </div>
     </div>
