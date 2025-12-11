@@ -26,15 +26,18 @@ public class PlaylistController {
         this.authService = authService;
     }
 
+    //TODO
+    // This mapping is unsafe, it allows all users to get all playlists.
+    // Should remove for prod
     @GetMapping
     public List<PlaylistDTO> getAll() {
         return service.getAll();
     }
 
 
-    @GetMapping("/user/{userid}") //This is user id
-    public List<PlaylistDTO> getByUserId(@PathVariable Long userid, HttpServletRequest request) {
-        authService.authorizeSelfAccess(request, userid);
+    @GetMapping("/user") //This is user id
+    public List<PlaylistDTO> getByUserId(HttpServletRequest request) {
+        Long userid = authService.getUserIdFromAuthorization(request);
 
         return service.getByUserId(userid);
     }
@@ -50,8 +53,11 @@ public class PlaylistController {
     }
 
     @PostMapping
-    public PlaylistDTO create(@Valid @RequestBody PlaylistWOIDDTO dto) {
-        return service.create(dto);
+    public PlaylistDTO create(@Valid @RequestBody PlaylistWOIDDTO dto,
+                              HttpServletRequest request) {
+        Long userid = authService.getUserIdFromAuthorization(request);
+
+        return service.create(userid, dto);
     }
 
     @PutMapping("/{id}")

@@ -61,8 +61,8 @@ public class PlaylistService {
                 playlist.getUser().getUserId(),
                 new ArrayList<>(playlist.getSongs()).stream().map(this::SongToDTO).collect(Collectors.toSet()));
     }
-    private Playlist DTOToPlaylist (PlaylistWOIDDTO dto) {
-        AppUser user = userRepo.findById(dto.userid()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+    private Playlist DTOToPlaylist (Long userid, PlaylistWOIDDTO dto) {
+        AppUser user = userRepo.findById(userid).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
         return new Playlist(dto.name(), user);
     }
@@ -84,9 +84,9 @@ public class PlaylistService {
         return repo.findByUser_UserId(userId).stream().map(this::PlaylistToDTO).toList();
     }
 
-    public PlaylistDTO create(PlaylistWOIDDTO dto) {
+    public PlaylistDTO create(Long userid, PlaylistWOIDDTO dto) {
 
-        Playlist playlist = DTOToPlaylist(dto);
+        Playlist playlist = DTOToPlaylist(userid, dto);
 
         List<Optional<Song>> songs = dto.songs().stream().map(s -> songRepo.findById(s.id())).toList();
 
