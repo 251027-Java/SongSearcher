@@ -64,11 +64,14 @@ public class SongSearcherApplication {
             var p1 = new Playlist("Favorites", u1);
             p1.setSongs(Set.of(s1));
 
+            var p2 = new Playlist("Favorites", u2);
+            p1.setSongs(Set.of(s1));
+
             try {
                 artistRepo.saveAll(List.of(a1, a2));
                 albumRepo.save(ab1);
                 songRepo.saveAll(List.of(s1, s2));
-                playlistRepo.save(p1);
+                playlistRepo.saveAll(List.of(p1, p2));
             } catch (Exception e) {
                 System.out.println("Failed to insert information");
                 e.printStackTrace();
