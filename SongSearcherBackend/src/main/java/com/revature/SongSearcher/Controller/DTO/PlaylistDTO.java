@@ -1,6 +1,13 @@
 package com.revature.SongSearcher.Controller.DTO;
 
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.Set;
 
-public record PlaylistDTO(String id, String name, Long userid, Set<SongDTO> songs) {
+public record PlaylistDTO(
+        @NotBlank(message = "Playlist ID is required")
+        String id,
+        @NotBlank(message = "Playlist Name is required")
+        String name,
+        Set<SongDTO> songs) {
 }

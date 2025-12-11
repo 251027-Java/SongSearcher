@@ -1,4 +1,8 @@
 package com.revature.SongSearcher.Controller.DTO;
 
-public record SongID(String song_id) {
+import jakarta.validation.constraints.NotBlank;
+
+public record SongID(
+        @NotBlank(message = "Song ID is required")
+        String song_id) {
 }

@@ -1,3 +1,9 @@
 package com.revature.SongSearcher.Controller.DTO;
 
-public record ArtistDTO(String id, String name) {}
+import jakarta.validation.constraints.NotBlank;
+
+public record ArtistDTO(
+        @NotBlank(message = "Artist ID is required")
+        String id,
+        @NotBlank(message = "Artist Name is required")
+        String name) {}

@@ -2,6 +2,7 @@ package com.revature.SongSearcher.Controller;
 import com.revature.SongSearcher.Controller.DTO.ArtistDTO;
 import com.revature.SongSearcher.Controller.DTO.ArtistWOIDDTO;
 import com.revature.SongSearcher.Service.ArtistService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,17 +28,17 @@ public class ArtistController {
     }
 
     @PostMapping
-    public ArtistDTO create(@RequestBody ArtistWOIDDTO dto) {
+    public ArtistDTO create(@Valid @RequestBody ArtistWOIDDTO dto) {
         return service.create(dto);
     }
 
 //    @PutMapping("/{id}")
-//    public ArtistDTO update(@PathVariable String id, @RequestBody ArtistDTO dto) {
+//    public ArtistDTO update(@PathVariable String id, @Valid @RequestBody ArtistDTO dto) {
 //        return service.update(id, dto);
 //    }
 
     @PatchMapping("/{id}")
-    public ArtistDTO patch(@PathVariable String id, @RequestBody ArtistDTO dto) {
+    public ArtistDTO patch(@PathVariable String id, @Valid @RequestBody ArtistDTO dto) {
         return service.patch(id, dto);
     }
 

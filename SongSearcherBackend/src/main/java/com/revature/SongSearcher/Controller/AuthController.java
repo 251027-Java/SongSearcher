@@ -6,6 +6,7 @@ import com.revature.SongSearcher.JwtUtil;
 import com.revature.SongSearcher.Model.AppUser;
 import com.revature.SongSearcher.Repository.AppUserRepository;
 import com.revature.SongSearcher.Service.AppUserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,7 +44,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody AuthRequest request){
+    public AuthResponse login(@Valid @RequestBody AuthRequest request){
 
         Optional<AppUser> user = appUserRepository.findByUsername(request.username());
         if (user.isEmpty()) {
@@ -60,7 +61,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public AppUserDTO register(@RequestBody AppUserWOIDDTO dto) {
+    public AppUserDTO register(@Valid @RequestBody AppUserWOIDDTO dto) {
         //TODO
         // Add handling here to generate a token
         // client should not receive appuserdto, just success and a token

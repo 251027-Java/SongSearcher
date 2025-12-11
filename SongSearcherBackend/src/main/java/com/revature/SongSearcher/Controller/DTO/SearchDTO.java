@@ -1,4 +1,8 @@
 package com.revature.SongSearcher.Controller.DTO;
 
-public record SearchDTO (String lyrics) {
+import jakarta.validation.constraints.NotBlank;
+
+public record SearchDTO (
+        @NotBlank(message = "Lyrics are required")
+        String lyrics) {
 }
