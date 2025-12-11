@@ -45,13 +45,12 @@ const AddSongForm = ({ onSubmit }) => {
     const addArtists = !selectedArtists ? [] : selectedArtists.map(
       (artistOption) => artistOption.value
     );
-    const artists = [...selectedAlbum.value.artists, ...addArtists];
     onSubmit({
       title: data.get("title"),
       length: Math.round(data.get("length")),
       lyrics: data.get("lyrics"),
       album: selectedAlbum.value,
-      artists: artists,
+      artists: addArtists,
     });
     event.target.reset();
     setSelectedAlbum(null);
