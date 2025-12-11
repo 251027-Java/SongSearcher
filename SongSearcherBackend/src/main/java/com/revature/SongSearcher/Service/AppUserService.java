@@ -41,8 +41,8 @@ public class AppUserService {
 
         AppUser user = new AppUser(dto.username(), encoder.encode(dto.password()), "USER");
 
-        PlaylistWOIDDTO favoritesDTO = new PlaylistWOIDDTO("Favorites", user.getUserId(), Set.of());
-        PlaylistDTO favorites = playlistService.create(favoritesDTO);
+        PlaylistWOIDDTO favoritesDTO = new PlaylistWOIDDTO("Favorites", Set.of());
+        PlaylistDTO favorites = playlistService.create(user.getUserId(), favoritesDTO);
 
         return AppUserToDTO(repo.save(user));
     }

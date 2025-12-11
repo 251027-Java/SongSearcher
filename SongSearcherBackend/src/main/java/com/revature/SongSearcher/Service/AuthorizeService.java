@@ -33,4 +33,8 @@ public class AuthorizeService {
         }
     }
 
+    public Long getUserIdFromAuthorization(HttpServletRequest request) {
+        return (Long) request.getAttribute("authenticatedUserId");
+    }
+
 }
