@@ -1,12 +1,12 @@
 import SongSearchItem from "./SongSearchItem";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { SEARCH_MODEL } from "../constants";
 import { useSongsApi } from "../ApiHooks/useSongsApi";
 import { useSongsSearch } from "../ApiHooks/useSongsSearch";
 import Spinner from "./Spinner";
 import { usePlaylistsApi } from "../ApiHooks/usePlaylistsApi";
 
-const SearchBox = ({playlists}) => {
+const SearchBox = ({favoritePlaylist}) => {
   const [searchModel, setSearchModel] = useState(SEARCH_MODEL.SONG_TITLE);
   const [searchQuery, setSearchQuery] = useState(null);
   const [search, setSearch] = useState("");
@@ -18,11 +18,6 @@ const SearchBox = ({playlists}) => {
   } = useSongsApi();
   const { addSongToPlaylist, removeSongFromPlaylist } =
     usePlaylistsApi();
-
-  const favoritePlaylist = useMemo(() => {
-    if (!playlists) return null;
-    return playlists.find((p) => p.name === "Favorites") || null;
-  }, [playlists]);
 
   let placeholder;
   if (searchModel == SEARCH_MODEL.SONG_TITLE) {
