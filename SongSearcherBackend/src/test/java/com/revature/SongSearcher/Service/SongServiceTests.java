@@ -86,6 +86,41 @@ class SongServiceTests {
                 .isInstanceOf(ResponseStatusException.class);
     }
 
+    @Test
+    void create_validSongWOIDDTO_returnsSongDTO() {
+        // Arrange
+        AlbumSlimDTO albumDto = new AlbumSlimDTO("a1", "Greatest Hits", 2024);
+        ArtistDTO artistDto = new ArtistDTO("ar1", "Artist One");
+        Set<ArtistDTO> artists = new HashSet<>();
+        artists.add(artistDto);
+
+        SongWOIDDTO dto = new SongWOIDDTO(
+                "My New Song",
+                new BigDecimal("3.45"),
+                "These are the lyrics of my new song",
+                albumDto,
+                artists.stream().toList()
+        );
+
+        Album album = new Album("a1", "Greatest Hits", 2024, new HashSet<>());
+        Song savedSong = new Song("s1", "My New Song", new BigDecimal("3.45"),
+                album, Set.of(new Artist("ar1", "Artist One")),
+                "These are the lyrics of my new song",
+                new float[]{0.1f, 0.2f});
+
+        when(albumRepo.findById("a1")).thenReturn(Optional.of(album));
+        when(embedder.getEmbedding(dto.lyrics())).thenReturn(new float[]{0.1f, 0.2f});
+        when(songRepo.save(any(Song.class))).thenReturn(savedSong);
+
+        // Act
+        SongDTO created = service.create(dto);
+
+        // Assert
+        assertThat(created.title()).isEqualTo("My New Song");
+        assertThat(created.album().id()).isEqualTo("a1");
+        assertThat(created.artists()).hasSize(1);
+        verify(songRepo).save(any(Song.class));
+    }
 
     @Test
     void happyPath_update_existingSong_updatesFields() {
