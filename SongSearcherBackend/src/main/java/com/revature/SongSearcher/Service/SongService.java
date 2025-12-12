@@ -9,7 +9,7 @@ import com.revature.SongSearcher.Model.Song;
 import com.revature.SongSearcher.Repository.SongRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -40,13 +40,13 @@ public class SongService {
         return new Artist(dto.id(), dto.name());
     }
     private AlbumDTO AlbumToDTO (Album album) {
-        return new AlbumDTO(album.getAlbumId(), album.getTitle(), album.getRelease_year(), album.getArtists().stream().map(this::ArtistToDTO).toList());
+        return new AlbumDTO(album.getAlbumId(), album.getTitle(), album.getReleaseyear(), album.getArtists().stream().map(this::ArtistToDTO).toList());
     }
     private AlbumSlimDTO AlbumToSlimDTO (Album album ) {
         return new AlbumSlimDTO(
                 album.getAlbumId(),
                 album.getTitle(),
-                album.getRelease_year()
+                album.getReleaseyear()
         );
     }
     private Album DTOToAlbum (AlbumSlimDTO dto) {
@@ -93,6 +93,7 @@ public class SongService {
         return SongToDTO(song);
     }
 
+    @Transactional
     public SongDTO create(SongWOIDDTO dto) {
 
         Song song = DTOToSong(dto);
@@ -107,6 +108,7 @@ public class SongService {
 
         }
 
+    @Transactional
     public SongDTO update(String id, SongDTO dto) {
         Song song = repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -127,6 +129,7 @@ public class SongService {
         return SongToDTO(saved);
     }
 
+    @Transactional
     public SongDTO patch(String id, SongDTO dto) {
 
         Song song = repo.findById(id)

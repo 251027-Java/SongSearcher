@@ -52,12 +52,18 @@ public class AppUserService {
 
         Optional<AppUser> existing = repo.findByUsername(dto.username());
         if (existing.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.IM_USED);
+            throw new ResponseStatusException(HttpStatus.IM_USED, "Username already in use");
         }
 
-        AppUser admin = new AppUser(dto.username(), encoder.encode(dto.password()), "ADMIN");
+        AppUser user = new AppUser(dto.username(), encoder.encode(dto.password()), "ADMIN");
 
-        return AppUserToDTO(repo.save(admin));
+        AppUser saved = repo.save(user);
+        repo.flush();
+
+        PlaylistWOIDDTO favoritesDTO = new PlaylistWOIDDTO("Favorites", Set.of());
+        PlaylistDTO favorites = playlistService.create(saved.getUserId(), favoritesDTO);
+
+        return AppUserToDTO(saved);
     }
 
     public void delete(Long id) {

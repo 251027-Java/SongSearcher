@@ -31,12 +31,12 @@ public class AlbumService {
         return new Artist(dto.id(), dto.name());
     }
     private AlbumDTO AlbumToDTO (Album album) {
-        return new AlbumDTO(album.getAlbumId(), album.getTitle(), album.getRelease_year(), album.getArtists().stream().map(this::ArtistToDTO).toList());
+        return new AlbumDTO(album.getAlbumId(), album.getTitle(), album.getReleaseyear(), album.getArtists().stream().map(this::ArtistToDTO).toList());
     }
 
     public List<AlbumDTO> getAll() {
         return repo.findAll().stream()
-                .map(a -> new AlbumDTO(a.getAlbumId(), a.getTitle(), a.getRelease_year(), a.getArtists().stream().map(this::ArtistToDTO).toList()))
+                .map(a -> new AlbumDTO(a.getAlbumId(), a.getTitle(), a.getReleaseyear(), a.getArtists().stream().map(this::ArtistToDTO).toList()))
                 .toList();
     }
 
@@ -78,7 +78,7 @@ public class AlbumService {
 //
 //        return dto;
         album.setTitle(dto.title());
-        album.setRelease_year(dto.releaseYear());
+        album.setReleaseyear(dto.releaseYear());
 
         album.getArtists().clear();
 
@@ -104,7 +104,7 @@ public class AlbumService {
         }
 
         if (dto.releaseYear() != 0) {
-            album.setRelease_year(dto.releaseYear());
+            album.setReleaseyear(dto.releaseYear());
         }
 
         if (dto.artists() != null && !dto.artists().isEmpty()) {
@@ -126,6 +126,16 @@ public class AlbumService {
 
     public void delete(String id) {
         repo.deleteById(id);
+    }
+
+    public AlbumDTO getByTitleAndReleaseYear(String title, int release_year) {
+        Album album = repo.findByTitleAndReleaseyear(title, release_year);
+
+        return album!=null ? AlbumToDTO(album) : null;
+    }
+
+    public void flush() {
+        repo.flush();
     }
 }
 

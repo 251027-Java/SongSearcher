@@ -74,6 +74,6 @@ public class Song {
 //    @Override
 //    public String toString() {
 //        return String.format("Song: \"%s\", Artist: %s, Album: %s (%d), Duration: %.2f",
-//                this.title, this.album.getArtists().toString(), this.album, this.album.getRelease_year(), this.length);
+//                this.title, this.album.getArtists().toString(), this.album, this.album.getReleaseyear(), this.length);
 //    }
 }

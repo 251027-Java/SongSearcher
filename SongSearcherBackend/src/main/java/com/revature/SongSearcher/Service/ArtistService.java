@@ -72,4 +72,13 @@ public class ArtistService {
     public void delete(String id) {
         repo.deleteById(id);
     }
+
+    public ArtistDTO getByName (String name) {
+        Artist artist = this.repo.findByName(name);
+        return artist!=null ? ArtistToDTO(this.repo.findByName(name)) : null;
+    }
+
+    public void flush() {
+        repo.flush();
+    }
 }

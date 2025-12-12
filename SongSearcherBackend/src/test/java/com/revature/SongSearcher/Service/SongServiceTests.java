@@ -46,7 +46,7 @@ class SongServiceTests {
         album = new Album();
         album.setAlbumId("a1");
         album.setTitle("AlbumTitle");
-        album.setRelease_year(2024);
+        album.setReleaseyear(2024);
         album.setArtists(new HashSet<>());
 
         song = new Song();
