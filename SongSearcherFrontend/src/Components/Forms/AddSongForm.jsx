@@ -76,7 +76,7 @@ const AddSongForm = ({ onSubmit }) => {
           </div>
           <div className="flex w-full min-w-0">
             <label className="px-1 mx-1" for="length">
-              Length:
+              Length (seconds):
             </label>
             <input
               required
@@ -86,7 +86,7 @@ const AddSongForm = ({ onSubmit }) => {
               min="0"
               id="length"
               name="length"
-              placeholder="Song length..."
+              placeholder="Song length in seconds..."
             />
           </div>
           <div className="flex w-full items-center">

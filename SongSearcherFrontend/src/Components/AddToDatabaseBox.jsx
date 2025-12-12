@@ -29,7 +29,7 @@ const AddToDatabaseBox = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2 theme-main col-span-2 h-90 rounded-lg p-5 relative">
+    <div className="flex flex-col gap-2 theme-main col-span-3 h-90 rounded-lg p-5 relative">
       <div className="flex gap-2">
         <div className="flex items-center gap-1">
           <Plus className="h-5 w-5" />

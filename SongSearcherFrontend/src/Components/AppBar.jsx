@@ -1,17 +1,17 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../AuthContext";
 import LogoutConfirmDialog from "./Dialogs/LogoutConfirmDialog";
 
 const AppBar = () => {
   const { logout, isAuthenticated } = useContext(AuthContext);
-  const [open, setOpen] = useState(false);
+//   const [open, setOpen] = useState(false);
   
-  const handleLogoutClick = () => {
-    setOpen(true);
-  }
+//   const handleLogoutClick = () => {
+//     setOpen(true);
+//   }
   const logoutHandler = () => {
     logout();
-    setOpen(false);
+    // setOpen(false);
   }
 
   return (
@@ -24,14 +24,14 @@ const AppBar = () => {
           {isAuthenticated && (
             <button
               className="text-mint-800 rounded-md p-1 px-2 hover:cursor-pointer hover:bg-mint-300"
-              onClick={handleLogoutClick}
+              onClick={logoutHandler}
             >
               Logout
             </button>
           )}
         </div>
       </div>
-      <LogoutConfirmDialog open={open} setOpen={setOpen} onLogout={logoutHandler}/>
+      {/* <LogoutConfirmDialog open={open} setOpen={setOpen} onLogout={logoutHandler}/> */}
     </header>
   );
 };
