@@ -8,6 +8,7 @@ import com.revature.SongSearcher.Model.Artist;
 import com.revature.SongSearcher.Model.Song;
 import com.revature.SongSearcher.Repository.SongRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -166,7 +167,11 @@ public class SongService {
     }
 
     public void delete(String id) {
-        repo.deleteById(id);
+        try {
+            repo.deleteById(id);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.IM_USED, "Unable to Delete Song, being used");
+        }
     }
 
     public List<SongDTO> searchByTitle (String title) {
