@@ -6,8 +6,12 @@ name: Node.js CI
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'SongSearcherFrontend/**'
   pull_request:
     branches: [ "main" ]
+    paths:
+      - 'SongSearcherFrontend/**'
 
 jobs:
   build:
