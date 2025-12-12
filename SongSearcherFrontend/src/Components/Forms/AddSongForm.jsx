@@ -1,5 +1,5 @@
-import { useArtistsApi } from "../ApiHooks/useArtistsApi";
-import { useAlbumsApi } from "../ApiHooks/useAlbumsApi";
+import { useArtistsApi } from "../../ApiHooks/useArtistsApi";
+import { useAlbumsApi } from "../../ApiHooks/useAlbumsApi";
 import { useState } from "react";
 import Select from "react-select";
 
@@ -76,7 +76,7 @@ const AddSongForm = ({ onSubmit }) => {
           </div>
           <div className="flex w-full min-w-0">
             <label className="px-1 mx-1" for="length">
-              Length:
+              Length (seconds):
             </label>
             <input
               required
@@ -86,7 +86,7 @@ const AddSongForm = ({ onSubmit }) => {
               min="0"
               id="length"
               name="length"
-              placeholder="Song length..."
+              placeholder="Song length in seconds..."
             />
           </div>
           <div className="flex w-full items-center">
@@ -177,7 +177,7 @@ const AddSongForm = ({ onSubmit }) => {
       <div>
         <button
           type="submit"
-          className="bg-mint-300 bottom-0 right-2 p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-400 hover:cursor-pointer"
+          className="submit-button"
         >
           Add Song
         </button>

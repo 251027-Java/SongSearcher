@@ -1,6 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AuthContext } from "../AuthContext";
+import { apiClient } from "../ApiHooks/ApiClient";
+import { useNavigate } from "react-router-dom";
 
 const SignUpBox = ({ toggle }) => {
+  const nav = useNavigate();
+  const { login } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
@@ -24,13 +29,28 @@ const SignUpBox = ({ toggle }) => {
     setUsername(e.target.value);
   };
 
-  const handleSignUp = () => {
-    // Placeholder sign up logic
+  const handleSignUp = async () => {
     if (password === confirmPass) {
-      console.log(
-        "Sign up with username: " + username + " and password: " + password
-      );
-      toggle();
+      try {
+        const data = await apiClient("/auth/register", {
+          method: "POST",
+          body: { username, password },
+        });
+
+        const token = data?.token || data?.accessToken || null;
+        if (!token) {
+          console.error("No token returned from register", data);
+          return;
+        }
+
+        login(token);
+        nav("/dashboard");
+        setPassword("");
+        setUsername("");
+        setConfirmPass("");
+      } catch (err) {
+        console.error("Login failed", err.message);
+      }
     } else {
       setPassError(true);
       setConfirmPass("");
@@ -77,9 +97,13 @@ const SignUpBox = ({ toggle }) => {
           value={confirmPass}
         />
       </div>
-      {passError && <p className="text-red-500 mb-3 w-50 text-center">Passwords did not match</p>}
+      {passError && (
+        <p className="text-red-500 mb-3 w-50 text-center">
+          Passwords did not match
+        </p>
+      )}
       <button
-        className="bg-mint-300 p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-400 hover:cursor-pointer"
+        className="submit-button"
         type="submit"
         onClick={handleSignUp}
       >

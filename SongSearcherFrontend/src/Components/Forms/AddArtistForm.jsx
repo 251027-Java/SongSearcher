@@ -4,6 +4,7 @@ const AddArtistForm = ({ onSubmit }) => {
 
     const data = new FormData(event.currentTarget);
     onSubmit({ name: data.get("name") });
+    event.target.reset();
   };
 
   return (
@@ -24,7 +25,7 @@ const AddArtistForm = ({ onSubmit }) => {
       <div>
         <button
           type="submit"
-          className="bg-mint-300 bottom-0 right-2 p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-400 hover:cursor-pointer"
+          className="submit-button"
         >
           Add Artist
         </button>

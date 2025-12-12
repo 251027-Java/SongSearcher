@@ -6,7 +6,7 @@ export const usePlaylistsApi = () => {
 
   const userPlaylistsQuery = useQuery({
     queryKey: ["playlists"],
-    queryFn: () => apiClient(`/playlists`),
+    queryFn: () => apiClient(`/playlists/user`),
   });
 
   const usePlaylist = (id) =>

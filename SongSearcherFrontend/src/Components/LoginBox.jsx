@@ -82,7 +82,7 @@ const LoginBox = ({ toggle }) => {
         {<p className="text-red-500">{invalidMessage}</p>}
       </div>
       <button
-        className="bg-mint-300 p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-400 hover:cursor-pointer"
+        className="submit-button"
         type="submit"
         onClick={handleLogin}
       >

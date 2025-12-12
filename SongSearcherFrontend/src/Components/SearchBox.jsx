@@ -1,12 +1,13 @@
 import SongSearchItem from "./SongSearchItem";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { SEARCH_MODEL } from "../constants";
 import { useSongsApi } from "../ApiHooks/useSongsApi";
 import { useSongsSearch } from "../ApiHooks/useSongsSearch";
 import Spinner from "./Spinner";
 import { usePlaylistsApi } from "../ApiHooks/usePlaylistsApi";
+import { Search } from "lucide-react";
 
-const SearchBox = () => {
+const SearchBox = ({ favoritePlaylist }) => {
   const [searchModel, setSearchModel] = useState(SEARCH_MODEL.SONG_TITLE);
   const [searchQuery, setSearchQuery] = useState(null);
   const [search, setSearch] = useState("");
@@ -16,14 +17,7 @@ const SearchBox = () => {
     searchSongsByAlbum,
     searchSongsByArtist,
   } = useSongsApi();
-  const { addSongToPlaylist, userPlaylistsQuery, removeSongFromPlaylist } =
-    usePlaylistsApi();
-
-  const { data: playlists } = userPlaylistsQuery;
-  const favoritePlaylist = useMemo(() => {
-    if (!playlists) return null;
-    return playlists.find((p) => p.name === "Favorites") || null;
-  }, [playlists]);
+  const { addSongToPlaylist, removeSongFromPlaylist } = usePlaylistsApi();
 
   let placeholder;
   if (searchModel == SEARCH_MODEL.SONG_TITLE) {
@@ -48,7 +42,10 @@ const SearchBox = () => {
   });
 
   const submitSearchHandler = async () => {
-    if (search == "") return;
+    if (search == "") {
+      setSearchQuery(null);
+      return;
+    }
     const result = await searchMutation.mutateAsync({
       model: searchModel,
       search,
@@ -79,53 +76,56 @@ const SearchBox = () => {
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       submitSearchHandler();
     }
-  }
+  };
 
   return (
-    <div className="flex flex-col gap-2 col-span-2 h-90 bg-slate-200 rounded-lg p-5">
-      <h1 className="font-bold text-2xl">Search</h1>
+    <div className="flex flex-col theme-main gap-2 col-span-2 h-180 rounded-lg p-5">
+      <div className="flex gap-1 items-center">
+        <Search className="w-5 h-5" />
+        <h1 className="font-bold text-2xl">Search</h1>
+      </div>
       <div className="grid grid-cols-4 gap-1">
         <button
-          className={`${
+          className={`toggle-button ${
             searchModel == SEARCH_MODEL.SONG_TITLE
               ? "bg-mint-300"
               : "bg-mint-500"
-          } p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-300 hover:cursor-pointer`}
+          }`}
           onClick={() => modelButtonClickHandler(SEARCH_MODEL.SONG_TITLE)}
         >
           Song Title
         </button>
         <button
-          className={`${
+          className={`toggle-button ${
             searchModel == SEARCH_MODEL.SONG_LYRICS
               ? "bg-mint-300"
               : "bg-mint-500"
-          } p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-300 hover:cursor-pointer`}
+          }`}
           onClick={() => modelButtonClickHandler(SEARCH_MODEL.SONG_LYRICS)}
         >
           Song Lyrics
         </button>
         <button
-          className={`${
+          className={`toggle-button ${
             searchModel == SEARCH_MODEL.ALBUM ? "bg-mint-300" : "bg-mint-500"
-          } p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-300 hover:cursor-pointer`}
+          }`}
           onClick={() => modelButtonClickHandler(SEARCH_MODEL.ALBUM)}
         >
           Album
         </button>
         <button
-          className={`${
+          className={`toggle-button ${
             searchModel == SEARCH_MODEL.ARTIST ? "bg-mint-300" : "bg-mint-500"
-          } p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-300 hover:cursor-pointer`}
+          }`}
           onClick={() => modelButtonClickHandler(SEARCH_MODEL.ARTIST)}
         >
           Artist
         </button>
       </div>
-      <div className="flex gap-1">
+      <div className="flex gap-1 mb-5">
         <input
           className="bg-white rounded-md w-full border border-grey-200 px-1"
           placeholder={placeholder}
@@ -133,10 +133,7 @@ const SearchBox = () => {
           onKeyDown={handleKeyDown}
           onChange={searchChangeHandler}
         />
-        <button
-          className="bg-mint-400 border border-mint-400 p-1 px-2 rounded-md hover:bg-mint-300 hover:cursor-pointer"
-          onClick={submitSearchHandler}
-        >
+        <button className="submit-button" onClick={submitSearchHandler}>
           Search
         </button>
       </div>
@@ -144,11 +141,11 @@ const SearchBox = () => {
       {searchMutation.isError && (
         <p className="text-red-500">Error: {searchMutation.error.message}</p>
       )}
-      <div className="flex flex-col gap-2 overflow-auto">
+      <div className="flex flex-col gap-2 px-2 overflow-auto">
         {searchQuery ? (
           searchQuery.map((song) => (
             <SongSearchItem
-              id={song.id}
+              key={song.id}
               song={song}
               isFav={favoritePlaylist?.songs.some((s) => s.id === song.id)}
               toggleFavorite={toggleFavoriteHandler}

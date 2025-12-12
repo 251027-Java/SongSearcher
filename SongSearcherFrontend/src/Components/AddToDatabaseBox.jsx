@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { MODEL_TYPE } from "../constants";
-import AddSongForm from "./AddSongForm";
-import AddAlbumForm from "./AddAlbumForm";
-import AddArtistForm from "./AddArtistForm";
+import AddSongForm from "./Forms/AddSongForm";
+import AddAlbumForm from "./Forms/AddAlbumForm";
+import AddArtistForm from "./Forms/AddArtistForm";
 import { useSongsApi } from "../ApiHooks/useSongsApi";
 import { useAlbumsApi } from "../ApiHooks/useAlbumsApi";
 import { useArtistsApi } from "../ApiHooks/useArtistsApi";
 import { toast, ToastContainer } from "react-toastify";
+import { Plus } from "lucide-react";
 
 const AddToDatabaseBox = () => {
   const [modelType, setModelType] = useState(MODEL_TYPE.SONG);
@@ -28,29 +29,32 @@ const AddToDatabaseBox = () => {
   };
 
   return (
-    <div className="flex flex-col col-span-2 h-90 bg-slate-200 rounded-lg p-5 relative">
+    <div className="flex flex-col gap-2 theme-main col-span-3 h-90 rounded-lg p-5 relative">
       <div className="flex gap-2">
-        <h1 className="font-bold text-2xl">Add to database</h1>
+        <div className="flex items-center gap-1">
+          <Plus className="h-5 w-5" />
+          <h1 className="font-bold text-2xl">Add to database</h1>
+        </div>
         <button
-          className={`${
+          className={`toggle-button ${
             modelType == MODEL_TYPE.SONG ? "bg-mint-300" : "bg-mint-500"
-          } p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-300 hover:cursor-pointer`}
+          }`}
           onClick={() => setModelType(MODEL_TYPE.SONG)}
         >
           Song
         </button>
         <button
-          className={`${
+          className={`toggle-button ${
             modelType == MODEL_TYPE.ALBUM ? "bg-mint-300" : "bg-mint-500"
-          } p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-300 hover:cursor-pointer`}
+          }`}
           onClick={() => setModelType(MODEL_TYPE.ALBUM)}
         >
           Album
         </button>
         <button
-          className={`${
+          className={`toggle-button ${
             modelType == MODEL_TYPE.ARTIST ? "bg-mint-300" : "bg-mint-500"
-          } p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-300 hover:cursor-pointer`}
+          }`}
           onClick={() => setModelType(MODEL_TYPE.ARTIST)}
         >
           Artist

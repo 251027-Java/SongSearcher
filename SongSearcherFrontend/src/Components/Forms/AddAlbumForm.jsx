@@ -1,4 +1,4 @@
-import { useArtistsApi } from "../ApiHooks/useArtistsApi";
+import { useArtistsApi } from "../../ApiHooks/useArtistsApi";
 import Select from "react-select";
 import { useState } from "react";
 
@@ -28,6 +28,8 @@ const AddAlbumForm = ({ onSubmit }) => {
       releaseYear: Math.round(data.get("release-year")),
       artists: artists,
     });
+    setMainArtists([]);
+    event.target.reset();
   };
 
   return (
@@ -93,7 +95,7 @@ const AddAlbumForm = ({ onSubmit }) => {
       <div>
         <button
           type="submit"
-          className="bg-mint-300 bottom-0 right-2 p-1 px-2 mb-2 border border-mint-500 rounded-md hover:bg-mint-400 hover:cursor-pointer"
+          className="submit-button"
         >
           Add Album
         </button>

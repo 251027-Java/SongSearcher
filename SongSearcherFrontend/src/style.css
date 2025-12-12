@@ -82,6 +82,37 @@
   color: var(--color-ash-grey-950);
 }
 
+.submit-button {
+  background-color: var(--color-mint-300);
+  padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2);
+  border: 1px;
+  border-color: var(--color-mint-500);
+  border-radius: var(--radius-md);
+}
+
+.submit-button:hover {
+  background-color: var(--color-mint-400);
+  cursor: pointer;
+}
+
+.toggle-button {
+  padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2);
+  border: 1px;
+  border-color: var(--color-mint-500);
+  border-radius: var(--radius-md);
+}
+
+.toggle-button:hover {
+  background-color: var(--color-mint-300);
+  cursor: pointer;
+}
+
+.title {
+  font-weight: bold;
+  font-size: var(--text-2xl);
+  line-height: var(--text-2xl--line-height);
+}
+
 .divider {
   display: inline-block;
   width: 2px;
