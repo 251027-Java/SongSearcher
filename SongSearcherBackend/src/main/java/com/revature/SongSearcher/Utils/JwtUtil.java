@@ -1,4 +1,4 @@
-package com.revature.SongSearcher;
+package com.revature.SongSearcher.Utils;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
