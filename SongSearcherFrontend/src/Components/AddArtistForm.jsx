@@ -4,6 +4,7 @@ const AddArtistForm = ({ onSubmit }) => {
 
     const data = new FormData(event.currentTarget);
     onSubmit({ name: data.get("name") });
+    event.target.reset();
   };
 
   return (

@@ -28,6 +28,8 @@ const AddAlbumForm = ({ onSubmit }) => {
       releaseYear: Math.round(data.get("release-year")),
       artists: artists,
     });
+    setMainArtists([]);
+    event.target.reset();
   };
 
   return (
