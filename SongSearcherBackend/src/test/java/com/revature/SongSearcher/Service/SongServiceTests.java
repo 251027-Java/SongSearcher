@@ -35,19 +35,15 @@ class SongServiceTests {
 
     @InjectMocks
     private SongService service;
-
+    private Artist artist;
     private Album album;
     private Song song;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-
-        album = new Album();
-        album.setAlbumId("a1");
-        album.setTitle("AlbumTitle");
-        album.setRelease_year(2024);
-        album.setArtists(new HashSet<>());
+        artist = new Artist("artistId-123", "Test Artist");
+        album = new Album("a1","AlbumTitle", 2024, Set.of(artist));
 
         song = new Song();
         song.setSongId("s1");
@@ -55,7 +51,10 @@ class SongServiceTests {
         song.setLength(new BigDecimal("3.50"));
         song.setLyrics("lyrics...");
         song.setAlbum(album);
-        song.setArtists(new HashSet<>());
+        song.setArtists(Set.of(artist));
+
+        album.getAlbumSongs().add(song);
+        artist.getSongs().add(song);
     }
 
     @Test
@@ -69,6 +68,18 @@ class SongServiceTests {
     }
 
     @Test
+    public void edgeCase_getAll_empty_returnsEmptyList() {
+        // Arrange
+        when(songRepo.findAll()).thenReturn(List.of());
+
+        // Act
+        List<SongDTO> actual = service.getAll();
+
+        // Assert
+        assertThat(actual).isEmpty();
+    }
+
+    @Test
     void happyPath_getById_existingSong_returnsDTO() {
         when(songRepo.findById("s1")).thenReturn(Optional.of(song));
 
@@ -76,6 +87,16 @@ class SongServiceTests {
 
         assertThat(dto.id()).isEqualTo("s1");
         assertThat(dto.title()).isEqualTo("SongTitle");
+    }
+
+    @Test
+    public void sadPath_getSongById_notFound_throwsNotFound() {
+        // Arrange
+        when(songRepo.findById("missing")).thenReturn(Optional.empty());
+
+        // Act + Assert
+        assertThatThrownBy(() -> service.getById("missing"))
+                .isInstanceOf(ResponseStatusException.class);
     }
 
     @Test
@@ -87,7 +108,7 @@ class SongServiceTests {
     }
 
     @Test
-    void create_validSongWOIDDTO_returnsSongDTO() {
+    void happyPath_create_validSongWOIDDTO_returnsSongDTO() {
         // Arrange
         AlbumSlimDTO albumDto = new AlbumSlimDTO("a1", "Greatest Hits", 2024);
         ArtistDTO artistDto = new ArtistDTO("ar1", "Artist One");
@@ -120,6 +141,30 @@ class SongServiceTests {
         assertThat(created.album().id()).isEqualTo("a1");
         assertThat(created.artists()).hasSize(1);
         verify(songRepo).save(any(Song.class));
+        verify(embedder).getEmbedding("These are the lyrics of my new song");
+    }
+
+    @Test
+    public void sadPath_createSong_albumMissing_throwsNotFound() {
+        // Arrange
+        AlbumSlimDTO albumDto = new AlbumSlimDTO("a1", "Greatest Hits", 2024);
+        ArtistDTO artistDto = new ArtistDTO("ar1", "Artist One");
+        Set<ArtistDTO> artists = new HashSet<>();
+        artists.add(artistDto);
+
+        SongWOIDDTO dto = new SongWOIDDTO(
+                "Fail Song",
+                new BigDecimal("1.00"),
+                "lyrics",
+                new AlbumSlimDTO("missing", "?", 1990),
+                artists.stream().toList()
+        );
+
+        when(albumRepo.findById("missing")).thenReturn(Optional.empty());
+
+        // Act + Assert
+        assertThatThrownBy(() -> service.create(dto))
+                .isInstanceOf(ResponseStatusException.class);
     }
 
     @Test
@@ -144,6 +189,37 @@ class SongServiceTests {
     }
 
     @Test
+    public void sadPath_update_songMissing_throwsNotFound() {
+        // Arrange
+        when(songRepo.findById("missing")).thenReturn(Optional.empty());
+
+        // Act + Assert
+        assertThatThrownBy(() ->
+                service.update("missing", mock(SongDTO.class))
+        ).isInstanceOf(ResponseStatusException.class);
+    }
+
+    @Test
+    public void sadPath_update_albumMissing_throwsNotFound() {
+        // Arrange
+        when(songRepo.findById("songId-123")).thenReturn(Optional.of(song));
+        when(albumRepo.findById(anyString())).thenReturn(Optional.empty());
+
+        SongDTO dto = new SongDTO(
+                "songId-123",
+                "Title",
+                BigDecimal.ONE,
+                "lyrics",
+                new AlbumSlimDTO("missing", "?", 0),
+                null
+        );
+
+        // Act + Assert
+        assertThatThrownBy(() -> service.update("songId-123", dto))
+                .isInstanceOf(ResponseStatusException.class);
+    }
+
+    @Test
     void happyPath_patch_partialUpdate_updatesOnlyProvidedFields() {
         SongDTO dto = new SongDTO(
                 "s1",
@@ -161,6 +237,15 @@ class SongServiceTests {
 
         assertThat(patched.title()).isEqualTo("PatchedTitle");
         verify(songRepo).save(song);
+    }
+
+    @Test
+    public void sadPath_patch_songMissing_throwsNotFound() {
+        when(songRepo.findById("missing")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() ->
+                service.patch("missing", mock(SongDTO.class))
+        ).isInstanceOf(ResponseStatusException.class);
     }
 
     @Test
@@ -182,5 +267,14 @@ class SongServiceTests {
         assertThat(results.get(0).id()).isEqualTo("s1");
     }
 
+    @Test
+    public void edgeCase_searchByLyrics_noResults_returnsEmptyList() {
+        when(embedder.getEmbedding(anyString())).thenReturn(new float[]{1,1,1});
+        when(songRepo.findMostSimilar(any(float[].class), eq(10))).thenReturn(List.of());
+
+        List<SongDTO> actual = service.searchByLyrics(new SearchDTO("nothing"));
+
+        assertThat(actual).isEmpty();
+    }
 
 }
