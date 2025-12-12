@@ -136,7 +136,6 @@ public class PlaylistServiceTests {
         user.setUserId(10L);
 
         PlaylistWOIDDTO dto = new PlaylistWOIDDTO("Study", Set.of());
-        PlaylistWOIDDTO dto = new PlaylistWOIDDTO("Study", Set.of());
 
         when(userRepo.findById(10L)).thenReturn(Optional.of(user));
 
