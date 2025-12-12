@@ -1,5 +1,5 @@
-import { useArtistsApi } from "../ApiHooks/useArtistsApi";
-import { useAlbumsApi } from "../ApiHooks/useAlbumsApi";
+import { useArtistsApi } from "../../ApiHooks/useArtistsApi";
+import { useAlbumsApi } from "../../ApiHooks/useAlbumsApi";
 import { useState } from "react";
 import Select from "react-select";
 

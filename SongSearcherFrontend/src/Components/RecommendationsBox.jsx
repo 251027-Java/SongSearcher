@@ -25,7 +25,7 @@ const RecommendationsBox = ({ favoritePlaylist }) => {
     } else if (songs) {
       if (songs.length > 0) {
         return (
-          <div className="flex flex-col gap-2 px-2 overflow-auto">
+          <div className="flex flex-col gap-2 px-2 overflow-auto w-full">
             {songs.map((song) => (
               <RecommendedSongItem
                 key={song.id}
