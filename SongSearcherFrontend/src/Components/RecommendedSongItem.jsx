@@ -9,7 +9,7 @@ const RecommendedSongItem = ({ song, favoriteSong }) => {
           <h2 className="font-bold text-md font-serif">{song.title}</h2>
           <div className="flex gap-1">
             {song.artists.map((artist) => (
-              <h3 id={artist.id} className="text-sm font-bold font-serif">
+              <h3 key={artist.id} className="text-sm font-bold font-serif">
                 {artist.name}
               </h3>
             ))}

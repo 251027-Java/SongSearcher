@@ -4,18 +4,16 @@ import { usePlaylistsApi } from "../ApiHooks/usePlaylistsApi";
 import Spinner from "./Spinner";
 import RecommendedSongItem from "./RecommendedSongItem";
 
-const RecommendationsBox = () => {
+const RecommendationsBox = ({playlists}) => {
   const { recommendedSongsQuery } = useSongsApi();
 
-  const { userPlaylistsQuery, addSongToPlaylist } = usePlaylistsApi();
+  const { addSongToPlaylist } = usePlaylistsApi();
 
   const {
     data: songs,
     isLoading: isRecLoading,
     isError,
   } = recommendedSongsQuery;
-
-  const { data: playlists } = userPlaylistsQuery;
 
   const favoritePlaylist = useMemo(() => {
     if (!playlists) return null;
