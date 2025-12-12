@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../AuthContext";
-import LogoutConfirmDialog from "./LogoutConfirmDialog";
+import LogoutConfirmDialog from "./Dialogs/LogoutConfirmDialog";
 
 const AppBar = () => {
   const { logout, isAuthenticated } = useContext(AuthContext);

@@ -1,4 +1,4 @@
-import { useArtistsApi } from "../ApiHooks/useArtistsApi";
+import { useArtistsApi } from "../../ApiHooks/useArtistsApi";
 import Select from "react-select";
 import { useState } from "react";
 

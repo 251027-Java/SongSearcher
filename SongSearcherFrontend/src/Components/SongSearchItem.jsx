@@ -4,7 +4,7 @@ import {
   HeartIcon as HeartOutlineIcon,
 } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
-import DeleteConfirmDialog from "./DeleteConfirmDialog";
+import DeleteConfirmDialog from "./Dialogs/DeleteConfirmDialog";
 import { useState } from "react";
 import { useSongsApi } from "../ApiHooks/useSongsApi";
 

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { MODEL_TYPE } from "../constants";
-import AddSongForm from "./AddSongForm";
-import AddAlbumForm from "./AddAlbumForm";
-import AddArtistForm from "./AddArtistForm";
+import AddSongForm from "./Forms/AddSongForm";
+import AddAlbumForm from "./Forms/AddAlbumForm";
+import AddArtistForm from "./Forms/AddArtistForm";
 import { useSongsApi } from "../ApiHooks/useSongsApi";
 import { useAlbumsApi } from "../ApiHooks/useAlbumsApi";
 import { useArtistsApi } from "../ApiHooks/useArtistsApi";
