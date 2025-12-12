@@ -48,7 +48,9 @@ public class AlbumService {
     }
 
     public AlbumDTO create(AlbumWOIDDTO dto) {
-
+        if (dto.artists() == null || dto.artists().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Artist list cannot be empty");
+        }
         Album entity = new Album(dto.title(), dto.releaseYear(), dto.artists().stream().map(this::DTOToArtist).collect(Collectors.toSet()));
 
         for (ArtistDTO a : dto.artists()) {
