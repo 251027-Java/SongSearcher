@@ -136,6 +136,7 @@ public class PlaylistServiceTests {
         user.setUserId(10L);
 
         PlaylistWOIDDTO dto = new PlaylistWOIDDTO("Study", Set.of());
+        PlaylistWOIDDTO dto = new PlaylistWOIDDTO("Study", Set.of());
 
         when(userRepo.findById(10L)).thenReturn(Optional.of(user));
 
@@ -205,7 +206,7 @@ public class PlaylistServiceTests {
         when(playlistRepo.save(any(Playlist.class))).thenReturn(savedPlaylist);
 
         // Act
-        PlaylistDTO actual = service.create(1L, dto);
+        PlaylistDTO actual = service.create(user.getUserId(), dto);
 
         // Assert
         assertThat(actual.songs()).hasSize(1);

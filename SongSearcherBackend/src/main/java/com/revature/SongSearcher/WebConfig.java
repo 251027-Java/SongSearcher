@@ -1,5 +1,7 @@
 package com.revature.SongSearcher;
 
+import com.revature.SongSearcher.Utils.BasicAuthInterceptor;
+import com.revature.SongSearcher.Utils.JwtInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

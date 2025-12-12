@@ -3,7 +3,9 @@ package com.revature.SongSearcher.Controller;
 import com.revature.SongSearcher.Controller.DTO.SearchDTO;
 import com.revature.SongSearcher.Controller.DTO.SongDTO;
 import com.revature.SongSearcher.Controller.DTO.SongWOIDDTO;
+import com.revature.SongSearcher.Service.AuthorizeService;
 import com.revature.SongSearcher.Service.SongService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,9 +16,11 @@ import java.util.List;
 public class SongController {
 
     private final SongService service;
+    private final AuthorizeService authService;
 
-    public SongController(SongService service) {
+    public SongController(SongService service, AuthorizeService authService) {
         this.service = service;
+        this.authService = authService;
     }
 
     @GetMapping
@@ -69,8 +73,11 @@ public class SongController {
         return service.searchByLyrics(dto);
     }
 
-    @GetMapping("/recommend/{userid}")
-    public List<SongDTO> getUserSongRecommendations(@PathVariable Long userid) {
+    @GetMapping("/recommend")
+    public List<SongDTO> getUserSongRecommendations(HttpServletRequest request) {
+
+        Long userid = authService.getUserIdFromAuthorization(request);
+
         return service.getUserSongRecommendations(userid);
     }
 }
