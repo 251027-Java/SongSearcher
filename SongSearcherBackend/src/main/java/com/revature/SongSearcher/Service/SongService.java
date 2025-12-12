@@ -189,6 +189,9 @@ public class SongService {
         PlaylistDTO favorites = playlistService.getByUserIdAndName(userid, "Favorites");
 
         List<Song> songs = favorites.songs().stream().map(this::DTOToSong).toList();
+        if (songs.isEmpty()) {
+            return List.of();
+        }
 
         float[] centroidEmbedding = this.computeCentroid(songs.stream().map(Song::getEmbedding).toList());
 

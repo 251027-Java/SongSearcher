@@ -135,7 +135,7 @@ public class PlaylistServiceTests {
         AppUser user = new AppUser("john", "pass", "USER");
         user.setUserId(10L);
 
-        PlaylistWOIDDTO dto = new PlaylistWOIDDTO("Study", 10L, Set.of());
+        PlaylistWOIDDTO dto = new PlaylistWOIDDTO("Study", Set.of());
 
         when(userRepo.findById(10L)).thenReturn(Optional.of(user));
 
@@ -144,7 +144,7 @@ public class PlaylistServiceTests {
         when(playlistRepo.save(any(Playlist.class))).thenReturn(saved);
 
         // Act
-        PlaylistDTO actual = service.create(dto);
+        PlaylistDTO actual = service.create(user.getUserId(), dto);
 
         // Assert
         assertThat(actual.id()).isEqualTo("p123");
@@ -155,11 +155,11 @@ public class PlaylistServiceTests {
     @Test
     public void sadPath_createPlaylist_userNotFound_throws400() {
         // Arrange
-        PlaylistWOIDDTO dto = new PlaylistWOIDDTO("Study", 77L, Set.of());
+        PlaylistWOIDDTO dto = new PlaylistWOIDDTO("Study", Set.of());
         when(userRepo.findById(77L)).thenReturn(Optional.empty());
 
         // Act + Assert
-        assertThatThrownBy(() -> service.create(dto))
+        assertThatThrownBy(() -> service.create(77L, dto))
                 .isInstanceOf(ResponseStatusException.class)
                 .hasMessageContaining("400");
     }
@@ -196,7 +196,7 @@ public class PlaylistServiceTests {
                 List.of() // no artists for this test
         );
 
-        PlaylistWOIDDTO dto = new PlaylistWOIDDTO("Workout", 1L, Set.of(songDto));
+        PlaylistWOIDDTO dto = new PlaylistWOIDDTO("Workout", Set.of(songDto));
 
         Playlist savedPlaylist = new Playlist("Workout", user);
         savedPlaylist.setPlaylistId("pid");
@@ -205,7 +205,7 @@ public class PlaylistServiceTests {
         when(playlistRepo.save(any(Playlist.class))).thenReturn(savedPlaylist);
 
         // Act
-        PlaylistDTO actual = service.create(dto);
+        PlaylistDTO actual = service.create(user.getUserId(), dto);
 
         // Assert
         assertThat(actual.songs()).hasSize(1);

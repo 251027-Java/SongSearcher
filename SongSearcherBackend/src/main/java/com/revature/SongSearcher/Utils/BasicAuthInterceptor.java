@@ -1,4 +1,4 @@
-package com.revature.SongSearcher;
+package com.revature.SongSearcher.Utils;
 
 import com.revature.SongSearcher.Model.AppUser;
 import com.revature.SongSearcher.Repository.AppUserRepository;
