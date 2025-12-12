@@ -30,21 +30,22 @@ public class AppUserService {
         return new AppUserDTO(user.getUserId(), user.getUsername());
     }
 
-    // TODO
-    // Create 'favorites' playlist when user is created.
     public AppUserDTO createUser(AppUserWOIDDTO dto) {
 
         Optional<AppUser> existing = repo.findByUsername(dto.username());
         if (existing.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.IM_USED);
+            throw new ResponseStatusException(HttpStatus.IM_USED, "Username already in use");
         }
 
         AppUser user = new AppUser(dto.username(), encoder.encode(dto.password()), "USER");
 
-        PlaylistWOIDDTO favoritesDTO = new PlaylistWOIDDTO("Favorites", Set.of());
-        PlaylistDTO favorites = playlistService.create(user.getUserId(), favoritesDTO);
+        AppUser saved = repo.save(user);
+        repo.flush();
 
-        return AppUserToDTO(repo.save(user));
+        PlaylistWOIDDTO favoritesDTO = new PlaylistWOIDDTO("Favorites", Set.of());
+        PlaylistDTO favorites = playlistService.create(saved.getUserId(), favoritesDTO);
+
+        return AppUserToDTO(saved);
     }
 
     public AppUserDTO createAdmin(AppUserWOIDDTO dto) {

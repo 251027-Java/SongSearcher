@@ -61,10 +61,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public AppUserDTO register(@Valid @RequestBody AppUserWOIDDTO dto) {
-        //TODO
-        // Add handling here to generate a token
-        // client should not receive appuserdto, just success and a token
-        return service.createUser(dto);
+    public AuthResponse register(@Valid @RequestBody AppUserWOIDDTO dto) {
+
+        AppUserDTO user =  service.createUser(dto);
+
+        String token = jwtUtil.generateToken(String.valueOf(user.id()));
+
+        return new AuthResponse(token);
     }
 }
