@@ -13,7 +13,7 @@ const FavoritesBox = ({favoritePlaylist, isLoading}) => {
   };
 
   return (
-    <div className="flex flex-col theme-main items-center col-span-1 h-90 rounded-lg p-5">
+    <div className="flex flex-col theme-main items-center h-87 rounded-lg p-5">
       <h1 className="title">Favorites</h1>
       {isLoading ? (
         <Spinner />

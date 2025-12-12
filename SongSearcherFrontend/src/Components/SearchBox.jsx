@@ -82,7 +82,7 @@ const SearchBox = ({ favoritePlaylist }) => {
   };
 
   return (
-    <div className="flex flex-col theme-main gap-2 col-span-2 h-90 rounded-lg p-5">
+    <div className="flex flex-col theme-main gap-2 col-span-2 h-180 rounded-lg p-5">
       <div className="flex gap-1 items-center">
         <Search className="w-5 h-5" />
         <h1 className="font-bold text-2xl">Search</h1>
@@ -125,7 +125,7 @@ const SearchBox = ({ favoritePlaylist }) => {
           Artist
         </button>
       </div>
-      <div className="flex gap-1">
+      <div className="flex gap-1 mb-5">
         <input
           className="bg-white rounded-md w-full border border-grey-200 px-1"
           placeholder={placeholder}

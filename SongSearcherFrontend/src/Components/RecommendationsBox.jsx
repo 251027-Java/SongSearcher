@@ -42,7 +42,7 @@ const RecommendationsBox = ({ favoritePlaylist }) => {
   };
 
   return (
-    <div className="flex flex-col theme-main gap-1 col-span-1 h-90 rounded-lg p-5 items-center">
+    <div className="flex flex-col theme-main gap-1 col-span-1 h-87 rounded-lg p-5 items-center">
       <h1 className="font-bold text-2xl">Recommendations</h1>
       {renderedUI()}
     </div>

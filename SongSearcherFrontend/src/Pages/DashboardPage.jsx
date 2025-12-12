@@ -21,9 +21,14 @@ const DashboardPage = () => {
       <div className="h-[3rem]" />
       <main className="grid grid-cols-3 gap-4 p-5 overflow-auto">
         <SearchBox favoritePlaylist={favoritePlaylist} />
-        <FavoritesBox favoritePlaylist={favoritePlaylist} isLoading={isLoading} />
+        <div className="col-span-1 flex flex-col gap-6">
+          <FavoritesBox
+            favoritePlaylist={favoritePlaylist}
+            isLoading={isLoading}
+          />
+          <RecommendationsBox favoritePlaylist={favoritePlaylist} />
+        </div>
         <AddToDatabaseBox />
-        <RecommendationsBox favoritePlaylist={favoritePlaylist} />
       </main>
     </div>
   );
