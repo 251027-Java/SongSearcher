@@ -23,7 +23,7 @@ const AppBar = () => {
         <div className="flex items-center gap-2">
           {isAuthenticated && (
             <button
-              className="text-mint-800 hover:cursor-pointer"
+              className="text-mint-800 rounded-md p-1 px-2 hover:cursor-pointer hover:bg-mint-300"
               onClick={handleLogoutClick}
             >
               Logout

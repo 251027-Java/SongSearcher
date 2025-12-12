@@ -16,7 +16,7 @@ const DashboardPage = () => {
   }, [playlists]);
 
   return (
-    <>
+    <div className="theme-background px-10">
       {/* Empty div is spacing for the AppBar */}
       <div className="h-[3rem]" />
       <main className="grid grid-cols-3 gap-4 p-5 overflow-auto">
@@ -25,7 +25,7 @@ const DashboardPage = () => {
         <AddToDatabaseBox />
         <RecommendationsBox favoritePlaylist={favoritePlaylist} />
       </main>
-    </>
+    </div>
   );
 };
 

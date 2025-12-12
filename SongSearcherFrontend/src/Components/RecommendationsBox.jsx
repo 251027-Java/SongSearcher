@@ -25,7 +25,7 @@ const RecommendationsBox = ({ favoritePlaylist }) => {
     } else if (songs) {
       if (songs.length > 0) {
         return (
-          <div className="flex flex-col gap-2 overflow-auto">
+          <div className="flex flex-col gap-2 px-2 overflow-auto">
             {songs.map((song) => (
               <RecommendedSongItem
                 key={song.id}
@@ -42,7 +42,7 @@ const RecommendationsBox = ({ favoritePlaylist }) => {
   };
 
   return (
-    <div className="flex flex-col gap-1 col-span-1 h-90 bg-slate-200 rounded-lg p-5 items-center">
+    <div className="flex flex-col theme-main gap-1 col-span-1 h-90 rounded-lg p-5 items-center">
       <h1 className="font-bold text-2xl">Recommendations</h1>
       {renderedUI()}
     </div>
