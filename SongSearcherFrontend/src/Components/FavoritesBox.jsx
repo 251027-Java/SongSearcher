@@ -3,9 +3,8 @@ import FavoriteSongItem from "./FavoriteSongItem";
 import { usePlaylistsApi } from "../ApiHooks/usePlaylistsApi";
 import Spinner from "./Spinner";
 
-const FavoritesBox = () => {
-  const { userPlaylistsQuery, removeSongFromPlaylist } = usePlaylistsApi();
-  const { data: playlists, isLoading } = userPlaylistsQuery;
+const FavoritesBox = ({playlists, isLoading}) => {
+  const { removeSongFromPlaylist } = usePlaylistsApi();
 
   const favoritePlaylist = useMemo(() => {
     if (!playlists) return null;
@@ -21,7 +20,7 @@ const FavoritesBox = () => {
 
   return (
     <div className="flex flex-col items-center col-span-1 h-90 bg-slate-200 rounded-lg p-5">
-      <h1 className="text-lg font-bold">Favorites</h1>
+      <h1 className="text-2xl font-bold">Favorites</h1>
       {isLoading ? (
         <Spinner />
       ) : (

@@ -6,7 +6,7 @@ import { useSongsSearch } from "../ApiHooks/useSongsSearch";
 import Spinner from "./Spinner";
 import { usePlaylistsApi } from "../ApiHooks/usePlaylistsApi";
 
-const SearchBox = () => {
+const SearchBox = ({playlists}) => {
   const [searchModel, setSearchModel] = useState(SEARCH_MODEL.SONG_TITLE);
   const [searchQuery, setSearchQuery] = useState(null);
   const [search, setSearch] = useState("");
@@ -16,10 +16,9 @@ const SearchBox = () => {
     searchSongsByAlbum,
     searchSongsByArtist,
   } = useSongsApi();
-  const { addSongToPlaylist, userPlaylistsQuery, removeSongFromPlaylist } =
+  const { addSongToPlaylist, removeSongFromPlaylist } =
     usePlaylistsApi();
 
-  const { data: playlists } = userPlaylistsQuery;
   const favoritePlaylist = useMemo(() => {
     if (!playlists) return null;
     return playlists.find((p) => p.name === "Favorites") || null;
@@ -148,7 +147,7 @@ const SearchBox = () => {
         {searchQuery ? (
           searchQuery.map((song) => (
             <SongSearchItem
-              id={song.id}
+              key={song.id}
               song={song}
               isFav={favoritePlaylist?.songs.some((s) => s.id === song.id)}
               toggleFavorite={toggleFavoriteHandler}

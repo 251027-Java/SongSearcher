@@ -9,6 +9,11 @@ export const useSongsApi = () => {
     queryFn: () => apiClient("/songs"),
   });
 
+  const recommendedSongsQuery = useQuery({
+    queryKey: ["songs", "recommended"],
+    queryFn: () => apiClient("/songs/recommend"),
+  })
+
   const useSong = (id) =>
     useQuery({
       queryKey: ["song", id],
@@ -55,6 +60,7 @@ export const useSongsApi = () => {
 
   return {
     songsQuery,
+    recommendedSongsQuery,
     useSong,
     searchSongsByTitle,
     searchSongsByAlbum,
