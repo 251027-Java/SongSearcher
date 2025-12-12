@@ -173,7 +173,7 @@ public class PlaylistServiceTests {
         Album album = new Album();
         album.setAlbumId("album1");
         album.setTitle("AlbumTitle");
-        album.setRelease_year(2024);
+        album.setReleaseyear(2024);
 
         Song song = new Song();
         song.setSongId("song1");
@@ -232,7 +232,7 @@ public class PlaylistServiceTests {
         Album album = new Album();
         album.setAlbumId("a1");
         album.setTitle("AlbumTitle");
-        album.setRelease_year(2024);
+        album.setReleaseyear(2024);
         album.setArtists(new HashSet<>()); // required to avoid NPE
 
         Song song = new Song();

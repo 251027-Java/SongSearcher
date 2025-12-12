@@ -55,8 +55,6 @@ public class Doc2VecEmbedder implements IEmbedder {
     public float[] getEmbedding(String text) {
         float[] embedding;
         try {
-            log.info("Creating new embedding");
-            log.debug("Creating embedding from text: {}", text);
             embedding = this.embedder.inferVector(text).toFloatVector();
         } catch (ND4JIllegalStateException e) {
             log.warn("Unable to create embedding from pre-trained word vectors");

@@ -22,7 +22,7 @@ public class Album {
     @Column(name = "album_title")
     private String title;
 
-    private int release_year;
+    private int releaseyear;
 
     @ManyToMany
     @JoinTable(
@@ -37,20 +37,20 @@ public class Album {
     @ToString.Exclude
     private List<Song> albumSongs = new ArrayList<>();
 
-    public Album(String title, int release_year, Set<Artist> artists) {
+    public Album(String title, int releaseyear, Set<Artist> artists) {
         this.title = title;
-        this.release_year = release_year;
+        this.releaseyear = releaseyear;
         this.artists = artists;
     }
 
-    public Album(String id, String title, int release_year, Set<Artist> artists) {
+    public Album(String id, String title, int releaseyear, Set<Artist> artists) {
         this.albumId = id;
         this.title = title;
-        this.release_year = release_year;
+        this.releaseyear = releaseyear;
         this.artists = artists;
     }
 
 //    public String toString() {
-//        return "Album: " + this.title + " (" + this.release_year + ")";
+//        return "Album: " + this.title + " (" + this.releaseyear + ")";
 //    }
 }
