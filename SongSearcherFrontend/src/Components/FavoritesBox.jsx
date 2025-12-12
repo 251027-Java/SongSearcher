@@ -13,13 +13,13 @@ const FavoritesBox = ({favoritePlaylist, isLoading}) => {
   };
 
   return (
-    <div className="flex flex-col items-center col-span-1 h-90 bg-slate-200 rounded-lg p-5">
-      <h1 className="text-2xl font-bold">Favorites</h1>
+    <div className="flex flex-col theme-main items-center col-span-1 h-90 rounded-lg p-5">
+      <h1 className="title">Favorites</h1>
       {isLoading ? (
         <Spinner />
       ) : (
         favoritePlaylist && (
-          <ul className="w-full overflow-auto">
+          <ul className="w-full overflow-auto px-2">
             {favoritePlaylist.songs.map((song) => (
               <FavoriteSongItem
                 key={song.id}
