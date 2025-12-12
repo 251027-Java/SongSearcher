@@ -2,7 +2,7 @@ package com.revature.SongSearcher.Controller;
 
 import com.revature.SongSearcher.Controller.DTO.AppUserDTO;
 import com.revature.SongSearcher.Controller.DTO.AppUserWOIDDTO;
-import com.revature.SongSearcher.JwtUtil;
+import com.revature.SongSearcher.Utils.JwtUtil;
 import com.revature.SongSearcher.Model.AppUser;
 import com.revature.SongSearcher.Repository.AppUserRepository;
 import com.revature.SongSearcher.Service.AppUserService;
