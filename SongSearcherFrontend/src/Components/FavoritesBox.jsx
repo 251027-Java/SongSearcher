@@ -1,15 +1,9 @@
-import { useMemo } from "react";
 import FavoriteSongItem from "./FavoriteSongItem";
 import { usePlaylistsApi } from "../ApiHooks/usePlaylistsApi";
 import Spinner from "./Spinner";
 
-const FavoritesBox = ({playlists, isLoading}) => {
+const FavoritesBox = ({favoritePlaylist, isLoading}) => {
   const { removeSongFromPlaylist } = usePlaylistsApi();
-
-  const favoritePlaylist = useMemo(() => {
-    if (!playlists) return null;
-    return playlists.find((p) => p.name === "Favorites") || null;
-  }, [playlists]);
 
   const unFavoriteSong = (songId) => {
     removeSongFromPlaylist.mutateAsync({
