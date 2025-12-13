@@ -5,7 +5,8 @@ export function useSongsSearch({
   searchSongsByTitle,
   similarSongs,
   searchSongsByAlbum,
-  searchSongsByArtist
+  searchSongsByArtist, 
+  similarSongsById
 }) {
   return useMutation({
     mutationFn: async ({ model, search }) => {
@@ -18,6 +19,8 @@ export function useSongsSearch({
           return searchSongsByAlbum(search);
         case SEARCH_MODEL.ARTIST:
           return searchSongsByArtist(search);
+        case SEARCH_MODEL.SONG_SIMILAR:
+          return similarSongsById(search);
         default:
           throw new Error("Unknown search model: " + model);
       }

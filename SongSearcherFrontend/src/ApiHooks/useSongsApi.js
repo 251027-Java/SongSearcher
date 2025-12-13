@@ -31,6 +31,9 @@ export const useSongsApi = () => {
   const searchSongsByArtist = (name) =>
     apiClient(`/songs/search/artist/${name}`);
 
+  const similarSongsById = (id) => 
+    apiClient(`/songs/search/similar/${id}`);
+
   const similarSongs = (lyrics) =>
     apiClient("/songs/search/similar", {
       method: "POST",
@@ -65,6 +68,7 @@ export const useSongsApi = () => {
     searchSongsByTitle,
     searchSongsByAlbum,
     searchSongsByArtist,
+    similarSongsById,
     createSong,
     similarSongs,
     deleteSong,

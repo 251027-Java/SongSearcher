@@ -6,6 +6,7 @@ export const SEARCH_MODEL = {
   ARTIST: "artist",
   SONG_TITLE: "song title",
   SONG_LYRICS: "song lyrics",
+  SONG_SIMILAR: "song similar",
 };
 
 export const MAX_LENGTH = 50;

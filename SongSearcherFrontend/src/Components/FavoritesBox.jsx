@@ -25,6 +25,7 @@ const FavoritesBox = ({favoritePlaylist, isLoading}) => {
                 key={song.id}
                 song={song}
                 unFavoriteSong={unFavoriteSong}
+                favoritePlaylist={favoritePlaylist}
               />
             ))}
           </ul>

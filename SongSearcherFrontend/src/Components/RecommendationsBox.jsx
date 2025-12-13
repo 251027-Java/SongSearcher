@@ -31,6 +31,7 @@ const RecommendationsBox = ({ favoritePlaylist }) => {
                 key={song.id}
                 song={song}
                 favoriteSong={favoriteSong}
+                showFavoriteButton={true}
               />
             ))}
           </div>

@@ -193,6 +193,13 @@ public class SongService {
         return similarSongs;
     }
 
+    public List<SongDTO> searchSimilarById ( String id) {
+        Song song = repo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        return repo.findMostSimilarTo(song.getSongId(), song.getEmbedding(), 10)
+                .stream().map(this::SongToDTO).toList();
+    }
+
     public List<SongDTO> getUserSongRecommendations(Long userid) {
         PlaylistDTO favorites = playlistService.getByUserIdAndName(userid, "Favorites");
 
