@@ -209,6 +209,88 @@ public class AlbumServiceTests {
         verify(repo, times(1)).deleteById("id1");
     }
 
+    // ...existing code...
+
+    @Test
+    public void edgeCase_getAll_empty_returnsEmptyList() {
+        when(repo.findAll()).thenReturn(List.of());
+
+        List<AlbumDTO> actual = service.getAll();
+
+        assertThat(actual).isEmpty();
+    }
+
+    @Test
+    public void edgeCase_getByTitleAndReleaseYear_notFound_returnsNull() {
+        when(repo.findByTitleAndReleaseyear("NonExistent", 1900)).thenReturn(null);
+
+        AlbumDTO actual = service.getByTitleAndReleaseYear("NonExistent", 1900);
+
+        assertThat(actual).isNull();
+    }
+
+    @Test
+    public void happyPath_patch_updatesArtists_whenProvided() {
+        Artist oldArtist = new Artist("oldA", "Old Artist");
+        Album existing = new Album("idPatch", "Some Title", 2000, new HashSet<>(Set.of(oldArtist)));
+
+        when(repo.findById("idPatch")).thenReturn(Optional.of(existing));
+        when(repo.save(any(Album.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        ArtistDTO newArtistDto = new ArtistDTO("newA", "New Artist");
+        AlbumDTO patch = new AlbumDTO("idPatch", "", 0, List.of(newArtistDto));
+
+        AlbumDTO result = service.patch("idPatch", patch);
+
+        assertThat(result.artists()).containsExactly(newArtistDto);
+        // ensure underlying entity artists were updated as well
+        assertThat(existing.getArtists()).hasSize(1);
+        Artist updated = existing.getArtists().iterator().next();
+        assertThat(updated.getName()).isEqualTo("New Artist");
+        // bi-directional relationship: artist should reference the album
+        assertThat(updated.getAlbums()).contains(existing);
+    }
+
+    @Test
+    public void happyPath_create_setsArtistAlbumRelationship() {
+        // Arrange
+        ArtistDTO aDto = new ArtistDTO("aX", "Artist X");
+        AlbumWOIDDTO dto = new AlbumWOIDDTO(
+                "Created",
+                2025,
+                new ArrayList<>(List.of(aDto)) // mutable list
+        );
+
+        final Album[] savedHolder = new Album[1];
+        when(repo.save(any(Album.class))).thenAnswer(invocation -> {
+            Album arg = invocation.getArgument(0);
+
+            // Ensure artists set is mutable for bidirectional relationship
+            arg.setArtists(new HashSet<>(arg.getArtists()));
+
+            // Set the bidirectional relationship manually as done in the service
+            arg.getArtists().forEach(artist -> artist.getAlbums().add(arg));
+
+            savedHolder[0] = arg;
+            return arg;
+        });
+
+        // Act
+        AlbumDTO created = service.create(dto);
+
+        // Assert DTO values
+        assertThat(created.title()).isEqualTo("Created");
+        assertThat(created.releaseYear()).isEqualTo(2025);
+        assertThat(created.artists()).containsExactly(aDto);
+
+        // Assert saved entity relationships
+        Album saved = savedHolder[0];
+        assertThat(saved).isNotNull();
+        Artist savedArtist = saved.getArtists().iterator().next();
+        assertThat(savedArtist.getAlbums()).contains(saved);
+    }
+
+
 }
 
 
