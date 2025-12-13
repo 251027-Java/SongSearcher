@@ -58,6 +58,102 @@ class SongServiceTests {
     }
 
     @Test
+    void happyPath_searchByTitle_returnsDTOs() {
+        when(songRepo.findByTitleContainingIgnoreCase("SongTitle")).thenReturn(List.of(song));
+
+        List<SongDTO> results = service.searchByTitle("SongTitle");
+
+        assertThat(results).hasSize(1);
+        assertThat(results.get(0).id()).isEqualTo("s1");
+    }
+
+    @Test
+    void happyPath_searchByAlbum_returnsDTOs() {
+        when(songRepo.findByAlbum_TitleContainingIgnoreCase("AlbumTitle")).thenReturn(List.of(song));
+
+        List<SongDTO> results = service.searchByAlbum("AlbumTitle");
+
+        assertThat(results).hasSize(1);
+        assertThat(results.get(0).album().id()).isEqualTo("a1");
+    }
+
+    @Test
+    void happyPath_searchByArtist_returnsDTOs() {
+        when(songRepo.findSongsByArtistName("Test Artist")).thenReturn(List.of(song));
+
+        List<SongDTO> results = service.searchByArtist("Test Artist");
+
+        assertThat(results).hasSize(1);
+        assertThat(results.get(0).artists()).isNotEmpty();
+    }
+
+    @Test
+    void happyPath_getUserSongRecommendations_returnsRecommendations() {
+        PlaylistDTO favorites = mock(PlaylistDTO.class);
+        SongDTO favDto = new SongDTO(
+                "sFav",
+                "FavSong",
+                new BigDecimal("3.00"),
+                "fav lyrics",
+                new AlbumSlimDTO("a1", "AlbumTitle", 2024),
+                List.of(new ArtistDTO("ar1", "Artist One"))
+        );
+
+        when(favorites.songs()).thenReturn(Set.of(favDto));
+        when(playlistService.getByUserIdAndName(123L, "Favorites")).thenReturn(favorites);
+        when(albumRepo.findById("a1")).thenReturn(Optional.of(album));
+        when(embedder.getEmbedding("fav lyrics")).thenReturn(new float[]{0.5f, 0.5f});
+        when(songRepo.recommend(any(float[].class), anyList(), eq(10))).thenReturn(List.of(song));
+
+        List<SongDTO> recs = service.getUserSongRecommendations(123L);
+
+        assertThat(recs).hasSize(1);
+        assertThat(recs.get(0).id()).isEqualTo("s1");
+        verify(playlistService).getByUserIdAndName(123L, "Favorites");
+    }
+
+    @Test
+    public void edgeCase_getUserSongRecommendations_noFavorites_returnsEmptyList() {
+        PlaylistDTO favorites = mock(PlaylistDTO.class);
+        when(favorites.songs()).thenReturn(Set.of());
+        when(playlistService.getByUserIdAndName(999L, "Favorites")).thenReturn(favorites);
+
+        List<SongDTO> actual = service.getUserSongRecommendations(999L);
+
+        assertThat(actual).isEmpty();
+    }
+
+    @Test
+    public void sadPath_getUserSongRecommendations_mismatchedEmbeddingLengths_throwsIllegalArgumentException() {
+        PlaylistDTO favorites = mock(PlaylistDTO.class);
+        SongDTO dto1 = new SongDTO(
+                "sA",
+                "A",
+                new BigDecimal("2.00"),
+                "lyrics1",
+                new AlbumSlimDTO("a1", "AlbumTitle", 2024),
+                List.of()
+        );
+        SongDTO dto2 = new SongDTO(
+                "sB",
+                "B",
+                new BigDecimal("2.50"),
+                "lyrics2",
+                new AlbumSlimDTO("a1", "AlbumTitle", 2024),
+                List.of()
+        );
+
+        when(favorites.songs()).thenReturn(Set.of(dto1, dto2));
+        when(playlistService.getByUserIdAndName(55L, "Favorites")).thenReturn(favorites);
+        when(albumRepo.findById("a1")).thenReturn(Optional.of(album));
+        when(embedder.getEmbedding("lyrics1")).thenReturn(new float[]{1f, 2f});
+        when(embedder.getEmbedding("lyrics2")).thenReturn(new float[]{1f, 2f, 3f});
+
+        assertThatThrownBy(() -> service.getUserSongRecommendations(55L))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     void happyPath_getAll_returnsSongDTOs() {
         when(songRepo.findAll()).thenReturn(List.of(song));
 

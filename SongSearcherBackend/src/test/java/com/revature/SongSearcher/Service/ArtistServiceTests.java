@@ -190,5 +190,32 @@ public class ArtistServiceTests {
         // Assert
         verify(repo, times(1)).deleteById(id);
     }
+
+    @Test
+    public void happyPath_getByName_returnsArtistDTO_whenFound() {
+        // Arrange
+        Artist a = new Artist("byNameId", "The Artist");
+        when(repo.findByName("The Artist")).thenReturn(a);
+
+        // Act
+        ArtistDTO actual = service.getByName("The Artist");
+
+        // Assert
+        assertThat(actual).isEqualTo(new ArtistDTO("byNameId", "The Artist"));
+        verify(repo, times(2)).findByName("The Artist"); // implementation calls findByName twice
+    }
+
+    @Test
+    public void edgeCase_getByName_returnsNull_whenNotFound() {
+        // Arrange
+        when(repo.findByName("Missing")).thenReturn(null);
+
+        // Act
+        ArtistDTO actual = service.getByName("Missing");
+
+        // Assert
+        assertThat(actual).isNull();
+    }
+
 }
 
