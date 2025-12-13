@@ -5,16 +5,21 @@ import {
 } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
 import DeleteConfirmDialog from "./Dialogs/DeleteConfirmDialog";
+import SongModal from "./SongModal";
 import { useState } from "react";
 import { useSongsApi } from "../ApiHooks/useSongsApi";
 
 const SongSearchItem = ({ song, resetSearch, toggleFavorite, isFav }) => {
   const [open, setOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const { deleteSong } = useSongsApi();
 
   const openDialogHandler = () => {
     setOpen(true);
   };
+
+  const openModalHandler = () => setModalOpen(true);
+  const closeModalHandler = () => setModalOpen(false);
 
   const deleteHandler = async () => {
     const response = await deleteSong.mutateAsync(song.id);
@@ -24,9 +29,15 @@ const SongSearchItem = ({ song, resetSearch, toggleFavorite, isFav }) => {
   };
 
   return (
-    <div className="h-auto p-2 bg-mint-400 w-full rounded-xl">
+    
+      <div
+        className="h-auto p-2 bg-mint-400 w-full rounded-xl"
+      >
       <div className="flex justify-between items-center">
-        <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 w-[90%]"
+            onClick={openModalHandler}
+            role="button"
+            tabIndex={0}>
           <h2 className="font-bold text-sm font-serif">{song.title}</h2>
           <div className="flex ml-2">
             {song.artists.map((artist, index) => (
@@ -40,10 +51,10 @@ const SongSearchItem = ({ song, resetSearch, toggleFavorite, isFav }) => {
             {song.lyrics.substring(0, MAX_LENGTH) + "..."}
           </p>
         </div>
-        <div className="flex flex-col gap-5 mr-2">
+          <div className="flex flex-col gap-5 mr-2">
           <button
             className="px-1 hover:bg-red-200 hover:cursor-pointer rounded-full"
-            onClick={() => toggleFavorite(song.id)}
+            onClick={(e) => { e.stopPropagation(); toggleFavorite(song.id); }}
           >
             {isFav ? (
               <HeartSolidIcon className="size-6 text-red-500" />
@@ -52,13 +63,18 @@ const SongSearchItem = ({ song, resetSearch, toggleFavorite, isFav }) => {
             )}
           </button>
           <button
-            onClick={openDialogHandler}
+            onClick={(e) => { e.stopPropagation(); openDialogHandler(); }}
             className="px-1 hover:bg-mint-200 hover:cursor-pointer rounded-full"
           >
             <TrashIcon className="size-6" />
           </button>
         </div>
       </div>
+      <SongModal
+        open={modalOpen}
+        setOpen={setModalOpen}
+        song={song}
+      />
       <DeleteConfirmDialog
         open={open}
         setOpen={setOpen}
