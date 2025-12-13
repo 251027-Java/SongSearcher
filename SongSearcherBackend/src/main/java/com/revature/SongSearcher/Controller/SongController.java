@@ -73,6 +73,11 @@ public class SongController {
         return service.searchByLyrics(dto);
     }
 
+    @GetMapping("/search/similar/{id}")
+    public List<SongDTO> similarSearchById(@PathVariable String id) {
+        return service.searchSimilarById(id);
+    }
+
     @GetMapping("/recommend")
     public List<SongDTO> getUserSongRecommendations(HttpServletRequest request) {
 
