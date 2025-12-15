@@ -1,6 +1,5 @@
 package com.revature.SongSearcher.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.revature.SongSearcher.Controller.DTO.*;
@@ -17,18 +16,15 @@ import java.util.Map;
 @Service
 public class DatabaseIngestionService {
 
-    private final ObjectMapper objectMapper;
     private final ArtistService artistService;
     private final AlbumService albumService;
     private final SongService songService;
     private final Gson gson;
 
     public DatabaseIngestionService(
-            ObjectMapper objectMapper,
             ArtistService artistService,
             AlbumService albumService,
             SongService songService) {
-        this.objectMapper = objectMapper;
         this.artistService = artistService;
         this.albumService = albumService;
         this.songService = songService;

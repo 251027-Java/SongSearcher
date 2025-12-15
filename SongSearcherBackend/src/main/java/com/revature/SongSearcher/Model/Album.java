@@ -50,7 +50,4 @@ public class Album {
         this.artists = artists;
     }
 
-//    public String toString() {
-//        return "Album: " + this.title + " (" + this.releaseyear + ")";
-//    }
 }

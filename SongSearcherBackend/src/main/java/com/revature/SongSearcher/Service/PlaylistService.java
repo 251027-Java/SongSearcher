@@ -32,10 +32,6 @@ public class PlaylistService {
     private ArtistDTO ArtistToDTO(Artist artist ) {
         return new ArtistDTO(artist.getArtistId(), artist.getName());
     }
-    private AlbumDTO AlbumToDTO (Album album) {
-        return new AlbumDTO(album.getAlbumId(), album.getTitle(), album.getReleaseyear(),
-                new ArrayList<>(album.getArtists()).stream().map(this::ArtistToDTO).toList());
-    }
     private AlbumSlimDTO AlbumToSlimDTO (Album album ) {
         return new AlbumSlimDTO(
                 album.getAlbumId(),

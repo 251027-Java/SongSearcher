@@ -2,8 +2,6 @@ package com.revature.SongSearcher.Model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.IdGeneratorType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -39,7 +37,4 @@ public class Artist {
         this.name = name;
     }
 
-//    public String toString() {
-//        return "Artist: " + this.getName();
-//    }
 }
