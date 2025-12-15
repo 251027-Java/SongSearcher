@@ -17,11 +17,9 @@ import java.util.stream.Collectors;
 public class AlbumService {
 
     private final AlbumRepository repo;
-    //private final ArtistRepository artistRepo;
 
     public AlbumService(AlbumRepository repo) {
         this.repo = repo;
-        //this.artistRepo = artistRepo;
     }
 
     private ArtistDTO ArtistToDTO(Artist artist ) {
@@ -67,16 +65,6 @@ public class AlbumService {
         Album album = repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-//        Artist artist = artistRepo.findById(dto.artistId())
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-//
-//        album.setTitle(dto.title());
-//        album.setReleaseYear(dto.releaseYear());
-//        album.setArtist(artist);
-//
-//        repo.save(album);
-//
-//        return dto;
         album.setTitle(dto.title());
         album.setReleaseyear(dto.releaseYear());
 

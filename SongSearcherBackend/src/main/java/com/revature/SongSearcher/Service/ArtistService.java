@@ -22,9 +22,6 @@ public class ArtistService {
     private ArtistDTO ArtistToDTO(Artist artist ) {
         return new ArtistDTO(artist.getArtistId(), artist.getName());
     }
-    private Artist DTOToArtist ( ArtistDTO dto ) {
-        return new Artist(dto.id(), dto.name());
-    }
 
     public List<ArtistDTO> getAll() {
         return repo.findAll().stream()
@@ -52,7 +49,6 @@ public class ArtistService {
         Artist saved = repo.save(a);
 
         return ArtistToDTO(saved);
-//        return new ArtistDTO(repo.save(a).getId(), a.getName());
     }
 
     public ArtistDTO patch(String id, ArtistDTO dto) {
